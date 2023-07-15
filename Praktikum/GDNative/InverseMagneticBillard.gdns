@@ -1,0 +1,8 @@
+[gd_resource type="NativeScript" load_steps=2 format=2]
+
+[ext_resource path="res://GDNative/InverseMagneticBillard.tres" type="GDNativeLibrary" id=1]
+
+[resource]
+resource_name = "InverseMagneticBillard"
+class_name = "InverseMagneticBillard"
+library = ExtResource( 1 )

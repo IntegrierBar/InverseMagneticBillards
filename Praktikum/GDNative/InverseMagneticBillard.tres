@@ -1,0 +1,9 @@
+[gd_resource type="GDNativeLibrary" format=2]
+
+[resource]
+entry/HTML5.wasm32 = "res://GDNative/InverseMagneticBillard.wasm"
+entry/Windows.64 = "res://GDNative/InverseMagneticBillard.dll"
+entry/Windows.32 = "res://GDNative/InverseMagneticBillard.dll"
+dependency/HTML5.wasm32 = [  ]
+dependency/Windows.64 = [  ]
+dependency/Windows.32 = [  ]
