@@ -17,10 +17,10 @@ __meta__ = {
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Panel" type="Panel" parent="CanvasLayer"]
-margin_left = 729.0
-margin_top = 8.0
-margin_right = 1014.0
-margin_bottom = 345.0
+margin_left = 720.0
+margin_top = 40.0
+margin_right = 1005.0
+margin_bottom = 377.0
 script = ExtResource( 5 )
 
 [node name="Button" type="Button" parent="CanvasLayer/Panel"]
