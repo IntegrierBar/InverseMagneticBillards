@@ -9,11 +9,18 @@ export var max_zoom := 1000.0
 export var zoom_speed := 0.1
 # Duration of the zoom's tween animation.
 export var zoom_duration := 0.2
-
 export var zoom_factor : float = 1.5
+export var _zoom_level : float = 0.1 # initial zoom
+export var camera_speed: float = 10.0
 
-var _zoom_level : float = 1.0
 
+func _ready():
+	zoom = Vector2(_zoom_level, _zoom_level)
+
+func _process(delta):
+	# move camera with keyboard
+	var direction = Input.get_vector("move_camera_left", "move_camera_right", "move_camera_up", "move_camera_down")
+	position += camera_speed*delta*direction
 
 
 func _set_zoom_level(value: float) -> void:
@@ -27,4 +34,7 @@ func _unhandled_input(event):
 		_set_zoom_level(_zoom_level/zoom_factor)
 	if event.is_action_pressed("zoom_out"):
 		_set_zoom_level(_zoom_level*zoom_factor)
-		
+	# make camera dragable
+	if event is InputEventMouseMotion:
+		if event.button_mask == BUTTON_MASK_RIGHT:
+			position -= event.relative * zoom
