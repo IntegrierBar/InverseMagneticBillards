@@ -79,8 +79,8 @@ text = "Change radius, default radius is 1 "
 
 [node name="Sprite" type="Sprite" parent="CanvasLayer/Panel"]
 material = SubResource( 2 )
-position = Vector2( -489.5, 153.75 )
-scale = Vector2( 5.39062, 4.35157 )
+position = Vector2( -504.75, 161.375 )
+scale = Vector2( 5.11719, 4.05079 )
 texture = ExtResource( 2 )
 script = ExtResource( 6 )
 
