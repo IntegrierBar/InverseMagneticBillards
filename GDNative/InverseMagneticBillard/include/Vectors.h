@@ -44,6 +44,9 @@ namespace godot {
 
 	inline double length(const vec2_d& v) { return sqrt(dot(v, v)); }
 	inline double length_squared(const vec2_d& v) { return dot(v, v); }
+	inline double angle_between(const vec2_d& v1, const vec2_d& v2) {
+		return std::atan2(det(v1, v2), dot(v1, v2));
+	}
 
 	inline vec2_d normalize(const vec2_d& v) { return v * (1 / length(v)); }
 
