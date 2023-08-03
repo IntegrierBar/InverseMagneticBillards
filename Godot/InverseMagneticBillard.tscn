@@ -24,60 +24,187 @@ texture = ExtResource( 2 )
 
 [node name="Panel" type="Panel" parent="CanvasLayer"]
 margin_left = 720.0
-margin_top = 40.0
+margin_top = 45.0
 margin_right = 1005.0
-margin_bottom = 377.0
+margin_bottom = 382.0
 script = ExtResource( 5 )
 
-[node name="Button" type="Button" parent="CanvasLayer/Panel"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 108.0
-margin_bottom = 57.0
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = 7.0
+margin_right = -7.0
+margin_bottom = -7.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer"]
+margin_right = 271.0
+margin_bottom = 323.0
+
+[node name="ControlsTitle" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+margin_right = 271.0
+margin_bottom = 14.0
+text = "Inverse Magnetic Billards Control"
+align = 1
+
+[node name="Iterations" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+margin_top = 18.0
+margin_right = 271.0
+margin_bottom = 74.0
+size_flags_horizontal = 3
+
+[node name="IterationsLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations"]
+margin_right = 271.0
+margin_bottom = 14.0
+text = "Iterations"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations"]
+margin_top = 18.0
+margin_right = 271.0
+margin_bottom = 38.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer"]
+margin_top = 3.0
+margin_right = 133.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
+text = "Draw iteration batch:"
+
+[node name="IterateButton" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer"]
+margin_left = 137.0
+margin_right = 271.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
 text = "Iterate"
 
-[node name="LabelInstructions" type="Label" parent="CanvasLayer/Panel"]
-margin_left = 10.0
-margin_top = 195.0
-margin_right = 249.0
-margin_bottom = 283.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations"]
+margin_top = 42.0
+margin_right = 271.0
+margin_bottom = 56.0
 
-[node name="ButtonStartPos" type="Button" parent="CanvasLayer/Panel"]
-margin_left = 6.0
-margin_top = 149.0
-margin_right = 184.0
-margin_bottom = 181.0
-text = "Choose new start position"
+[node name="Label" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer2"]
+margin_right = 133.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Set #iterations: "
 
-[node name="ButtonPolygon" type="Button" parent="CanvasLayer/Panel"]
-margin_left = 5.0
-margin_top = 72.0
-margin_right = 167.0
-margin_bottom = 100.0
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer2"]
+margin_left = 137.0
+margin_right = 271.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "1
+"
+
+[node name="Radius" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+margin_top = 78.0
+margin_right = 271.0
+margin_bottom = 110.0
+size_flags_horizontal = 3
+
+[node name="RadiusLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius"]
+margin_right = 271.0
+margin_bottom = 14.0
+text = "Radius"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius"]
+margin_top = 18.0
+margin_right = 271.0
+margin_bottom = 32.0
+
+[node name="SetRadiusLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius/HBoxContainer"]
+margin_right = 133.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "Set radius: "
+
+[node name="SetRadiusTextEdit" type="TextEdit" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius/HBoxContainer"]
+margin_left = 137.0
+margin_right = 271.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "1 "
+
+[node name="Polygon" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+margin_top = 114.0
+margin_right = 271.0
+margin_bottom = 207.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PolygonLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon"]
+margin_right = 271.0
+margin_bottom = 14.0
+text = "Polygon"
+
+[node name="ButtonPolygon" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon"]
+margin_top = 18.0
+margin_right = 271.0
+margin_bottom = 38.0
 text = "Choose new polygon"
 
-[node name="ButtonClosePolygon" type="Button" parent="CanvasLayer/Panel"]
-margin_left = 6.0
-margin_top = 106.0
-margin_right = 126.0
-margin_bottom = 133.0
+[node name="ButtonClosePolygon" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon"]
+margin_top = 42.0
+margin_right = 271.0
+margin_bottom = 62.0
 text = "Close Contour"
 
-[node name="Label" type="Label" parent="CanvasLayer/Panel"]
-margin_left = 220.0
-margin_top = 7.0
-margin_right = 269.0
-margin_bottom = 27.0
+[node name="LabelInstructions" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon"]
+margin_top = 66.0
+margin_right = 271.0
+margin_bottom = 80.0
 
-[node name="TextEdit" type="TextEdit" parent="CanvasLayer/Panel"]
-margin_left = 10.0
-margin_top = 298.0
-margin_right = 253.0
-margin_bottom = 327.0
-text = "Change radius, default radius is 1 "
+[node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+margin_top = 211.0
+margin_right = 271.0
+margin_bottom = 305.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[connection signal="pressed" from="CanvasLayer/Panel/Button" to="Trajectories" method="_on_Button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Panel/ButtonStartPos" to="Trajectories" method="_on_ButtonStartPos_pressed"]
-[connection signal="pressed" from="CanvasLayer/Panel/ButtonPolygon" to="Trajectories" method="_on_ButtonPolygon_pressed"]
-[connection signal="pressed" from="CanvasLayer/Panel/ButtonClosePolygon" to="Trajectories" method="_on_ButtonClosePolygon_pressed"]
-[connection signal="text_changed" from="CanvasLayer/Panel/TextEdit" to="Trajectories" method="_on_TextEdit_text_changed"]
+[node name="TrajectoriesLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories"]
+margin_right = 271.0
+margin_bottom = 14.0
+text = "Trajectories"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories"]
+margin_top = 18.0
+margin_right = 271.0
+margin_bottom = 38.0
+
+[node name="ButtonStartPos" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/HBoxContainer"]
+margin_right = 133.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "New start position"
+
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/HBoxContainer"]
+margin_left = 137.0
+margin_right = 271.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories"]
+margin_top = 42.0
+margin_right = 271.0
+margin_bottom = 56.0
+
+[node name="Other" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+margin_top = 309.0
+margin_right = 271.0
+margin_bottom = 323.0
+
+[node name="CurrentMousePosition" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Other"]
+margin_right = 271.0
+margin_bottom = 14.0
+
+[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer/IterateButton" to="Trajectories" method="_on_Button_pressed"]
+[connection signal="text_changed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="Trajectories" method="_on_TextEdit_text_changed"]
+[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/ButtonPolygon" to="Trajectories" method="_on_ButtonPolygon_pressed"]
+[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="Trajectories" method="_on_ButtonClosePolygon_pressed"]
+[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos" to="Trajectories" method="_on_ButtonStartPos_pressed"]
