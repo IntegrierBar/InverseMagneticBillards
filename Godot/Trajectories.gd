@@ -124,14 +124,19 @@ func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
 	var new_trajectorie = trajectory_scene.instance()
 	add_child(new_trajectorie)
 	trajectories.append(new_trajectorie)
-	new_trajectorie.set_start(start)
-	new_trajectorie.set_direction(dir)
 	new_trajectorie.batch = batch
 	new_trajectorie.maxCount = max_count
-	new_trajectorie.set_radius(radius)
 	new_trajectorie.trajectoryColor = color
-	for vertex in polygon:
-		new_trajectorie.add_polygon_vertex(vertex)
+	for i in range(polygon.size() - 1):
+		new_trajectorie.add_polygon_vertex(polygon[i])
+	if polygon_closed:
+		new_trajectorie.close_polygon()
+	else:
+		new_trajectorie.add_polygon_vertex(polygon.back())
+	new_trajectorie.set_start(start)
+	new_trajectorie.set_direction(dir)
+	new_trajectorie.set_radius(radius)
+
 
 func iterate_batch():
 	for t in trajectories:

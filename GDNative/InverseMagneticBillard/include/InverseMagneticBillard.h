@@ -36,9 +36,11 @@ namespace godot {
 
         int maxCount = 1000;
         int batch = 100;
-        int count = 0;
+        int count = 0;  // how many interations are done
         bool polygonClosed = false;
         std::vector<vec2_d> polygon;    // keep one structure for calculations
+        double polygonLength;
+        Color trajectoryColor = Color(0, 1, 0);
         //PoolVector2Array polygonToDraw; // and one for drawing. Remeber to always update both together POLYGON IS DRAWN IN MANAGER NODE
         //Color polygonColor = Color(1, 1, 1);
         vec2_d currentDirection = vec2_d(1, 0);
@@ -47,7 +49,8 @@ namespace godot {
         //std::vector<Vector2> trajectoryDraw; For debugging
         std::vector<std::array<Vector2, 2>> trajectoryLines;
         std::vector<std::tuple<vec2_d, double, double>> trajectoryCircles; // TODO maybe use better structure here?
-        Color trajectoryColor = Color(0, 1, 0);
+        std::vector<vec2_d> phaseSpacePoints;   // the trajectory points in the phase space [0,1] x [0,1]
+        
         
         
 

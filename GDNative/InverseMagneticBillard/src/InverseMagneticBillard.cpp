@@ -63,6 +63,7 @@ namespace godot {
     {
         polygonClosed = false;
         polygon = {};
+        polygonLength = 0;
         //polygonToDraw = {}; // TODO check if this does not give errors
         reset_trajectory();
         update();
@@ -70,9 +71,10 @@ namespace godot {
 
     void InverseMagneticBillard::add_polygon_vertex(Vector2 vertex)
     {
-        Godot::print("add vertex to polygon");
-        Godot::print(vertex);
+        //Godot::print("add vertex to polygon");
+        //Godot::print(vertex);
         if (polygonClosed) {    // if the polygon es closed, remember, that last element of vector is first element.
+            polygonClosed = false;
             polygon.pop_back();
             //polygonToDraw.remove(polygonToDraw.size() - 1);
             polygon.push_back(vec2_d(vertex));
@@ -88,9 +90,17 @@ namespace godot {
 
     void InverseMagneticBillard::close_polygon()
     {
-        if (polygonClosed || polygon.size() < 2) { return; }    // polygon needs to haev at least 3 edges
+        if (polygonClosed || polygon.size() < 3) { return; }    // polygon needs to haev at least 3 edges
         polygon.push_back(polygon[0]);
         //polygonToDraw.push_back(polygonToDraw[0]);
+
+        // calculate length of circumferreence of polygon
+        polygonLength = 0;
+        for (int i = 0; i < polygon.size()-1; i++)
+        {
+            polygonLength += length(polygon[i] - polygon[i + 1]);
+        }
+        polygonClosed = true;
         update();
     }
 
@@ -144,9 +154,34 @@ namespace godot {
 
     void InverseMagneticBillard::set_start(Vector2 start)
     {
-        // TODO, projection onto poylgon and check direction
-        currentPosition = start;
-        trajectory = { start };
+        if (polygon.size() > 2)
+        {
+            // projection onto poylgon
+            double min_distance = INFINITY;
+            for (int i = 0; i < polygon.size() - 1; i++)
+            {
+                double t = (length_squared(start) - dot(start, polygon[i])) / dot(start, polygon[i + 1] - polygon[i]);
+                // snap to corners of edge
+                if (t < 0) {
+                    t = 0;
+                }
+                else if (t > 1) {
+                    t = 1;
+                }
+                vec2_d pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
+                double distance = length_squared(vec2_d(start) - pointProjected);
+                if (distance < min_distance) {
+                    min_distance = distance;
+                    currentPosition = pointProjected;
+                }
+            }
+        }
+        else
+        {
+            currentPosition = start;
+        }
+        
+        trajectory = { currentPosition };
         trajectoryLines = {};
         trajectoryCircles = {};
         update();
