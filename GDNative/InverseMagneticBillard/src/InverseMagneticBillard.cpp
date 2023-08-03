@@ -18,8 +18,7 @@ namespace godot {
         register_method((char*)"add_polygon_vertex", &InverseMagneticBillard::add_polygon_vertex);
         register_method((char*)"close_polygon", &InverseMagneticBillard::close_polygon);
         register_method((char*)"set_radius", &InverseMagneticBillard::set_radius);
-        register_method((char*)"set_direction", &InverseMagneticBillard::set_direction);
-        register_method((char*)"set_start", &InverseMagneticBillard::set_start);
+        register_method((char*)"set_initial_values", &InverseMagneticBillard::set_initial_values);
         register_method((char*)"reset_trajectory", &InverseMagneticBillard::reset_trajectory);
         //register_method((char*)"iterate", &InverseMagneticBillard::iterate);
         register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch);
@@ -63,7 +62,7 @@ namespace godot {
     {
         polygonClosed = false;
         polygon = {};
-        polygonLength = 0;
+        polygonLength = {};
         //polygonToDraw = {}; // TODO check if this does not give errors
         reset_trajectory();
         update();
@@ -71,19 +70,32 @@ namespace godot {
 
     void InverseMagneticBillard::add_polygon_vertex(Vector2 vertex)
     {
-        //Godot::print("add vertex to polygon");
-        //Godot::print(vertex);
+        Godot::print("add vertex to polygon");
+        Godot::print(vertex);
         if (polygonClosed) {    // if the polygon es closed, remember, that last element of vector is first element.
-            polygonClosed = false;
-            polygon.pop_back();
-            //polygonToDraw.remove(polygonToDraw.size() - 1);
-            polygon.push_back(vec2_d(vertex));
-            //polygonToDraw.push_back(vertex);
-            close_polygon();
+            //polygonClosed = false;
+            //polygon.pop_back();
+            ////polygonToDraw.remove(polygonToDraw.size() - 1);
+            //polygon.push_back(vec2_d(vertex));
+            ////polygonToDraw.push_back(vertex);
+            //close_polygon();
+
+            // DONT DO ANYTHING IF POLYGON IS CLOSED
+            // THIS IS IMPORTANT FOR LENGTH CALCULATIONS. MAYBE CHANGE LATER
         }
         else {
+            if (polygon.size() > 0)
+            {
+                if (polygonLength.size() < 1) {
+                    polygonLength.push_back(length(polygon.back() - vec2_d(vertex)));
+                }
+                else {
+                    polygonLength.push_back(polygonLength.back() + length(polygon.back() - vec2_d(vertex)));
+                }
+                
+            }
+            
             polygon.push_back(vec2_d(vertex));
-            //polygonToDraw.push_back(vertex);
         }
         //update();
     }
@@ -91,15 +103,9 @@ namespace godot {
     void InverseMagneticBillard::close_polygon()
     {
         if (polygonClosed || polygon.size() < 3) { return; }    // polygon needs to haev at least 3 edges
-        polygon.push_back(polygon[0]);
-        //polygonToDraw.push_back(polygonToDraw[0]);
 
-        // calculate length of circumferreence of polygon
-        polygonLength = 0;
-        for (int i = 0; i < polygon.size()-1; i++)
-        {
-            polygonLength += length(polygon[i] - polygon[i + 1]);
-        }
+        polygonLength.push_back(polygonLength.back() + length(polygon.back() - vec2_d(polygon[0])));
+        polygon.push_back(polygon[0]);
         polygonClosed = true;
         update();
     }
@@ -109,16 +115,19 @@ namespace godot {
         //Godot::print("iteration point :");
         
         // the line inside the polygon
-        vec2_d nextIterate = intersect_polygon_line(currentPosition, currentDirection);
+        auto intersection = intersect_polygon_line(currentPosition, currentDirection);
+        vec2_d nextIterate = intersection.first;
+        currentIndexOnPolygon = intersection.second;
         trajectory.push_back(nextIterate);
         trajectoryLines.push_back({ currentPosition.to_godot(), nextIterate.to_godot() });
         currentPosition = nextIterate;  // direction stays the same
 
         
         // the cirlce outide the polygon
-        auto next = intersect_polygon_circle(currentPosition, currentDirection);
+        vec2_d center = currentPosition + radius * vec2_d(currentDirection.y, -currentDirection.x); // center of the circle
+        auto next = intersect_polygon_circle(currentPosition, currentPosition, center);
         nextIterate = next.first;
-        vec2_d center = next.second;
+        currentIndexOnPolygon = next.second;
         double angle = std::atan2(det((currentPosition - center), (nextIterate - center)), dot((currentPosition - center), (nextIterate - center))); // dont touch it magically works
         if (angle < 0)
         {
@@ -147,39 +156,44 @@ namespace godot {
         update();
     }
 
-    void InverseMagneticBillard::set_direction(Vector2 direction) // direction is not actually the direction, but the point where the direction points to from the current position
-    {
-        currentDirection = normalize(vec2_d(direction) - currentPosition); // always normaize the direction 
-    }
 
-    void InverseMagneticBillard::set_start(Vector2 start)
+
+    void InverseMagneticBillard::set_initial_values(Vector2 start, Vector2 dir)
     {
-        if (polygon.size() > 2)
+        if (polygon.size() < 3 || !polygonClosed)
         {
-            // projection onto poylgon
-            double min_distance = INFINITY;
-            for (int i = 0; i < polygon.size() - 1; i++)
-            {
-                double t = (length_squared(start) - dot(start, polygon[i])) / dot(start, polygon[i + 1] - polygon[i]);
-                // snap to corners of edge
-                if (t < 0) {
-                    t = 0;
-                }
-                else if (t > 1) {
-                    t = 1;
-                }
-                vec2_d pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
-                double distance = length_squared(vec2_d(start) - pointProjected);
-                if (distance < min_distance) {
-                    min_distance = distance;
-                    currentPosition = pointProjected;
-                }
+            return; // only works if polygon is closed!
+        }
+
+        
+        // projection onto poylgon
+        double min_distance = INFINITY;
+        vec2_d pointProjected;
+        for (int i = 0; i < polygon.size() - 1; i++)
+        {
+            double t = (length_squared(start) - dot(start, polygon[i])) / dot(start, polygon[i + 1] - polygon[i]);
+            // snap to corners of edge
+            if (t < 0) {
+                t = 0;
+            }
+            else if (t > 1) {
+                t = 1;
+            }
+            pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
+            double distance = length_squared(vec2_d(start) - pointProjected);
+            if (distance < min_distance) {
+                min_distance = distance;
+                currentPosition = pointProjected;
+                currentIndexOnPolygon = i;
             }
         }
-        else
-        {
-            currentPosition = start;
-        }
+
+        currentDirection = normalize(dir);  // normalize just in case
+
+        double angle = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
+        // TODO need to check if angle positive or negative right now
+        phaseSpaceTrajectory = { vec2_d((polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - pointProjected) )/polygonLength.back(), abs(angle)/M_PI)};
+
         
         trajectory = { currentPosition };
         trajectoryLines = {};
@@ -187,9 +201,12 @@ namespace godot {
         update();
     }
 
-    vec2_d InverseMagneticBillard::intersect_polygon_line(vec2_d start, vec2_d dir)
+    // return both the point and the index of the intersection edge
+    std::pair<vec2_d, int> InverseMagneticBillard::intersect_polygon_line(vec2_d start, vec2_d dir)
     {
-        std::vector<double> intersections;
+        int index = 0;
+        vec2_d intersection = vec2_d(0,0);
+        double min_distance = INFINITY;
         for (size_t i = 0; i < polygon.size()-1; i++) // only loop till -1, since we know that polygon closed means that first == last point
         {
             // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
@@ -202,15 +219,17 @@ namespace godot {
             if (0 <= t && t <= 1) // consider adding eps here as well
             {
                 double u = ((polygon[i].x - start.x) * (polygon[i].y - polygon[i + 1].y) - (polygon[i].y - start.y) * (polygon[i].x - polygon[i + 1].x)) / denominator;
-                if (u>eps) // TODO might need bigger coefficient, since u = 0 is also a solution. Could potentially use additional index to prevent this
+                if (i != currentIndexOnPolygon && u<min_distance) // TODO might need bigger coefficient, since u = 0 is also a solution. Could potentially use additional index to prevent this
                 {
-                    intersections.push_back(u);
+                    min_distance = u;
+                    intersection = start + u * dir; // TODO there could be an error in this
+                    index = i;
                 }
             }
         }
-        if (intersections.size() == 0) return vec2_d(0, 0); // if this happens, we got an upsi
-        double u = *std::min_element(intersections.begin(), intersections.end());   // calculate the smallest u, since that will be the one with the first intersection (only relevant if polygon not convex)
-        return start + u*dir;
+        //if (intersections.size() == 0) return std::make_pair(vec2_d(0,0), 0); // if this happens, we got an upsi
+        //auto u = std::min_element(intersections.begin(), intersections.end());   // calculate the smallest u, since that will be the one with the first intersection (only relevant if polygon not convex)
+        return std::make_pair(intersection, index);
     }
 
     void InverseMagneticBillard::set_radius(double r)
@@ -220,15 +239,17 @@ namespace godot {
     }
 
     // use formula https://math.stackexchange.com/questions/311921/get-location-of-vector-circle-intersection
-    // to return new intersection point and center
-    // TODO consider smarter return value
-    std::pair<vec2_d, vec2_d> InverseMagneticBillard::intersect_polygon_circle(vec2_d start, vec2_d dir)
+    // to return new intersection point and index of edge
+    // TODO consider optimizing!!!!!!
+    std::pair<vec2_d, int> InverseMagneticBillard::intersect_polygon_circle(vec2_d start, vec2_d dir, vec2_d center)
     {
 
         //Godot::print("circle intersection GODOT:");
-        vec2_d center = start + radius * vec2_d(dir.y, -dir.x); // center of the circle
-
-        std::vector<vec2_d> intersections;
+        
+        int index = 0;
+        vec2_d intersectionPoint = vec2_d(0,0);
+        double smallestAngle = 400;
+        double angleStart = (start - center).angle();
         // iterate through the kanten of the polygon to calculate also maybe here use index of which kante we are on polygon
         for (size_t i = 0; i < polygon.size() - 1 ; i++)
         {
@@ -251,7 +272,13 @@ namespace godot {
                 vec2_d intersection = polygon[i] + t * d;
                 if (length_squared(intersection - start) > eps) // check if intersection point is different from starting point TODO Maybe something smarte with angle might be possible here
                 {
-                    intersections.push_back(intersection);
+                    double angle = angleStart - (intersection - center).angle(); // need to do some cursed shit since y is inverted
+                    if (angle < 0) angle += 2 * M_PI; // we need to make sure that we always have positive angles!
+                    if (angle < smallestAngle) {
+                        smallestAngle = angle;
+                        intersectionPoint = intersection;
+                        index = i;
+                    }
                 }
             }
             t = (-b + discriminant) / (2 * a); // also check the other intersection
@@ -259,34 +286,64 @@ namespace godot {
                 vec2_d intersection = polygon[i] + t * d;
                 if (length_squared(intersection - start) > eps)
                 {
-                    intersections.push_back(intersection);
+                    double angle = angleStart - (intersection - center).angle(); // need to do some cursed shit since y is inverted
+                    if (angle < 0) angle += 2 * M_PI; // we need to make sure that we always have positive angles!
+                    if (angle < smallestAngle) {
+                        smallestAngle = angle;
+                        intersectionPoint = intersection;
+                        index = i;
+                    }
                 }
             }
         }
-        // TODO for optimization consider moving this inside the other loop THERE MIGHT BE ERROR HERE
-        double smallestAngle = 400;
-        double angleStart = (start- center).angle();
-        vec2_d intersectionPoint = vec2_d(0, 0);
-        for (size_t i = 0; i < intersections.size(); i++)
-        {
-            double angle = angleStart - (intersections[i] - center).angle() ; // need to do some cursed shit since y is inverted
-            if (angle < 0) angle += 2*M_PI; // we need to make sure that we always have positive angles!
-            if (angle < smallestAngle) {
-                smallestAngle = angle;
-                intersectionPoint = intersections[i];
-            }
-        }
+        // TODO for optimization consider moving this inside the other loop THERE MIGHT BE ERROR HERE NO ERROR HERE I THINK
+        //double smallestAngle = 400;
+        //double angleStart = (start- center).angle();
+        //vec2_d intersectionPoint = vec2_d(0, 0);
+        //for (size_t i = 0; i < intersections.size(); i++)
+        //{
+        //    double angle = angleStart - (intersections[i] - center).angle() ; // need to do some cursed shit since y is inverted
+        //    if (angle < 0) angle += 2*M_PI; // we need to make sure that we always have positive angles!
+        //    if (angle < smallestAngle) {
+        //        smallestAngle = angle;
+        //        intersectionPoint = intersections[i];
+        //    }
+        //}
 
-        return std::make_pair(intersectionPoint, center);
+        return std::make_pair(intersectionPoint, index);
     }
 
     void InverseMagneticBillard::reset_trajectory()
     {
         // TODO safe initial direction
         currentPosition = trajectory[0];
-        trajectory = { currentPosition };
+        if (trajectory.size() > 1) {
+            currentDirection = normalize(trajectory[1] - currentPosition);
+        }
+        double min_distance = INFINITY;
+        vec2_d pointProjected;
+        for (int i = 0; i < polygon.size() - 1; i++)
+        {
+            double t = (length_squared(currentPosition) - dot(currentPosition, polygon[i])) / dot(currentPosition, polygon[i + 1] - polygon[i]);
+            // snap to corners of edge
+            if (t < 0) {
+                t = 0;
+            }
+            else if (t > 1) {
+                t = 1;
+            }
+            pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
+            double distance = length_squared(vec2_d(currentPosition) - pointProjected);
+            if (distance < min_distance) {
+                min_distance = distance;
+                currentIndexOnPolygon = i;
+            }
+        }
+      
+        trajectory.resize(1);
         trajectoryLines = {};
         trajectoryCircles = {};
+        phaseSpaceTrajectory.resize(1);
         update();
     }
 

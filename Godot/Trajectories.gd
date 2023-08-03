@@ -52,11 +52,11 @@ func _ready():
 	polygon = []
 	polygon_color = Color(1, 1, 1)
 	trajectories = []
-	add_trajectorie(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
 	add_polygon_vertex(Vector2(0,0))
 	add_polygon_vertex(Vector2(10,0))
 	add_polygon_vertex(Vector2(0,-10))
 	close_polygon()
+	add_trajectorie(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
 	trajectory_to_edit = 0 # TODO needs button to change
 
 func _process(_delta):
@@ -133,8 +133,7 @@ func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
 		new_trajectorie.close_polygon()
 	else:
 		new_trajectorie.add_polygon_vertex(polygon.back())
-	new_trajectorie.set_start(start)
-	new_trajectorie.set_direction(dir)
+	new_trajectorie.set_initial_values(start, dir)
 	new_trajectorie.set_radius(radius)
 
 
@@ -157,11 +156,11 @@ func mouse_input():
 			add_polygon_vertex(get_global_mouse_position())
 		STATES.SET_START:
 			newpos = snap_to_polygon(get_global_mouse_position())
-			trajectories[trajectory_to_edit].set_start(newpos)
+			#trajectories[trajectory_to_edit].set_start(newpos)
 			current_state = STATES.SET_DIRECTION
 			$"../CanvasLayer/Panel/LabelInstructions".text = "Click to choose a new direction"
 		STATES.SET_DIRECTION:
-			trajectories[trajectory_to_edit].set_direction(get_global_mouse_position())
+			trajectories[trajectory_to_edit].set_initial_values(newpos, get_global_mouse_position() - newpos)
 			current_state = STATES.ITERATE
 			$"../CanvasLayer/Panel/LabelInstructions".text = ""  # this can probably be done nicer
 
