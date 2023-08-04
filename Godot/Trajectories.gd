@@ -165,11 +165,11 @@ func mouse_input():
 			newpos = snap_to_polygon(get_global_mouse_position())
 			#trajectories[trajectory_to_edit].set_start(newpos)
 			current_state = STATES.SET_DIRECTION
-			$"../CanvasLayer/Panel/LabelInstructions".text = "Click to choose a new direction"
+			$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new direction"
 		STATES.SET_DIRECTION:
 			trajectories[trajectory_to_edit].set_initial_values(newpos, get_global_mouse_position() - newpos)
 			current_state = STATES.ITERATE
-			$"../CanvasLayer/Panel/LabelInstructions".text = ""  # this can probably be done nicer
+			$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = ""  # this can probably be done nicer
 
 # iterate Button pressed
 func _on_Button_pressed():
@@ -180,23 +180,26 @@ func _on_Button_pressed():
 func _on_ButtonPolygon_pressed():
 	current_state = STATES.SET_POLYGON
 	clear_polygon()
-	$"../CanvasLayer/Panel/LabelInstructions".text = "Click to position at least 3 points to create an new polygon"
+	# $"../CanvasLayer/Panel/LabelInstructions".text = "Click to position at least 3 points to create an new polygon"
+	$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to position at least 3 points to create an new polygon"
 
 # close polygon button pressed
 func _on_ButtonClosePolygon_pressed():
 	if current_state == STATES.SET_POLYGON:
 		close_polygon()
 		current_state = STATES.SET_START
-		$"../CanvasLayer/Panel/LabelInstructions".text = "Click to choose a new start position"
+		$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to choose a new start position"
 
 # user wants to input new start position
 func _on_ButtonStartPos_pressed():
 	current_state = STATES.SET_START
-	$"../CanvasLayer/Panel/LabelInstructions".text = "Click to choose a new start position"
+	#$"../CanvasLayer/Panel/LabelInstructions".text = "Click to choose a new start position"
+	$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new start position"
 
 # radius is set
 func _on_TextEdit_text_changed():
-	if $"../CanvasLayer/Panel/TextEdit".text.is_valid_float():
-		var newradius = $"../CanvasLayer/Panel/TextEdit".text.to_float()
+	#$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit"
+	if $"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit".text.is_valid_float():
+		var newradius = $"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit".text.to_float()
 		for t in trajectories:
 			t.set_radius(newradius)
