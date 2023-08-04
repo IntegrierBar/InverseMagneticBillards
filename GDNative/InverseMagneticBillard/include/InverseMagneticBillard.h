@@ -35,7 +35,7 @@ namespace godot {
         double radius = 1;
 
         int maxCount = 1000;
-        int batch = 100;
+        //int batch = 100;
         int count = 0;  // how many interations are done
         bool polygonClosed = false;
         std::vector<vec2_d> polygon;    // keep one structure for calculations
@@ -64,8 +64,8 @@ namespace godot {
         void reset_trajectory();
         void set_initial_values(Vector2 start, Vector2 dir);
         //void set_start(Vector2 start);
-        void iterate();
-        void iterate_batch();
+        Vector2 iterate();     // make iterate return the phase space points as Vector2
+        PoolVector2Array iterate_batch(int batch);
         std::pair<vec2_d, int> intersect_polygon_line(vec2_d start, vec2_d dir);
         std::pair<vec2_d, int> intersect_polygon_circle(vec2_d start, vec2_d dir, vec2_d center);
     };

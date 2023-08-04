@@ -24,7 +24,7 @@ namespace godot {
         register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch);
         register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
         register_property((char*)"maxCount", &InverseMagneticBillard::maxCount, 1000);
-        register_property((char*)"batch", &InverseMagneticBillard::batch, 100);
+        //register_property((char*)"batch", &InverseMagneticBillard::batch, 100);
         register_property((char*)"polygonClosed", &InverseMagneticBillard::polygonClosed, false);
         register_property((char*)"trajectoryColor", &InverseMagneticBillard::trajectoryColor, Color(0, 1, 0));
     }
@@ -70,8 +70,8 @@ namespace godot {
 
     void InverseMagneticBillard::add_polygon_vertex(Vector2 vertex)
     {
-        Godot::print("add vertex to polygon");
-        Godot::print(vertex);
+        //Godot::print("add vertex to polygon");
+        //Godot::print(vertex);
         if (polygonClosed) {    // if the polygon es closed, remember, that last element of vector is first element.
             //polygonClosed = false;
             //polygon.pop_back();
@@ -91,8 +91,13 @@ namespace godot {
                 }
                 else {
                     polygonLength.push_back(polygonLength.back() + length(polygon.back() - vec2_d(vertex)));
+
                 }
                 
+            }
+            else
+            {
+                polygonLength.push_back(0); // first entry needs to by a zero
             }
             
             polygon.push_back(vec2_d(vertex));
@@ -105,12 +110,14 @@ namespace godot {
         if (polygonClosed || polygon.size() < 3) { return; }    // polygon needs to haev at least 3 edges
 
         polygonLength.push_back(polygonLength.back() + length(polygon.back() - vec2_d(polygon[0])));
+        
+
         polygon.push_back(polygon[0]);
         polygonClosed = true;
         update();
     }
 
-    void InverseMagneticBillard::iterate()
+    Vector2 InverseMagneticBillard::iterate()
     {
         //Godot::print("iteration point :");
         
@@ -141,19 +148,27 @@ namespace godot {
         currentPosition = nextIterate;
         currentDirection = normalize(vec2_d(-(center - nextIterate).y, (center - nextIterate).x));
 
-        
+        double anglePhasespace = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
+        double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
+        // TODO need to check if angle positive or negative right now
+        phaseSpaceTrajectory = { vec2_d(pos, abs(anglePhasespace) / M_PI) };
         count++;
         //trajectoryDraw.push_back(currentPosition.to_godot()); for debugging
+        //Godot::print(Vector2(currentIndexOnPolygon, currentIndexOnPolygon));
+        return Vector2(pos, abs(anglePhasespace) / M_PI);
     }
 
-    void InverseMagneticBillard::iterate_batch()
+    PoolVector2Array InverseMagneticBillard::iterate_batch(int batch)
     {
-        if (count + batch > maxCount) { return; }
+        PoolVector2Array coordinatesPhasespace = PoolVector2Array();
+        if (count + batch > maxCount) { return coordinatesPhasespace; }
+        coordinatesPhasespace.resize(batch);
         for (size_t i = 0; i < batch; i++)
         {
-            iterate();
+            coordinatesPhasespace.set(i, iterate());
         }
         update();
+        return coordinatesPhasespace;
     }
 
 

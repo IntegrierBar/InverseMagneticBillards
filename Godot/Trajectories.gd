@@ -18,6 +18,8 @@ extends Node2D
 
 onready var trajectory_scene = preload("res://Trajectory.tscn")
 
+onready var phase_space = $"../CanvasLayer/PhaseSpace"
+
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
 
@@ -45,8 +47,8 @@ var trajectory_to_edit: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	batch = 1
-	max_count = 100
+	batch = 100
+	max_count = 1000
 	radius = 1
 	polygon_closed = false
 	polygon = []
@@ -124,7 +126,7 @@ func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
 	var new_trajectorie = trajectory_scene.instance()
 	add_child(new_trajectorie)
 	trajectories.append(new_trajectorie)
-	new_trajectorie.batch = batch
+	#new_trajectorie.batch = batch
 	new_trajectorie.maxCount = max_count
 	new_trajectorie.trajectoryColor = color
 	for i in range(polygon.size() - 1):
@@ -135,11 +137,16 @@ func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
 		new_trajectorie.add_polygon_vertex(polygon.back())
 	new_trajectorie.set_initial_values(start, dir)
 	new_trajectorie.set_radius(radius)
+	# add trajectory to phasespace
+	phase_space.add_trajectory(color)
+	
 
 
 func iterate_batch():
-	for t in trajectories:
-		t.iterate_batch()
+	for i in range(trajectories.size()):
+		var coordsPhasespace = trajectories[i].iterate_batch(batch)
+		#print(coordsPhasespace)
+		phase_space.add_points_to_trajectory(i, coordsPhasespace)
 
 
 
