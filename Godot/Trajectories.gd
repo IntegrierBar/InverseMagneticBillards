@@ -47,8 +47,8 @@ var trajectory_to_edit: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	batch = 100
-	max_count = 1000
+	batch = 1000
+	max_count = 10000
 	radius = 1
 	polygon_closed = false
 	polygon = []
@@ -102,10 +102,13 @@ func close_polygon():
 	update()
 
 func clear_polygon():
+	print("clearing polygon")
 	polygon = []
 	polygon_closed = false
 	for t in trajectories:
 		t.clear_polygon()
+	# potentially put this some place else
+	phase_space.reset_trajectories()
 
 # prejects the point onto all sides of the polygon and returns the closest
 func snap_to_polygon(point: Vector2) -> Vector2:
@@ -193,6 +196,7 @@ func _on_ButtonClosePolygon_pressed():
 # user wants to input new start position
 func _on_ButtonStartPos_pressed():
 	current_state = STATES.SET_START
+	phase_space.reset_trajectories() # TODO THIS IS UGLY
 	#$"../CanvasLayer/Panel/LabelInstructions".text = "Click to choose a new start position"
 	$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new start position"
 

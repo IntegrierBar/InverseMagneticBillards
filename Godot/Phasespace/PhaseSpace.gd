@@ -51,6 +51,12 @@ func add_points_to_trajectory(index: int, points: Array):
 	#print(trajectories_to_draw[index])
 	update()
 
+func reset_trajectories():
+	trajectories_to_draw = []
+	for i in range(trajectory_count):
+		trajectories_to_draw.append([])
+	update()
+
 func rescale(points: Array) -> Array:
 	var rescaled_points = []
 	for p in points:

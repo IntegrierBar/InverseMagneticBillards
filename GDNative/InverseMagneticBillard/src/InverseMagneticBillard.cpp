@@ -64,7 +64,9 @@ namespace godot {
         polygon = {};
         polygonLength = {};
         //polygonToDraw = {}; // TODO check if this does not give errors
-        reset_trajectory();
+        //reset_trajectory();
+        trajectoryLines = {};
+        trajectoryCircles = {};
         update();
     }
 
@@ -234,7 +236,7 @@ namespace godot {
             if (0 <= t && t <= 1) // consider adding eps here as well
             {
                 double u = ((polygon[i].x - start.x) * (polygon[i].y - polygon[i + 1].y) - (polygon[i].y - start.y) * (polygon[i].x - polygon[i + 1].x)) / denominator;
-                if (i != currentIndexOnPolygon && u<min_distance) // TODO might need bigger coefficient, since u = 0 is also a solution. Could potentially use additional index to prevent this
+                if (i != currentIndexOnPolygon && u<min_distance && u > 0) // TODO might need bigger coefficient, since u = 0 is also a solution. Could potentially use additional index to prevent this
                 {
                     min_distance = u;
                     intersection = start + u * dir; // TODO there could be an error in this
@@ -343,6 +345,7 @@ namespace godot {
         vec2_d pointProjected;
         for (int i = 0; i < polygon.size() - 1; i++)
         {
+            Godot::print("should not reach");
             double t = (length_squared(currentPosition) - dot(currentPosition, polygon[i])) / dot(currentPosition, polygon[i + 1] - polygon[i]);
             // snap to corners of edge
             if (t < 0) {
