@@ -331,7 +331,11 @@ namespace godot {
     void InverseMagneticBillard::reset_trajectory()
     {
         // TODO safe initial direction
-        currentPosition = trajectory[0];
+        if (trajectory.size() > 0)
+        {
+            currentPosition = trajectory[0];
+        }
+        
         if (trajectory.size() > 1) {
             currentDirection = normalize(trajectory[1] - currentPosition);
         }
