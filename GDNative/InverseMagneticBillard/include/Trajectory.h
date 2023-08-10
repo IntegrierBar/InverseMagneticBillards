@@ -16,7 +16,6 @@ namespace godot {
 
         Color trajectoryColor = Color(0, 1, 0);
 
-        bool polygonClosed = false;
         std::vector<vec2_d> polygon;    // keep one structure for calculations
         std::vector<double> polygonLength;  // polygonLength[i] is the length from start to edge i, not including edge i (will always have size = polygon.size)
 
@@ -26,16 +25,21 @@ namespace godot {
         std::vector<vec2_d> trajectory;
         std::vector<vec2_d> phaseSpaceTrajectory;   // the trajectory points in the phase space [0,1] x [0,1] CONVENTION: first variable is coord on polygon, second is angle
         // use one long polyline for drawing
-        std::vector<Vector2> trajectoryLines;
+        std::vector<Vector2> trajectoryToDraw;  // call in manager class to draw
 
 
 		Trajectory();
 		~Trajectory();
 
         void set_initial_values(vec2_d start, vec2_d dir);
-        void set_initial_values(std::pair<vec2_d, vec2_d> pos); // use phasespace coords to set inital values
-	private:
+        void set_initial_values(vec2_d pos); // use phasespace coords to set inital values
+        void reset_trajectory();
 
+        void iterate();
+        void iterate_batch(int batch);
+	private:
+        std::pair<vec2_d, int> intersect_polygon_line(vec2_d start, vec2_d dir);
+        std::pair<vec2_d, int> intersect_polygon_circle(vec2_d start, vec2_d dir, vec2_d center);
 	};
 
 	

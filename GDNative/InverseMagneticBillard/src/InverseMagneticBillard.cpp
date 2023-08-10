@@ -88,7 +88,7 @@ namespace godot {
         else {
             if (polygon.size() > 0)
             {
-                if (polygonLength.size() < 1) {
+                if (polygonLength.size() < 1) { // TODO should be unneccessary now
                     polygonLength.push_back(length(polygon.back() - vec2_d(vertex)));
                 }
                 else {
