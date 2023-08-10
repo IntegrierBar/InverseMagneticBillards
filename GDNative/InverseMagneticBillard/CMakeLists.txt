@@ -5,6 +5,8 @@ set(SOURCES
     include/InverseMagneticBillard.h
     src/InverseMagneticBillard.cpp
     include/Vectors.h
+    include/Trajectory.h
+    src/Trajectory.cpp
     )
 
 if(EMSCRIPTEN)
