@@ -37,7 +37,11 @@ namespace godot {
     {
         // TODO consider using antialiasing and width
         for (auto& t : trajectories) {
-            draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
+            if (t.trajectoryToDraw.size() > 1)
+            {
+                draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
+            }
+            
         }
 
 
@@ -140,6 +144,7 @@ namespace godot {
         t.polygonLength = polygonLength;
 
         t.set_initial_values(vec2_d(start), vec2_d(dir));
+        trajectories.push_back(t);
     }
 
     void InverseMagneticBillard::remove_trajectory(int index)
@@ -163,6 +168,7 @@ namespace godot {
         }
         update();
         return coordinatesPhasespace;*/
+        update();
     }
 
 

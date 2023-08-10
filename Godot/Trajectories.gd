@@ -48,7 +48,7 @@ var trajectory_to_edit: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	batch = 1000
+	batch = 1
 	max_count = 10000
 	radius = 1
 	polygon_closed = false
@@ -154,7 +154,7 @@ func mouse_input():
 			current_state = STATES.SET_DIRECTION
 			$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new direction"
 		STATES.SET_DIRECTION:
-			trajectories[trajectory_to_edit].set_initial_values(newpos, get_global_mouse_position() - newpos)
+			trajectories.set_initial_values(trajectory_to_edit, newpos, get_global_mouse_position() - newpos)
 			current_state = STATES.ITERATE
 			$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = ""  # this can probably be done nicer
 
