@@ -45,6 +45,7 @@ namespace godot {
 
         trajectory = { currentPosition };
         trajectoryToDraw = {};
+        trajectoryToDraw.push_back(currentPosition.to_godot());
     }
 
     void Trajectory::set_initial_values(vec2_d pos)
@@ -64,6 +65,7 @@ namespace godot {
         phaseSpaceTrajectory = { pos };
         trajectory = { currentPosition };
         trajectoryToDraw = {};
+        trajectoryToDraw.push_back(currentPosition.to_godot());
     }
 
     void Trajectory::reset_trajectory()
@@ -99,7 +101,7 @@ namespace godot {
         }
 
         trajectory.resize(1);
-        trajectoryToDraw = {};
+        trajectoryToDraw.resize(1);
         phaseSpaceTrajectory.resize(1);
     }
 
@@ -162,7 +164,9 @@ namespace godot {
     void Trajectory::iterate_batch(int batch)
     {
         //PoolVector2Array coordinatesPhasespace = PoolVector2Array();
-        //if (count + batch > maxCount) { return coordinatesPhasespace; }
+        if (count + batch > maxCount) { 
+            return; //coordinatesPhasespace; 
+        }
         //coordinatesPhasespace.resize(batch);
         for (size_t i = 0; i < batch; i++)
         {

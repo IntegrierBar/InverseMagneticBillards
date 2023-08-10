@@ -16,7 +16,7 @@
 
 extends Node2D
 
-onready var trajectory_scene = preload("res://Trajectory.tscn")
+#onready var trajectory_scene = preload("res://Trajectory.tscn")
 
 onready var phase_space = $"../CanvasLayer/PhaseSpace"
 
@@ -30,7 +30,8 @@ var polygon: Array
 var polygon_color: Color
 var polygon_closed: bool
 
-var trajectories: Array
+onready var trajectories = $Trajectory
+
 var batch: int
 var max_count: int
 var radius: float
@@ -53,7 +54,6 @@ func _ready():
 	polygon_closed = false
 	polygon = []
 	polygon_color = Color(1, 1, 1)
-	trajectories = []
 	add_polygon_vertex(Vector2(0,0))
 	add_polygon_vertex(Vector2(10,0))
 	add_polygon_vertex(Vector2(0,-10))
@@ -88,16 +88,14 @@ func _draw():
 func add_polygon_vertex(vertex: Vector2):
 	if !polygon_closed:		# dont allow adding of vertices when polygon is closed
 		polygon.append(vertex)
-		for t in trajectories:
-			t.add_polygon_vertex(vertex)
+		trajectories.add_polygon_vertex(vertex)
 	update()
 
 func close_polygon():
 	if polygon_closed || polygon.size() < 3:
 		return
 	polygon.append(polygon[0])
-	for t in trajectories:		# TODO consider rethinking logic here to only call "add vertex" and remove close polygon from C++ code
-		t.close_polygon()
+	trajectories.close_polygon()
 	polygon_closed = true
 	update()
 
@@ -105,8 +103,7 @@ func clear_polygon():
 	print("clearing polygon")
 	polygon = []
 	polygon_closed = false
-	for t in trajectories:
-		t.clear_polygon()
+	trajectories.clear_polygon()
 	# potentially put this some place else
 	phase_space.reset_trajectories()
 
@@ -126,30 +123,17 @@ func snap_to_polygon(point: Vector2) -> Vector2:
 
 ##################### TRAJECTORIES #################################################################
 func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
-	var new_trajectorie = trajectory_scene.instance()
-	add_child(new_trajectorie)
-	trajectories.append(new_trajectorie)
-	#new_trajectorie.batch = batch
-	new_trajectorie.maxCount = max_count
-	new_trajectorie.trajectoryColor = color
-	for i in range(polygon.size() - 1):
-		new_trajectorie.add_polygon_vertex(polygon[i])
-	if polygon_closed:
-		new_trajectorie.close_polygon()
-	else:
-		new_trajectorie.add_polygon_vertex(polygon.back())
-	new_trajectorie.set_initial_values(start, dir)
-	new_trajectorie.set_radius(radius)
-	# add trajectory to phasespace
+	trajectories.add_trajectory(start, dir, color)
 	phase_space.add_trajectory(color)
 	
 
 
 func iterate_batch():
-	for i in range(trajectories.size()):
-		var coordsPhasespace = trajectories[i].iterate_batch(batch)
-		#print(coordsPhasespace)
-		phase_space.add_points_to_trajectory(i, coordsPhasespace)
+	trajectories.iterate_batch(batch)
+#	for i in range(trajectories.size()):
+#		var coordsPhasespace = trajectories[i].iterate_batch(batch)
+#		#print(coordsPhasespace)
+#		phase_space.add_points_to_trajectory(i, coordsPhasespace)
 
 
 

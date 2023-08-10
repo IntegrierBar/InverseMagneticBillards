@@ -4,6 +4,8 @@
 #include <Vector2.hpp>
 #include <vector>
 #include <Color.hpp>
+#include <Array.hpp>
+#include <PoolArrays.hpp>
 // Trajectory class
 
 namespace godot {
@@ -25,7 +27,7 @@ namespace godot {
         std::vector<vec2_d> trajectory;
         std::vector<vec2_d> phaseSpaceTrajectory;   // the trajectory points in the phase space [0,1] x [0,1] CONVENTION: first variable is coord on polygon, second is angle
         // use one long polyline for drawing
-        std::vector<Vector2> trajectoryToDraw;  // call in manager class to draw
+        PoolVector2Array trajectoryToDraw;
 
 
 		Trajectory();
@@ -37,6 +39,7 @@ namespace godot {
 
         void iterate();
         void iterate_batch(int batch);
+
 	private:
         std::pair<vec2_d, int> intersect_polygon_line(vec2_d start, vec2_d dir);
         std::pair<vec2_d, int> intersect_polygon_circle(vec2_d start, vec2_d dir, vec2_d center);
