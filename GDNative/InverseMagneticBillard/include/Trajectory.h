@@ -11,7 +11,7 @@
 namespace godot {
 	struct Trajectory {
 	public:
-        double eps = 1e-8;
+        double eps = 1e-8;  // TODO maybe make global eps or something?
         double radius = 1;
         int maxCount = 1000;
         int count = 0;  // how many interations are done

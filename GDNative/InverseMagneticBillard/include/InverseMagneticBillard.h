@@ -41,7 +41,6 @@ namespace godot {
         std::vector<double> polygonLength;  // polygonLength[i] is the length from start to vertex i, not including edge i (will always have size = polygon.size )
 
         std::vector<Trajectory> trajectories;
-        PoolVector2Array test;
         
 
         // Member functions

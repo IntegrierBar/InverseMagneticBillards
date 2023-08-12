@@ -42,7 +42,7 @@ namespace godot {
         // TODO need to check if angle positive or negative right now
         phaseSpaceTrajectory = { vec2_d((polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - pointProjected)) / polygonLength.back(), abs(angle) / M_PI) };
 
-
+        count = 0;
         trajectory = { currentPosition };
         trajectoryToDraw = {};
         trajectoryToDraw.push_back(currentPosition.to_godot());
@@ -62,6 +62,7 @@ namespace godot {
         mat2_d rotator = mat2_d(std::cos(M_PI * pos.y), -std::sin(M_PI * pos.y), std::sin(M_PI * pos.y), std::cos(M_PI * pos.y));
         currentDirection = rotator * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
 
+        count = 0;
         phaseSpaceTrajectory = { pos };
         trajectory = { currentPosition };
         trajectoryToDraw = {};
@@ -99,7 +100,7 @@ namespace godot {
                 currentIndexOnPolygon = i;
             }
         }
-
+        count = 0;
         trajectory.resize(1);
         trajectoryToDraw.resize(1);
         phaseSpaceTrajectory.resize(1);

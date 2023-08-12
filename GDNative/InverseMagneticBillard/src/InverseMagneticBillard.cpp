@@ -149,6 +149,7 @@ namespace godot {
 
     void InverseMagneticBillard::remove_trajectory(int index)
     {
+        // TODO
     }
 
     
