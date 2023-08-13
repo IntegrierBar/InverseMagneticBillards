@@ -29,6 +29,10 @@ config/icon="res://icon.png"
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/dockable_container/plugin.cfg" )
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true

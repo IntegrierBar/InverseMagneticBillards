@@ -1,9 +1,82 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
 [ext_resource path="res://Trajectories.gd" type="Script" id=3]
 [ext_resource path="res://Trajectory.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/dockable_container/layout_panel.gd" type="Script" id=5]
+[ext_resource path="res://addons/dockable_container/layout.gd" type="Script" id=6]
+[ext_resource path="res://addons/dockable_container/dockable_container.gd" type="Script" id=7]
+[ext_resource path="res://addons/dockable_container/layout_split.gd" type="Script" id=8]
+
+[sub_resource type="Resource" id=8]
+resource_name = "Tabs"
+script = ExtResource( 5 )
+names = PoolStringArray( "ControlPanel" )
+current_tab = 0
+
+[sub_resource type="Resource" id=11]
+resource_name = "Tabs"
+script = ExtResource( 5 )
+names = PoolStringArray( "Flowmap" )
+current_tab = 0
+
+[sub_resource type="Resource" id=12]
+resource_name = "Split"
+script = ExtResource( 8 )
+direction = 1
+percent = 0.5
+first = SubResource( 8 )
+second = SubResource( 11 )
+
+[sub_resource type="Resource" id=1]
+resource_name = "Tabs"
+script = ExtResource( 5 )
+names = PoolStringArray( "PolygonSpace" )
+current_tab = 0
+
+[sub_resource type="Resource" id=10]
+resource_name = "Split"
+script = ExtResource( 8 )
+direction = 0
+percent = 0.33871
+first = SubResource( 12 )
+second = SubResource( 1 )
+
+[sub_resource type="Resource" id=4]
+resource_name = "Tabs"
+script = ExtResource( 5 )
+names = PoolStringArray( "Phasespace" )
+current_tab = 0
+
+[sub_resource type="Resource" id=13]
+resource_name = "Tabs"
+script = ExtResource( 5 )
+names = PoolStringArray( "PSControlPanel" )
+current_tab = 0
+
+[sub_resource type="Resource" id=14]
+resource_name = "Split"
+script = ExtResource( 8 )
+direction = 1
+percent = 0.738281
+first = SubResource( 4 )
+second = SubResource( 13 )
+
+[sub_resource type="Resource" id=5]
+resource_name = "Split"
+script = ExtResource( 8 )
+direction = 0
+percent = 0.704036
+first = SubResource( 10 )
+second = SubResource( 14 )
+
+[sub_resource type="Resource" id=6]
+resource_name = "Layout"
+script = ExtResource( 6 )
+root = SubResource( 5 )
+hidden_tabs = {
+}
 
 [node name="InverseMagneticBillard" type="Node2D"]
 
@@ -19,197 +92,221 @@ __meta__ = {
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="PhaseSpace" type="TextureRect" parent="CanvasLayer"]
-margin_left = 41.0
-margin_top = 35.0
-margin_right = 300.0
-margin_bottom = 315.0
-script = ExtResource( 2 )
-
-[node name="Panel" type="Panel" parent="CanvasLayer"]
-anchor_left = 1.0
+[node name="DockableContainer" type="Container" parent="CanvasLayer"]
 anchor_right = 1.0
-margin_left = -326.0
-margin_top = 35.0
-margin_right = -41.0
-margin_bottom = 371.0
+anchor_bottom = 1.003
+margin_bottom = 0.200012
+script = ExtResource( 7 )
+tabs_visible = false
+layout = SubResource( 6 )
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Panel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 7.0
-margin_top = 7.0
-margin_right = -7.0
-margin_bottom = -7.0
+[node name="PolygonSpace" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
+margin_left = 252.155
+margin_top = 8.0
+margin_right = 710.933
+margin_bottom = 598.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer"]
-margin_right = 271.0
-margin_bottom = 322.0
+[node name="ControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
+margin_left = 4.0
+margin_top = 8.0
+margin_right = 232.155
+margin_bottom = 291.0
 
-[node name="ControlsTitle" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
-margin_right = 271.0
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/DockableContainer/ControlPanel"]
+margin_right = 228.155
+margin_bottom = 283.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer"]
+margin_right = 228.0
+margin_bottom = 283.0
+
+[node name="ControlsTitle" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer"]
+margin_right = 228.0
 margin_bottom = 14.0
 text = "Inverse Magnetic Billards Control"
 align = 1
 
-[node name="Iterations" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+[node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer"]
 margin_top = 18.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 74.0
 size_flags_horizontal = 3
 
-[node name="IterationsLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations"]
-margin_right = 271.0
+[node name="IterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Iterations"]
+margin_right = 228.0
 margin_bottom = 14.0
 text = "Iterations"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Iterations"]
 margin_top = 18.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 38.0
 
-[node name="Label" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Iterations/HBoxContainer"]
 margin_top = 3.0
 margin_right = 133.0
 margin_bottom = 17.0
 size_flags_horizontal = 3
 text = "Draw iteration batch:"
 
-[node name="IterateButton" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer"]
+[node name="IterateButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Iterations/HBoxContainer"]
 margin_left = 137.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Iterate"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Iterations"]
 margin_top = 42.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 56.0
 
-[node name="Label" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer2"]
-margin_right = 133.0
+[node name="Label" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Iterations/HBoxContainer2"]
+margin_right = 112.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Set #iterations: "
 
-[node name="TextEdit" type="TextEdit" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer2"]
-margin_left = 137.0
-margin_right = 271.0
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Iterations/HBoxContainer2"]
+margin_left = 116.0
+margin_right = 228.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "1
 "
 
-[node name="Radius" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+[node name="Radius" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer"]
 margin_top = 78.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 110.0
 size_flags_horizontal = 3
 
-[node name="RadiusLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius"]
-margin_right = 271.0
+[node name="RadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Radius"]
+margin_right = 228.0
 margin_bottom = 14.0
 text = "Radius"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Radius"]
 margin_top = 18.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 32.0
 
-[node name="SetRadiusLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius/HBoxContainer"]
-margin_right = 133.0
+[node name="SetRadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Radius/HBoxContainer"]
+margin_right = 112.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 6
 text = "Set radius: "
 
-[node name="SetRadiusTextEdit" type="TextEdit" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius/HBoxContainer"]
-margin_left = 137.0
-margin_right = 271.0
+[node name="SetRadiusTextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Radius/HBoxContainer"]
+margin_left = 116.0
+margin_right = 228.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "1 "
 
-[node name="Polygon" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
+[node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer"]
 margin_top = 114.0
-margin_right = 271.0
-margin_bottom = 207.0
+margin_right = 228.0
+margin_bottom = 194.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="PolygonLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon"]
-margin_right = 271.0
+[node name="PolygonLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Polygon"]
+margin_right = 228.0
 margin_bottom = 14.0
 text = "Polygon"
 
-[node name="ButtonPolygon" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon"]
+[node name="ButtonPolygon" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Polygon"]
 margin_top = 18.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 38.0
 text = "Choose new polygon"
 
-[node name="ButtonClosePolygon" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon"]
+[node name="ButtonClosePolygon" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Polygon"]
 margin_top = 42.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 62.0
 text = "Close Contour"
 
-[node name="LabelInstructions" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon"]
+[node name="LabelInstructions" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Polygon"]
 margin_top = 66.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 80.0
 
-[node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
-margin_top = 211.0
-margin_right = 271.0
-margin_bottom = 304.0
+[node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer"]
+margin_top = 198.0
+margin_right = 228.0
+margin_bottom = 265.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TrajectoriesLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories"]
-margin_right = 271.0
+[node name="TrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Trajectories"]
+margin_right = 228.0
 margin_bottom = 14.0
 text = "Trajectories"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Trajectories"]
 margin_top = 18.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 38.0
 
-[node name="ButtonStartPos" type="Button" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/HBoxContainer"]
-margin_right = 133.0
+[node name="ButtonStartPos" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Trajectories/HBoxContainer"]
+margin_right = 129.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "New start position"
 
-[node name="TextEdit" type="TextEdit" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/HBoxContainer"]
-margin_left = 137.0
-margin_right = 271.0
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Trajectories/HBoxContainer"]
+margin_left = 133.0
+margin_right = 228.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories"]
+[node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Trajectories"]
 margin_top = 42.0
-margin_right = 271.0
+margin_right = 228.0
 margin_bottom = 56.0
 
-[node name="Other" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
-margin_top = 308.0
-margin_right = 271.0
-margin_bottom = 322.0
+[node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer"]
+margin_top = 269.0
+margin_right = 228.0
+margin_bottom = 283.0
 
-[node name="CurrentMousePosition" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Other"]
-margin_right = 271.0
+[node name="CurrentMousePosition" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Other"]
+margin_right = 228.0
 margin_bottom = 14.0
 
-[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Iterations/HBoxContainer/IterateButton" to="Trajectories" method="_on_Button_pressed"]
-[connection signal="text_changed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="Trajectories" method="_on_TextEdit_text_changed"]
-[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/ButtonPolygon" to="Trajectories" method="_on_ButtonPolygon_pressed"]
-[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="Trajectories" method="_on_ButtonClosePolygon_pressed"]
-[connection signal="pressed" from="CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos" to="Trajectories" method="_on_ButtonStartPos_pressed"]
+[node name="Phasespace" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
+margin_left = 730.933
+margin_top = 8.0
+margin_right = 1020.0
+margin_bottom = 434.445
+
+[node name="PhaseSpace" type="TextureRect" parent="CanvasLayer/DockableContainer/Phasespace"]
+margin_right = 289.067
+margin_bottom = 426.445
+script = ExtResource( 2 )
+
+[node name="PSControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
+margin_left = 730.933
+margin_top = 458.445
+margin_right = 1020.0
+margin_bottom = 598.0
+
+[node name="Flowmap" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
+margin_left = 4.0
+margin_top = 315.0
+margin_right = 232.155
+margin_bottom = 598.0
+
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Iterations/HBoxContainer/IterateButton" to="Trajectories" method="_on_Button_pressed"]
+[connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="Trajectories" method="_on_TextEdit_text_changed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Polygon/ButtonPolygon" to="Trajectories" method="_on_ButtonPolygon_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="Trajectories" method="_on_ButtonClosePolygon_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/MarginContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos" to="Trajectories" method="_on_ButtonStartPos_pressed"]
