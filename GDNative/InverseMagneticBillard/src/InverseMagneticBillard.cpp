@@ -12,7 +12,7 @@ namespace godot {
 
     void InverseMagneticBillard::_register_methods()
     {
-        register_method((char*)"_process", &InverseMagneticBillard::_process);
+        //register_method((char*)"_process", &InverseMagneticBillard::_process);
         register_method((char*)"_draw", &InverseMagneticBillard::_draw);
         register_method((char*)"clear_polygon", &InverseMagneticBillard::clear_polygon);
         register_method((char*)"add_polygon_vertex", &InverseMagneticBillard::add_polygon_vertex);
@@ -21,6 +21,8 @@ namespace godot {
         register_method((char*)"set_initial_values", &InverseMagneticBillard::set_initial_values);
         register_method((char*)"add_trajectory", &InverseMagneticBillard::add_trajectory);
         register_method((char*)"remove_trajectory", &InverseMagneticBillard::remove_trajectory);
+        register_method((char*)"get_trajectory_colors", &InverseMagneticBillard::get_trajectory_colors);
+        register_method((char*)"set_color", &InverseMagneticBillard::set_color);
         register_method((char*)"reset_trajectories", &InverseMagneticBillard::reset_trajectories);
         register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch);
         register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
@@ -76,7 +78,7 @@ namespace godot {
         update();
     }
 
-    // CURRENTLY BETTER NOT USED
+    // CURRENTLY BETTER NOT USED. // DAFUC U TALKING?
     void InverseMagneticBillard::add_polygon_vertex(Vector2 vertex)
     {
         //Godot::print("add vertex to polygon");
@@ -126,11 +128,19 @@ namespace godot {
 
         // only update polygon for the trajectories, once polygon is closed
         for (auto& t : trajectories) {
-            t.polygon = polygon;
-            t.polygonLength = polygonLength;
+            t.set_polygon(polygon, polygonLength);
         }
 
         update();
+    }
+
+    void InverseMagneticBillard::make_regular_ngon(int n, double radius)
+    {
+        for (size_t i = 0; i < n; i++)
+        {
+            add_polygon_vertex(Vector2(radius * std::cos(2 * M_PI * i / n), radius * std::sin(2 * M_PI * i / n)));
+        }
+        close_polygon();
     }
 
     void InverseMagneticBillard::add_trajectory(Vector2 start, Vector2 dir, Color color)
@@ -149,16 +159,21 @@ namespace godot {
 
     void InverseMagneticBillard::remove_trajectory(int index)
     {
-        // TODO
+        trajectories.erase(trajectories.begin() + index);
     }
 
-    
-
-    void InverseMagneticBillard::iterate_batch(int batch)
+    void InverseMagneticBillard::clear_trajectories()
     {
+        trajectories = {};
+    }
+
+    Array InverseMagneticBillard::iterate_batch(int batch)
+    {
+        Array phaseSpace;
+        //phaseSpace.resize(trajectories.size());
         for (auto& t : trajectories)
         {
-            t.iterate_batch(batch);
+            phaseSpace.push_back(t.iterate_batch(batch));
         }
         /*PoolVector2Array coordinatesPhasespace = PoolVector2Array();
         if (count + batch > maxCount) { return coordinatesPhasespace; }
@@ -170,9 +185,8 @@ namespace godot {
         update();
         return coordinatesPhasespace;*/
         update();
+        return phaseSpace;
     }
-
-
 
     void InverseMagneticBillard::set_initial_values(int index, Vector2 start, Vector2 dir)
     {
@@ -180,7 +194,19 @@ namespace godot {
         update();
     }
 
+    void InverseMagneticBillard::set_color(int index, Color c)
+    {
+        trajectories[index].trajectoryColor = c;
+    }
 
+    PoolColorArray InverseMagneticBillard::get_trajectory_colors()
+    {
+        PoolColorArray colors;
+        for (const auto& t : trajectories) {
+            colors.push_back(t.trajectoryColor);
+        }
+        return colors;
+    }
 
     void InverseMagneticBillard::set_radius(double r)
     {
@@ -193,8 +219,6 @@ namespace godot {
         update();
     }
 
-
-
     void InverseMagneticBillard::reset_trajectories()
     {
         for (auto& t : trajectories)
@@ -203,7 +227,5 @@ namespace godot {
         }
         update();
     }
-
-    
 
 }
