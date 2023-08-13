@@ -27,10 +27,12 @@ margin_bottom = 315.0
 script = ExtResource( 2 )
 
 [node name="Panel" type="Panel" parent="CanvasLayer"]
-margin_left = 720.0
-margin_top = 45.0
-margin_right = 1005.0
-margin_bottom = 382.0
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -326.0
+margin_top = 35.0
+margin_right = -41.0
+margin_bottom = 371.0
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Panel"]
 anchor_right = 1.0
@@ -42,7 +44,7 @@ margin_bottom = -7.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer"]
 margin_right = 271.0
-margin_bottom = 323.0
+margin_bottom = 322.0
 
 [node name="ControlsTitle" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
 margin_right = 271.0
@@ -164,7 +166,7 @@ margin_bottom = 80.0
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
 margin_top = 211.0
 margin_right = 271.0
-margin_bottom = 305.0
+margin_bottom = 304.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -198,9 +200,9 @@ margin_right = 271.0
 margin_bottom = 56.0
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer"]
-margin_top = 309.0
+margin_top = 308.0
 margin_right = 271.0
-margin_bottom = 323.0
+margin_bottom = 322.0
 
 [node name="CurrentMousePosition" type="Label" parent="CanvasLayer/Panel/MarginContainer/VBoxContainer/Other"]
 margin_right = 271.0
