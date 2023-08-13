@@ -35,7 +35,7 @@ namespace godot {
         // Member fields
         double radius = 1;
 
-        int maxCount = 1000;
+        int maxCount = 100;
 
         bool polygonClosed = false;
         std::vector<vec2_d> polygon;    // keep one structure for calculations

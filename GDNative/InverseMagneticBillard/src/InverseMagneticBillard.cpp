@@ -78,7 +78,7 @@ namespace godot {
         update();
     }
 
-    // CURRENTLY BETTER NOT USED
+    // CURRENTLY BETTER NOT USED. // DAFUC U TALKING?
     void InverseMagneticBillard::add_polygon_vertex(Vector2 vertex)
     {
         //Godot::print("add vertex to polygon");
@@ -138,8 +138,9 @@ namespace godot {
     {
         for (size_t i = 0; i < n; i++)
         {
-            int j = 0;
+            add_polygon_vertex(Vector2(radius * std::cos(2 * M_PI * i / n), radius * std::sin(2 * M_PI * i / n)));
         }
+        close_polygon();
     }
 
     void InverseMagneticBillard::add_trajectory(Vector2 start, Vector2 dir, Color color)
@@ -166,8 +167,6 @@ namespace godot {
         trajectories = {};
     }
 
-    
-
     Array InverseMagneticBillard::iterate_batch(int batch)
     {
         Array phaseSpace;
@@ -189,10 +188,6 @@ namespace godot {
         return phaseSpace;
     }
 
-
-
-
-
     void InverseMagneticBillard::set_initial_values(int index, Vector2 start, Vector2 dir)
     {
         trajectories[index].set_initial_values(start, dir);
@@ -213,8 +208,6 @@ namespace godot {
         return colors;
     }
 
-
-
     void InverseMagneticBillard::set_radius(double r)
     {
         radius = r;
@@ -226,8 +219,6 @@ namespace godot {
         update();
     }
 
-
-
     void InverseMagneticBillard::reset_trajectories()
     {
         for (auto& t : trajectories)
@@ -236,7 +227,5 @@ namespace godot {
         }
         update();
     }
-
-    
 
 }

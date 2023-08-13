@@ -230,6 +230,11 @@ namespace godot {
                 }
             }
         }
+        // If we don't find any other intersection, then this is because we are at a polygon vertex. In this case just keep going
+        if (min_distance == INFINITY)
+        {
+            return std::make_pair(currentPosition, currentIndexOnPolygon);
+        }
         //if (intersections.size() == 0) return std::make_pair(vec2_d(0,0), 0); // if this happens, we got an upsi
         //auto u = std::min_element(intersections.begin(), intersections.end());   // calculate the smallest u, since that will be the one with the first intersection (only relevant if polygon not convex)
         return std::make_pair(intersection, index);
@@ -245,7 +250,7 @@ namespace godot {
 
         int index = 0;
         vec2_d intersectionPoint = vec2_d(0, 0);
-        double smallestAngle = 400;
+        double smallestAngle = INFINITY;
         double angleStart = (start - center).angle();
         // iterate through the kanten of the polygon to calculate also maybe here use index of which kante we are on polygon
         for (size_t i = 0; i < polygon.size() - 1; i++)
@@ -259,13 +264,13 @@ namespace godot {
             double b = 2 * dot(polygon[i] - center, d);
             double c = length_squared(center - polygon[i]) - radius * radius;
             double discriminant = b * b - 4 * a * c;
-            if (discriminant < eps)
+            if (discriminant < 0) // maybe need eps here?
             {
                 continue;
             }
             discriminant = std::sqrt(discriminant);
             double t = (-b - discriminant) / (2 * a);  // TODO consider optimising here as well with regards to error cancelations
-            if (0 < t && t < 1) { // consider using eps here
+            if (0 <= t && t <= 1) { // consider using eps here
                 vec2_d intersection = polygon[i] + t * d;
                 if (length_squared(intersection - start) > eps) // check if intersection point is different from starting point TODO Maybe something smarte with angle might be possible here
                 {
@@ -279,7 +284,7 @@ namespace godot {
                 }
             }
             t = (-b + discriminant) / (2 * a); // also check the other intersection
-            if (0 < t && t < 1) { // consider using eps here
+            if (0 <= t && t <= 1) { // consider using eps here
                 vec2_d intersection = polygon[i] + t * d;
                 if (length_squared(intersection - start) > eps)
                 {
@@ -307,6 +312,11 @@ namespace godot {
         //    }
         //}
 
+        // we dont find any intersections if the circle intersection directly at a polygon vertex. In this case just return next polygon vertex as intersectionPoint
+        if (smallestAngle == INFINITY)
+        {
+            return std::make_pair(polygon[currentIndexOnPolygon + 1], currentIndexOnPolygon + 1);
+        }
         return std::make_pair(intersectionPoint, index);
     }
     

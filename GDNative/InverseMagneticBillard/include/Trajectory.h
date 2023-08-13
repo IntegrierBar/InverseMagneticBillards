@@ -13,7 +13,7 @@ namespace godot {
 	public:
         double eps = 1e-8;  // TODO maybe make global eps or something?
         double radius = 1;
-        int maxCount = 1000;    // how many iteration should be drawn. Will still compute more iterations after this but wont add to "trajectoryToDraw"
+        int maxCount = 100;    // how many iteration should be drawn. Will still compute more iterations after this but wont add to "trajectoryToDraw"
         int count = 0;  // how many interations are done
 
         Color trajectoryColor = Color(0, 1, 0);

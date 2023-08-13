@@ -48,8 +48,8 @@ var trajectory_to_edit: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	batch = 100000
-	trajectories.maxCount = 10
+	batch = 10
+	trajectories.maxCount = 1000
 	radius = 1
 	polygon_closed = false
 	polygon = []
