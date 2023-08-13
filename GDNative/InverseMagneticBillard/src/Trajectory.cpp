@@ -71,7 +71,6 @@ namespace godot {
 
     void Trajectory::reset_trajectory()
     {
-        // TODO safe initial direction
         if (trajectory.size() > 0)
         {
             currentPosition = trajectory[0];
@@ -107,8 +106,7 @@ namespace godot {
     }
 
 
-    /// TODO
-    void Trajectory::iterate()
+    Vector2 Trajectory::iterate()
     {
         //Godot::print("iteration point :");
 
@@ -117,40 +115,49 @@ namespace godot {
         vec2_d nextIterate = intersection.first;
         currentIndexOnPolygon = intersection.second;
         trajectory.push_back(nextIterate);
-        trajectoryToDraw.push_back(nextIterate.to_godot());   // is done together with the circle
+        if (count < maxCount)
+        {
+            trajectoryToDraw.push_back(nextIterate.to_godot());   // is done together with the circle
+        }
+        
         currentPosition = nextIterate;  // direction stays the same
 
-        ////////////////////////////////////////////////////// TODO drawing \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        
         // the cirlce outide the polygon
         vec2_d center = currentPosition + radius * vec2_d(currentDirection.y, -currentDirection.x); // center of the circle
         auto next = intersect_polygon_circle(currentPosition, currentPosition, center);
         nextIterate = next.first;
         currentIndexOnPolygon = next.second;
         //double angle = std::atan2(det((currentPosition - center), (nextIterate - center)), dot((currentPosition - center), (nextIterate - center))); // dont touch it magically works
-        double angle = angle_between( (nextIterate - center), (currentPosition - center));
-        if (angle < 0)
+        if (count < maxCount)
         {
-            angle += 2 * M_PI;
-        }
-
-        int n = int(radius * 20);   // to draw a circle, we draw a regular n-gon. Use radius to dynamically upscale
-
-        // divide angle for step size
-        double step =  -angle / double(n);
-        mat2_d rotation = mat2_d(std::cos(step), -std::sin(step), std::sin(step), std::cos(step));
-        vec2_d currentAngle = currentPosition - center; // line from center to point on circle
-        for (size_t i = 0; i < n; i++)
-        {
-            currentAngle = rotation * currentAngle;
-            trajectoryToDraw.push_back( (currentAngle + center).to_godot() );
-            
-            // IDEA: rotate start point around circle n times, until done
-            /*vec2_d vertex = vec2_d(radius * cos(-2 * M_PI * i / n), radius * sin(-2 * M_PI * i / n)) + center;
-            if ((vertex - center).angle() < (currentPosition-center).angle() && (vertex - center).angle() > (nextIterate - center).angle())
+            double angle = angle_between((nextIterate - center), (currentPosition - center));
+            if (angle < 0)
             {
-                trajectoryToDraw.push_back(vertex.to_godot());
-            }*/
+                angle += 2 * M_PI;
+            }
+
+            int n = int(radius * 20);   // to draw a circle, we draw a regular n-gon. Use radius to dynamically upscale
+
+            // divide angle for step size
+            double step = -angle / double(n);
+            mat2_d rotation = mat2_d(std::cos(step), -std::sin(step), std::sin(step), std::cos(step));
+            vec2_d currentAngle = currentPosition - center; // line from center to point on circle
+            for (size_t i = 0; i < n; i++)
+            {
+                currentAngle = rotation * currentAngle;
+                trajectoryToDraw.push_back((currentAngle + center).to_godot());
+
+                // IDEA: rotate start point around circle n times, until done
+                /*vec2_d vertex = vec2_d(radius * cos(-2 * M_PI * i / n), radius * sin(-2 * M_PI * i / n)) + center;
+                if ((vertex - center).angle() < (currentPosition-center).angle() && (vertex - center).angle() > (nextIterate - center).angle())
+                {
+                    trajectoryToDraw.push_back(vertex.to_godot());
+                }*/
+            }
+            trajectoryToDraw.push_back(nextIterate.to_godot());
         }
+        
         //if (angle < 0)
         //{
         //    trajectoryCircles.push_back({ center, (currentPosition - center).angle(), (currentPosition - center).angle() + angle });
@@ -160,35 +167,41 @@ namespace godot {
         //    trajectoryCircles.push_back({ center, (currentPosition - center).angle() + angle, (currentPosition - center).angle() + 2 * M_PI });
         //}
         trajectory.push_back(nextIterate);
-        trajectoryToDraw.push_back(nextIterate.to_godot());
+        
         currentPosition = nextIterate;
         currentDirection = normalize(vec2_d(-(center - nextIterate).y, (center - nextIterate).x));
 
         double anglePhasespace = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
         double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
-        // TODO need to check if angle positive or negative right now
         phaseSpaceTrajectory = { vec2_d(pos, abs(anglePhasespace) / M_PI) };
         count++;
-        //trajectoryDraw.push_back(currentPosition.to_godot()); for debugging
-        //Godot::print(Vector2(currentIndexOnPolygon, currentIndexOnPolygon));
-        //return Vector2(pos, abs(anglePhasespace) / M_PI);
+        return Vector2(pos, abs(anglePhasespace) / M_PI);
     }
 
     // iterate batch
-    void Trajectory::iterate_batch(int batch)
+    PoolVector2Array Trajectory::iterate_batch(int batch)
     {
-        Godot::print("iterating batch");
-        //PoolVector2Array coordinatesPhasespace = PoolVector2Array();
-        if (count + batch > maxCount) { 
-            return; //coordinatesPhasespace; 
-        }
-        //coordinatesPhasespace.resize(batch);
+        PoolVector2Array coordinatesPhasespace = PoolVector2Array();
+        //if (count + batch > maxCount) { 
+        //    return coordinatesPhasespace; 
+        //}
+        coordinatesPhasespace.resize(batch);
         for (size_t i = 0; i < batch; i++)
         {
-            //coordinatesPhasespace.set(i, iterate());
-            iterate();
+            coordinatesPhasespace.set(i, iterate());
         }
-        //return coordinatesPhasespace;
+        return coordinatesPhasespace;
+    }
+
+    void Trajectory::set_polygon(std::vector<vec2_d> p, std::vector<double> l)
+    {
+        polygon = p;
+        polygonLength = l;
+        if (phaseSpaceTrajectory.size() > 0)
+        {
+            set_initial_values(phaseSpaceTrajectory[0]);
+        }
+        
     }
 
     // return both the point and the index of the intersection edge
@@ -296,4 +309,5 @@ namespace godot {
 
         return std::make_pair(intersectionPoint, index);
     }
+    
 }

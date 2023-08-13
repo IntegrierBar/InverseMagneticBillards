@@ -48,8 +48,8 @@ var trajectory_to_edit: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	batch = 1
-	max_count = 10000
+	batch = 100000
+	trajectories.maxCount = 10
 	radius = 1
 	polygon_closed = false
 	polygon = []
@@ -124,12 +124,13 @@ func snap_to_polygon(point: Vector2) -> Vector2:
 ##################### TRAJECTORIES #################################################################
 func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
 	trajectories.add_trajectory(start, dir, color)
-	phase_space.add_trajectory(color)
+	#phase_space.add_trajectory(color)
 	
 
 
 func iterate_batch():
-	trajectories.iterate_batch(batch)
+	var phase_space_points = trajectories.iterate_batch(batch)
+	phase_space.add_points_to_image(phase_space_points, trajectories.get_trajectory_colors())
 #	for i in range(trajectories.size()):
 #		var coordsPhasespace = trajectories[i].iterate_batch(batch)
 #		#print(coordsPhasespace)
@@ -180,7 +181,7 @@ func _on_ButtonClosePolygon_pressed():
 # user wants to input new start position
 func _on_ButtonStartPos_pressed():
 	current_state = STATES.SET_START
-	phase_space.reset_trajectories() # TODO THIS IS UGLY
+	phase_space.reset_image() # TODO THIS IS UGLY
 	#$"../CanvasLayer/Panel/LabelInstructions".text = "Click to choose a new start position"
 	$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new start position"
 

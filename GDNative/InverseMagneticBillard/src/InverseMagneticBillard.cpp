@@ -12,7 +12,7 @@ namespace godot {
 
     void InverseMagneticBillard::_register_methods()
     {
-        register_method((char*)"_process", &InverseMagneticBillard::_process);
+        //register_method((char*)"_process", &InverseMagneticBillard::_process);
         register_method((char*)"_draw", &InverseMagneticBillard::_draw);
         register_method((char*)"clear_polygon", &InverseMagneticBillard::clear_polygon);
         register_method((char*)"add_polygon_vertex", &InverseMagneticBillard::add_polygon_vertex);
@@ -21,6 +21,8 @@ namespace godot {
         register_method((char*)"set_initial_values", &InverseMagneticBillard::set_initial_values);
         register_method((char*)"add_trajectory", &InverseMagneticBillard::add_trajectory);
         register_method((char*)"remove_trajectory", &InverseMagneticBillard::remove_trajectory);
+        register_method((char*)"get_trajectory_colors", &InverseMagneticBillard::get_trajectory_colors);
+        register_method((char*)"set_color", &InverseMagneticBillard::set_color);
         register_method((char*)"reset_trajectories", &InverseMagneticBillard::reset_trajectories);
         register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch);
         register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
@@ -126,11 +128,18 @@ namespace godot {
 
         // only update polygon for the trajectories, once polygon is closed
         for (auto& t : trajectories) {
-            t.polygon = polygon;
-            t.polygonLength = polygonLength;
+            t.set_polygon(polygon, polygonLength);
         }
 
         update();
+    }
+
+    void InverseMagneticBillard::make_regular_ngon(int n, double radius)
+    {
+        for (size_t i = 0; i < n; i++)
+        {
+            int j = 0;
+        }
     }
 
     void InverseMagneticBillard::add_trajectory(Vector2 start, Vector2 dir, Color color)
@@ -149,16 +158,23 @@ namespace godot {
 
     void InverseMagneticBillard::remove_trajectory(int index)
     {
-        // TODO
+        trajectories.erase(trajectories.begin() + index);
+    }
+
+    void InverseMagneticBillard::clear_trajectories()
+    {
+        trajectories = {};
     }
 
     
 
-    void InverseMagneticBillard::iterate_batch(int batch)
+    Array InverseMagneticBillard::iterate_batch(int batch)
     {
+        Array phaseSpace;
+        //phaseSpace.resize(trajectories.size());
         for (auto& t : trajectories)
         {
-            t.iterate_batch(batch);
+            phaseSpace.push_back(t.iterate_batch(batch));
         }
         /*PoolVector2Array coordinatesPhasespace = PoolVector2Array();
         if (count + batch > maxCount) { return coordinatesPhasespace; }
@@ -170,7 +186,10 @@ namespace godot {
         update();
         return coordinatesPhasespace;*/
         update();
+        return phaseSpace;
     }
+
+
 
 
 
@@ -178,6 +197,20 @@ namespace godot {
     {
         trajectories[index].set_initial_values(start, dir);
         update();
+    }
+
+    void InverseMagneticBillard::set_color(int index, Color c)
+    {
+        trajectories[index].trajectoryColor = c;
+    }
+
+    PoolColorArray InverseMagneticBillard::get_trajectory_colors()
+    {
+        PoolColorArray colors;
+        for (const auto& t : trajectories) {
+            colors.push_back(t.trajectoryColor);
+        }
+        return colors;
     }
 
 

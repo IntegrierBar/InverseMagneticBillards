@@ -13,7 +13,7 @@ namespace godot {
 	public:
         double eps = 1e-8;  // TODO maybe make global eps or something?
         double radius = 1;
-        int maxCount = 1000;
+        int maxCount = 1000;    // how many iteration should be drawn. Will still compute more iterations after this but wont add to "trajectoryToDraw"
         int count = 0;  // how many interations are done
 
         Color trajectoryColor = Color(0, 1, 0);
@@ -37,8 +37,11 @@ namespace godot {
         void set_initial_values(vec2_d pos); // use phasespace coords to set inital values
         void reset_trajectory();
 
-        void iterate();
-        void iterate_batch(int batch);
+        // set polygon keeps the inital phasespace coords
+        void set_polygon(std::vector<vec2_d> p, std::vector<double> l);
+
+        Vector2 iterate();
+        PoolVector2Array iterate_batch(int batch);
 
 	private:
         std::pair<vec2_d, int> intersect_polygon_line(vec2_d start, vec2_d dir);
