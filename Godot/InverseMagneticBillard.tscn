@@ -336,9 +336,28 @@ margin_top = 8.0
 margin_right = 1020.0
 margin_bottom = 434.445
 
-[node name="PhaseSpace" type="TextureRect" parent="CanvasLayer/DockableContainer/Phasespace"]
+[node name="ViewportContainer" type="ViewportContainer" parent="CanvasLayer/DockableContainer/Phasespace"]
+margin_left = 2.0
+margin_top = 2.0
 margin_right = 289.067
 margin_bottom = 426.445
+stretch = true
+script = ExtResource( 10 )
+
+[node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer"]
+size = Vector2( 287, 424 )
+physics_object_picking = true
+script = ExtResource( 11 )
+
+[node name="Camera2D" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" instance=ExtResource( 1 )]
+_zoom_level = 2.0
+
+[node name="PhaseSpace" type="TextureRect" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
+margin_left = -150.0
+margin_top = -400.0
+margin_right = 227.067
+margin_bottom = 326.445
+expand = true
 script = ExtResource( 2 )
 
 [node name="PSControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
@@ -358,3 +377,4 @@ margin_bottom = 598.0
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonStartPos_pressed"]
+[connection signal="size_changed" from="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_Viewport_size_changed"]
