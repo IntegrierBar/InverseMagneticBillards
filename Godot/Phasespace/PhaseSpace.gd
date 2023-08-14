@@ -8,15 +8,16 @@ var trajectories_colors: Array = []
 var trajectory_count = 0
 
 var phase_space: Image
-var sizex = rect_size.x
-var sizey = rect_size.y
+var background : ImageTexture = null
+onready var sizex = rect_size.x
+onready var sizey = rect_size.y
 
 func _ready():
 	phase_space = Image.new()
 	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
 	phase_space.fill(Color.black)
 	
-	var background = ImageTexture.new()
+	background = ImageTexture.new()
 	background.create_from_image(phase_space)
 	self.texture = background
 
@@ -25,10 +26,15 @@ func reset_image():
 	update()
 
 func rescale_image(size):
+	print(size)
 	sizex = size.x
 	sizey = size.y
 	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
 	phase_space.fill(Color.black)
+	
+	var background = ImageTexture.new()
+	background.create_from_image(phase_space)
+	self.texture = background
 	update()
 
 func rescale(points: Array) -> Array:
@@ -40,14 +46,15 @@ func rescale(points: Array) -> Array:
 
 # Array is an array of arrays, each inner array corresponds to a color
 func add_points_to_image(points: Array, colors: PoolColorArray):
+	print("adding points")
 	phase_space.lock()
 	for i in range(colors.size()):
 		for point in rescale(points[i]):
+			print(point)
 			phase_space.set_pixelv(point, colors[i])
 	phase_space.unlock()
 	# set image
-	var background = ImageTexture.new()
-	background.create_from_image(phase_space)
+	background.set_data(phase_space)
 	self.texture = background
 	update()
 

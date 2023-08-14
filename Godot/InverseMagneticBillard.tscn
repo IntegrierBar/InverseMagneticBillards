@@ -62,7 +62,7 @@ current_tab = 0
 resource_name = "Split"
 script = ExtResource( 8 )
 direction = 1
-percent = 0.738281
+percent = 0.515625
 first = SubResource( 4 )
 second = SubResource( 13 )
 
@@ -109,8 +109,11 @@ stretch = true
 script = ExtResource( 10 )
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer"]
+size = Vector2( 458, 590 )
+handle_input_locally = false
 disable_3d = true
 usage = 0
+render_target_update_mode = 3
 physics_object_picking = true
 script = ExtResource( 11 )
 
@@ -334,35 +337,45 @@ clip_text = true
 margin_left = 730.933
 margin_top = 8.0
 margin_right = 1020.0
-margin_bottom = 434.445
+margin_bottom = 300.406
 
 [node name="ViewportContainer" type="ViewportContainer" parent="CanvasLayer/DockableContainer/Phasespace"]
-margin_left = 2.0
-margin_top = 2.0
 margin_right = 289.067
-margin_bottom = 426.445
+margin_bottom = 292.406
 stretch = true
 script = ExtResource( 10 )
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer"]
-size = Vector2( 287, 424 )
+size = Vector2( 289, 292 )
+handle_input_locally = false
+render_target_update_mode = 3
 physics_object_picking = true
 script = ExtResource( 11 )
 
 [node name="Camera2D" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" instance=ExtResource( 1 )]
 _zoom_level = 2.0
 
-[node name="PhaseSpace" type="TextureRect" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
-margin_left = -150.0
-margin_top = -400.0
-margin_right = 227.067
-margin_bottom = 326.445
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
+margin_right = 40.0
+margin_bottom = 40.0
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
+margin_left = -200.0
+margin_top = -200.0
+margin_right = 200.0
+margin_bottom = 200.0
+
+[node name="PhaseSpace" type="TextureRect" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer" groups=["PhaseSpace"]]
+margin_right = 400.0
+margin_bottom = 400.0
 expand = true
+stretch_mode = 1
 script = ExtResource( 2 )
 
 [node name="PSControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
 margin_left = 730.933
-margin_top = 458.445
+margin_top = 324.406
 margin_right = 1020.0
 margin_bottom = 598.0
 
@@ -377,4 +390,4 @@ margin_bottom = 598.0
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonStartPos_pressed"]
-[connection signal="size_changed" from="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_Viewport_size_changed"]
+[connection signal="size_changed" from="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_Viewport_size_changed"]

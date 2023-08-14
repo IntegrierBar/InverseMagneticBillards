@@ -17,8 +17,7 @@
 extends Node2D
 
 #onready var trajectory_scene = preload("res://Trajectory.tscn")
-
-onready var phase_space = $"../../../../Phasespace/ViewportContainer/Viewport/PhaseSpace"
+var phase_space# = $"../../../../Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace"
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -48,8 +47,9 @@ var trajectory_to_edit: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	batch = 10
-	trajectories.maxCount = 1000
+	phase_space = get_tree().get_nodes_in_group("PhaseSpace")[0]
+	batch = 10000
+	trajectories.maxCount = 100
 	radius = 1
 	polygon_closed = false
 	polygon = []

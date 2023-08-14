@@ -12,9 +12,9 @@ func _input(event):
 
 
 func _set_inside():
-	print("inside")
+	#print("inside")
 	mouse_inside = true
 
 func _set_outside():
-	print("outiside")
+	#print("outiside")
 	mouse_inside = false
