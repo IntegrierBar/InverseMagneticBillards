@@ -12,7 +12,6 @@ var sizex = rect_size.x
 var sizey = rect_size.y
 
 func _ready():
-	
 	phase_space = Image.new()
 	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
 	phase_space.fill(Color.black)
@@ -22,6 +21,13 @@ func _ready():
 	self.texture = background
 
 func reset_image():
+	phase_space.fill(Color.black)
+	update()
+
+func rescale_image(size):
+	sizex = size.x
+	sizey = size.y
+	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
 	phase_space.fill(Color.black)
 	update()
 
@@ -44,6 +50,7 @@ func add_points_to_image(points: Array, colors: PoolColorArray):
 	background.create_from_image(phase_space)
 	self.texture = background
 	update()
+
 
 
 #func _draw():
@@ -85,3 +92,9 @@ func add_points_to_image(points: Array, colors: PoolColorArray):
 #		trajectories_to_draw.append([])
 #	update()
 
+
+
+func _on_Viewport_size_changed():
+	print("size change")
+	var viewport = $".."
+	#rescale_image(viewport.size)
