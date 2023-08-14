@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://ControlPanel/ScrollContainer.gd" type="Script" id=9]
 [ext_resource path="res://Viewport/ViewportContainerScript.gd" type="Script" id=10]
 [ext_resource path="res://Viewport/ViewportScript.gd" type="Script" id=11]
+[ext_resource path="res://ImportedDesignElements/CustomFont/TitilliumText-Regular.otf" type="DynamicFontData" id=12]
 
 [sub_resource type="Resource" id=8]
 resource_name = "Tabs"
@@ -81,6 +82,9 @@ root = SubResource( 5 )
 hidden_tabs = {
 }
 
+[sub_resource type="DynamicFont" id=15]
+font_data = ExtResource( 12 )
+
 [node name="InverseMagneticBillard" type="Node2D"]
 
 [node name="Camera2D" parent="." instance=ExtResource( 1 )]
@@ -109,8 +113,11 @@ stretch = true
 script = ExtResource( 10 )
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer"]
+size = Vector2( 458, 590 )
+handle_input_locally = false
 disable_3d = true
 usage = 0
+render_target_update_mode = 3
 physics_object_picking = true
 script = ExtResource( 11 )
 
@@ -139,7 +146,7 @@ script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 228.155
-margin_bottom = 272.0
+margin_bottom = 278.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -148,18 +155,19 @@ size_flags_vertical = 9
 
 [node name="ControlsTitle" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_right = 228.0
-margin_bottom = 14.0
+margin_bottom = 20.0
 rect_clip_content = true
 size_flags_horizontal = 11
 size_flags_vertical = 10
+custom_fonts/font = SubResource( 15 )
 text = "Inverse Magnetic Billards Control"
 align = 1
 clip_text = true
 
 [node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 18.0
+margin_top = 24.0
 margin_right = 228.0
-margin_bottom = 74.0
+margin_bottom = 80.0
 size_flags_horizontal = 3
 
 [node name="IterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
@@ -214,9 +222,9 @@ text = "1
 "
 
 [node name="Radius" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 78.0
+margin_top = 84.0
 margin_right = 228.0
-margin_bottom = 110.0
+margin_bottom = 116.0
 size_flags_horizontal = 3
 
 [node name="RadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
@@ -248,9 +256,9 @@ size_flags_vertical = 3
 text = "1 "
 
 [node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 114.0
+margin_top = 120.0
 margin_right = 228.0
-margin_bottom = 194.0
+margin_bottom = 200.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -281,9 +289,9 @@ margin_bottom = 80.0
 clip_text = true
 
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 198.0
+margin_top = 204.0
 margin_right = 228.0
-margin_bottom = 254.0
+margin_bottom = 260.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -320,9 +328,9 @@ margin_bottom = 56.0
 clip_text = true
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 258.0
+margin_top = 264.0
 margin_right = 228.0
-margin_bottom = 272.0
+margin_bottom = 278.0
 size_flags_horizontal = 3
 
 [node name="CurrentMousePosition" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
