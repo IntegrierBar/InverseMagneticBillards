@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -9,6 +9,8 @@
 [ext_resource path="res://addons/dockable_container/dockable_container.gd" type="Script" id=7]
 [ext_resource path="res://addons/dockable_container/layout_split.gd" type="Script" id=8]
 [ext_resource path="res://ControlPanel/ScrollContainer.gd" type="Script" id=9]
+[ext_resource path="res://Viewport/ViewportContainerScript.gd" type="Script" id=10]
+[ext_resource path="res://Viewport/ViewportScript.gd" type="Script" id=11]
 
 [sub_resource type="Resource" id=8]
 resource_name = "Tabs"
@@ -82,14 +84,7 @@ hidden_tabs = {
 [node name="InverseMagneticBillard" type="Node2D"]
 
 [node name="Camera2D" parent="." instance=ExtResource( 1 )]
-
-[node name="Trajectories" type="Node2D" parent="."]
-script = ExtResource( 3 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="Trajectory" parent="Trajectories" instance=ExtResource( 4 )]
+current = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -102,11 +97,34 @@ tabs_visible = false
 layout = SubResource( 6 )
 
 [node name="PolygonSpace" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
-visible = false
 margin_left = 252.155
 margin_top = 8.0
 margin_right = 710.933
 margin_bottom = 598.0
+
+[node name="ViewportContainer" type="ViewportContainer" parent="CanvasLayer/DockableContainer/PolygonSpace"]
+margin_right = 458.778
+margin_bottom = 590.0
+stretch = true
+script = ExtResource( 10 )
+
+[node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer"]
+disable_3d = true
+usage = 0
+physics_object_picking = true
+script = ExtResource( 11 )
+
+[node name="Camera2D" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport" instance=ExtResource( 1 )]
+position = Vector2( 252.155, 8 )
+
+[node name="Trajectories" type="Node2D" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport"]
+position = Vector2( 250, 10 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Trajectory" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" instance=ExtResource( 4 )]
 
 [node name="ControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
 margin_left = 4.0
@@ -335,8 +353,8 @@ margin_top = 315.0
 margin_right = 232.155
 margin_bottom = 598.0
 
-[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer/IterateButton" to="Trajectories" method="_on_Button_pressed"]
-[connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="Trajectories" method="_on_TextEdit_text_changed"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="Trajectories" method="_on_ButtonPolygon_pressed"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="Trajectories" method="_on_ButtonClosePolygon_pressed"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos" to="Trajectories" method="_on_ButtonStartPos_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer/IterateButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Button_pressed"]
+[connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_TextEdit_text_changed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonStartPos_pressed"]

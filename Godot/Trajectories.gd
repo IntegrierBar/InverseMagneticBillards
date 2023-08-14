@@ -18,7 +18,7 @@ extends Node2D
 
 #onready var trajectory_scene = preload("res://Trajectory.tscn")
 
-onready var phase_space = $"../CanvasLayer/DockableContainer/Phasespace/PhaseSpace"
+onready var phase_space = $"../../../../Phasespace/PhaseSpace"
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 

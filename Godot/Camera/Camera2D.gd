@@ -29,7 +29,7 @@ func _set_zoom_level(value: float) -> void:
 	tween.tween_property(self, "zoom", Vector2(_zoom_level, _zoom_level), zoom_duration)
 
 
-func _unhandled_input(event):
+func input(event):
 	if event.is_action_pressed("zoom_in"):
 		_set_zoom_level(_zoom_level/zoom_factor)
 	if event.is_action_pressed("zoom_out"):
