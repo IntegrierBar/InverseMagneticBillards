@@ -54,6 +54,7 @@ namespace godot {
         void make_regular_ngon(int n, double radius=1);
 
         void add_trajectory(Vector2 start, Vector2 dir, Color color);
+        void add_trajectory_phasespace(Vector2 pos, Color color);
         void remove_trajectory(int index);
         void clear_trajectories();  // remove all trajectories
         

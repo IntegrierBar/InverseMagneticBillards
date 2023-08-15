@@ -32,7 +32,7 @@ func rescale_image(size):
 	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
 	phase_space.fill(Color.black)
 	
-	var background = ImageTexture.new()
+	background = ImageTexture.new()
 	background.create_from_image(phase_space)
 	self.texture = background
 	update()
