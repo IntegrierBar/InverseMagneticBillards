@@ -21,6 +21,7 @@ var phase_space# = $"../../../../Phasespace/ViewportContainer/Viewport/MarginCon
 var polygon_instr
 var trajectory_instr
 var radius_edit
+var traj_control
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -42,7 +43,8 @@ enum STATES {
 	ITERATE,
 	SET_START,
 	SET_DIRECTION,
-	SET_POLYGON
+	SET_POLYGON,
+	ADD_TRAJECTORY
 }
 var current_state = STATES.ITERATE
 
@@ -54,6 +56,7 @@ func _ready():
 	polygon_instr = get_tree().get_nodes_in_group("PolygonInstructions")[0]
 	trajectory_instr = get_tree().get_nodes_in_group("TrajectoriesInstructions")[0]
 	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
+	traj_control = get_tree().get_nodes_in_group("TrajectoriesControlPart")[0]
 	batch = 10000
 	trajectories.maxCount = 100
 	radius = 1
@@ -202,3 +205,10 @@ func _on_TextEdit_text_changed():
 		var newradius = radius_edit.text.to_float()
 		for t in trajectories:
 			t.set_radius(newradius)
+
+
+func _on_Add_Trajectory_Button_pressed():
+	current_state = STATES.SET_START
+	add_trajectorie(Vector2(2,0), Vector2(1,-1), Color.aqua)
+	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
+	# traj_control.add_child()

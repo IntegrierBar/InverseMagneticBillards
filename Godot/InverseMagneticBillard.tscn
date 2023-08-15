@@ -145,8 +145,8 @@ margin_bottom = 283.0
 script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
-margin_right = 228.155
-margin_bottom = 278.0
+margin_right = 216.155
+margin_bottom = 302.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -154,7 +154,7 @@ size_flags_horizontal = 11
 size_flags_vertical = 9
 
 [node name="ControlsTitle" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 20.0
 rect_clip_content = true
 size_flags_horizontal = 11
@@ -166,12 +166,12 @@ clip_text = true
 
 [node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 24.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 80.0
 size_flags_horizontal = 3
 
 [node name="IterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 text = "Iterations"
@@ -179,33 +179,33 @@ clip_text = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
 margin_top = 18.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 38.0
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer"]
 margin_top = 3.0
-margin_right = 112.0
+margin_right = 106.0
 margin_bottom = 17.0
 size_flags_horizontal = 3
 text = "Draw iterations:"
 clip_text = true
 
 [node name="IterateButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer"]
-margin_left = 116.0
-margin_right = 228.0
+margin_left = 110.0
+margin_right = 216.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Iterate"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
 margin_top = 42.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 56.0
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer2"]
-margin_right = 112.0
+margin_right = 106.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -213,8 +213,8 @@ text = "Set #iterations: "
 clip_text = true
 
 [node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer2"]
-margin_left = 116.0
-margin_right = 228.0
+margin_left = 110.0
+margin_right = 216.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -223,24 +223,24 @@ text = "1
 
 [node name="Radius" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 84.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 116.0
 size_flags_horizontal = 3
 
 [node name="RadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 14.0
 text = "Radius"
 clip_text = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
 margin_top = 18.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 32.0
 size_flags_horizontal = 3
 
 [node name="SetRadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer"]
-margin_right = 112.0
+margin_right = 106.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 6
@@ -248,8 +248,8 @@ text = "Set radius: "
 clip_text = true
 
 [node name="SetRadiusTextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer" groups=["RadiusEdit"]]
-margin_left = 116.0
-margin_right = 228.0
+margin_left = 110.0
+margin_right = 216.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -257,57 +257,57 @@ text = "1 "
 
 [node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 120.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PolygonLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 14.0
 text = "Polygon"
 clip_text = true
 
 [node name="ButtonPolygon" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 18.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 38.0
 text = "Choose new polygon"
 clip_text = true
 
 [node name="ButtonClosePolygon" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 42.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 62.0
 text = "Close Contour"
 clip_text = true
 
 [node name="LabelInstructions" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon" groups=["PolygonInstructions"]]
 margin_top = 66.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 80.0
 clip_text = true
 
-[node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
+[node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
 margin_top = 204.0
-margin_right = 228.0
-margin_bottom = 260.0
+margin_right = 216.0
+margin_bottom = 284.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="TrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 14.0
 text = "Trajectories"
 clip_text = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
 margin_top = 18.0
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 38.0
 
-[node name="ButtonStartPos" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer"]
-margin_right = 112.0
+[node name="ButtonStartPos1" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer"]
+margin_right = 106.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -315,26 +315,32 @@ text = "New start position"
 clip_text = true
 
 [node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer"]
-margin_left = 116.0
-margin_right = 228.0
+margin_left = 110.0
+margin_right = 216.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" groups=["TrajectoriesInstructions"]]
+[node name="Button" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
 margin_top = 42.0
-margin_right = 228.0
-margin_bottom = 56.0
+margin_right = 216.0
+margin_bottom = 62.0
+text = "Add new trajectory"
+
+[node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" groups=["TrajectoriesInstructions"]]
+margin_top = 66.0
+margin_right = 216.0
+margin_bottom = 80.0
 clip_text = true
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 264.0
-margin_right = 228.0
-margin_bottom = 278.0
+margin_top = 288.0
+margin_right = 216.0
+margin_bottom = 302.0
 size_flags_horizontal = 3
 
 [node name="CurrentMousePosition" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
-margin_right = 228.0
+margin_right = 216.0
 margin_bottom = 14.0
 clip_text = true
 
@@ -394,5 +400,6 @@ margin_bottom = 598.0
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_TextEdit_text_changed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonStartPos_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos1" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonStartPos_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/Button" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Add_Trajectory_Button_pressed"]
 [connection signal="size_changed" from="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_Viewport_size_changed"]
