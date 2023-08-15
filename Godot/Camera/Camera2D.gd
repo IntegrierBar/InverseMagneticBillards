@@ -1,5 +1,7 @@
 extends Camera2D
 
+var mouse_inside: bool = false
+
 
 # Lower cap for the `_zoom_level`.
 export var min_zoom := 0.00005
@@ -19,8 +21,9 @@ func _ready():
 
 func _process(delta):
 	# move camera with keyboard
-	var direction = Input.get_vector("move_camera_left", "move_camera_right", "move_camera_up", "move_camera_down")
-	position += camera_speed*delta*direction
+	if mouse_inside:
+		var direction = Input.get_vector("move_camera_left", "move_camera_right", "move_camera_up", "move_camera_down")
+		position += camera_speed*delta*direction
 
 
 func _set_zoom_level(value: float) -> void:
@@ -29,12 +32,21 @@ func _set_zoom_level(value: float) -> void:
 	tween.tween_property(self, "zoom", Vector2(_zoom_level, _zoom_level), zoom_duration)
 
 
-func input(event):
-	if event.is_action_pressed("zoom_in"):
-		_set_zoom_level(_zoom_level/zoom_factor)
-	if event.is_action_pressed("zoom_out"):
-		_set_zoom_level(_zoom_level*zoom_factor)
-	# make camera dragable
-	if event is InputEventMouseMotion:
-		if event.button_mask == BUTTON_MASK_RIGHT:
-			position -= event.relative * zoom
+func _input(event):
+	if mouse_inside:
+		if event.is_action_pressed("zoom_in"):
+			_set_zoom_level(_zoom_level/zoom_factor)
+		if event.is_action_pressed("zoom_out"):
+			_set_zoom_level(_zoom_level*zoom_factor)
+		# make camera dragable
+		if event is InputEventMouseMotion:
+			if event.button_mask == BUTTON_MASK_RIGHT:
+				position -= event.relative * zoom
+
+func _set_inside():
+	print("inside")
+	mouse_inside = true
+
+func _set_outside():
+	print("outiside")
+	mouse_inside = false

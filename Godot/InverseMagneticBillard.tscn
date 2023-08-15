@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -10,7 +10,6 @@
 [ext_resource path="res://addons/dockable_container/layout_split.gd" type="Script" id=8]
 [ext_resource path="res://ControlPanel/ScrollContainer.gd" type="Script" id=9]
 [ext_resource path="res://Viewport/ViewportContainerScript.gd" type="Script" id=10]
-[ext_resource path="res://Viewport/ViewportScript.gd" type="Script" id=11]
 [ext_resource path="res://ImportedDesignElements/CustomFont/TitilliumText-Regular.otf" type="DynamicFontData" id=12]
 
 [sub_resource type="Resource" id=8]
@@ -111,6 +110,7 @@ margin_right = 458.778
 margin_bottom = 590.0
 stretch = true
 script = ExtResource( 10 )
+camera = NodePath("Viewport/Camera2D")
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer"]
 size = Vector2( 458, 590 )
@@ -119,7 +119,6 @@ disable_3d = true
 usage = 0
 render_target_update_mode = 3
 physics_object_picking = true
-script = ExtResource( 11 )
 
 [node name="Camera2D" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport" instance=ExtResource( 1 )]
 position = Vector2( 252.155, 8 )
@@ -349,13 +348,13 @@ margin_right = 289.067
 margin_bottom = 292.406
 stretch = true
 script = ExtResource( 10 )
+camera = NodePath("Viewport/Camera2D")
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer"]
 size = Vector2( 289, 292 )
 handle_input_locally = false
 render_target_update_mode = 3
 physics_object_picking = true
-script = ExtResource( 11 )
 
 [node name="Camera2D" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" instance=ExtResource( 1 )]
 _zoom_level = 2.0
