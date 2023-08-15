@@ -112,6 +112,7 @@ margin_bottom = 590.0
 stretch = true
 script = ExtResource( 10 )
 camera = NodePath("Viewport/Camera2D")
+trajectories = NodePath("Viewport/Trajectories")
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer"]
 size = Vector2( 458, 590 )

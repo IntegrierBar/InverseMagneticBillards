@@ -26,7 +26,7 @@ func reset_image():
 	update()
 
 func rescale_image(size):
-	print(size)
+	#print(size)
 	sizex = size.x
 	sizey = size.y
 	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
@@ -46,11 +46,11 @@ func rescale(points: Array) -> Array:
 
 # Array is an array of arrays, each inner array corresponds to a color
 func add_points_to_image(points: Array, colors: PoolColorArray):
-	print("adding points")
+	#print("adding points")
 	phase_space.lock()
 	for i in range(colors.size()):
 		for point in rescale(points[i]):
-			print(point)
+			#print(point)
 			phase_space.set_pixelv(point, colors[i])
 	phase_space.unlock()
 	# set image
@@ -98,6 +98,7 @@ func add_points_to_image(points: Array, colors: PoolColorArray):
 #	for i in range(trajectory_count):
 #		trajectories_to_draw.append([])
 #	update()
+
 
 
 

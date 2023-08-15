@@ -16,6 +16,8 @@
 
 extends Node2D
 
+var mouse_inside = false
+
 #onready var trajectory_scene = preload("res://Trajectory.tscn")
 var phase_space# = $"../../../../Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace"
 var polygon_instr
@@ -147,10 +149,11 @@ func iterate_batch():
 
 ####################### USER INPUT #################################################################
 func _input(event):
-	if event is InputEventMouseButton:
-		#print("test")
-		if event.button_index == BUTTON_LEFT and event.pressed:
-			mouse_input()
+	if mouse_inside:
+		if event is InputEventMouseButton:
+			#print("test")
+			if event.button_index == BUTTON_LEFT and event.pressed:
+				mouse_input()
 
 func mouse_input():
 	#print("hi")
@@ -202,3 +205,10 @@ func _on_TextEdit_text_changed():
 		var newradius = radius_edit.text.to_float()
 		for t in trajectories:
 			t.set_radius(newradius)
+
+# used to know if mouse is inside the clickable area or not
+func _set_inside():
+	mouse_inside = true
+
+func _set_outside():
+	mouse_inside = false
