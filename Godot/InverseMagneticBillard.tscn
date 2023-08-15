@@ -247,7 +247,7 @@ size_flags_vertical = 6
 text = "Set radius: "
 clip_text = true
 
-[node name="SetRadiusTextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer"]
+[node name="SetRadiusTextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer" groups=["RadiusEdit"]]
 margin_left = 116.0
 margin_right = 228.0
 margin_bottom = 14.0
@@ -282,7 +282,7 @@ margin_bottom = 62.0
 text = "Close Contour"
 clip_text = true
 
-[node name="LabelInstructions" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
+[node name="LabelInstructions" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon" groups=["PolygonInstructions"]]
 margin_top = 66.0
 margin_right = 228.0
 margin_bottom = 80.0
@@ -321,7 +321,7 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
+[node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" groups=["TrajectoriesInstructions"]]
 margin_top = 42.0
 margin_right = 228.0
 margin_bottom = 56.0

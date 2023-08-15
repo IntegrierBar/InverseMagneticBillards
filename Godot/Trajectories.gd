@@ -18,6 +18,9 @@ extends Node2D
 
 #onready var trajectory_scene = preload("res://Trajectory.tscn")
 var phase_space# = $"../../../../Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace"
+var polygon_instr
+var trajectory_instr
+var radius_edit
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -48,6 +51,9 @@ var trajectory_to_edit: int
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	phase_space = get_tree().get_nodes_in_group("PhaseSpace")[0]
+	polygon_instr = get_tree().get_nodes_in_group("PolygonInstructions")[0]
+	trajectory_instr = get_tree().get_nodes_in_group("TrajectoriesInstructions")[0]
+	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
 	batch = 10000
 	trajectories.maxCount = 100
 	radius = 1
@@ -76,11 +82,11 @@ func _draw():
 		draw_polyline(polygon, polygon_color)
 	match current_state:
 		STATES.SET_DIRECTION:
-			draw_line(newpos, get_global_mouse_position(), Color.green)
+			draw_line(newpos, get_local_mouse_position(), Color.green)
 		STATES.SET_POLYGON:
-			draw_line(polygon.back(), get_global_mouse_position(), polygon_color)
+			draw_line(polygon.back(), get_local_mouse_position(), polygon_color)
 		STATES.SET_START:
-			draw_circle(snap_to_polygon(get_global_mouse_position()), 1.0, Color.green)
+			draw_circle(snap_to_polygon(get_local_mouse_position()), 1.0, Color.green)
 
 
 
@@ -105,7 +111,7 @@ func clear_polygon():
 	polygon_closed = false
 	trajectories.clear_polygon()
 	# potentially put this some place else
-	phase_space.reset_trajectories()
+	#phase_space.reset_trajectories()
 
 # prejects the point onto all sides of the polygon and returns the closest
 func snap_to_polygon(point: Vector2) -> Vector2:
@@ -140,25 +146,27 @@ func iterate_batch():
 
 
 ####################### USER INPUT #################################################################
-func _unhandled_input(event):
+func _input(event):
 	if event is InputEventMouseButton:
+		#print("test")
 		if event.button_index == BUTTON_LEFT and event.pressed:
 			mouse_input()
 
 func mouse_input():
+	#print("hi")
 	match current_state:
 		STATES.SET_POLYGON: 
-			add_polygon_vertex(get_global_mouse_position())
+			add_polygon_vertex(get_local_mouse_position())
 		STATES.SET_START:
-			newpos = snap_to_polygon(get_global_mouse_position())
+			newpos = snap_to_polygon(get_local_mouse_position())
 			#trajectories[trajectory_to_edit].set_start(newpos)
 			current_state = STATES.SET_DIRECTION
-			$"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new direction"
+			trajectory_instr.text = "Click to choose a new direction"
 			# $"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new direction"
 		STATES.SET_DIRECTION:
-			trajectories.set_initial_values(trajectory_to_edit, newpos, get_global_mouse_position() - newpos)
+			trajectories.set_initial_values(trajectory_to_edit, newpos, get_local_mouse_position() - newpos)
 			current_state = STATES.ITERATE
-			$"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = ""
+			trajectory_instr.text = ""
 			#$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = ""  # this can probably be done nicer
 
 # iterate Button pressed
@@ -170,27 +178,27 @@ func _on_Button_pressed():
 func _on_ButtonPolygon_pressed():
 	current_state = STATES.SET_POLYGON
 	clear_polygon()
-	# $"../CanvasLayer/Panel/LabelInstructions".text = "Click to position at least 3 points to create an new polygon"
-	$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to position at least 3 points to create an new polygon"
+	polygon_instr.text = "Click to position at least 3 points to create an new polygon"
+	#$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to position at least 3 points to create an new polygon"
 
 # close polygon button pressed
 func _on_ButtonClosePolygon_pressed():
 	if current_state == STATES.SET_POLYGON:
 		close_polygon()
 		current_state = STATES.SET_START
-		$"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to choose a new start position"
-		# $"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to choose a new start position"
+		polygon_instr.text = "Click to choose a new start position"
+		#$"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to choose a new start position"
 
 # user wants to input new start position
 func _on_ButtonStartPos_pressed():
 	current_state = STATES.SET_START
 	phase_space.reset_image() # TODO THIS IS UGLY
-	$"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/TrajectoriesLabel".text = "Click to choose a new start position"
-	# $"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new start position"
+	trajectory_instr.text = "Click to choose a new start position"
+	# $"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/TrajectoriesLabel".text = "Click to choose a new start position"
 
 # radius is set
 func _on_TextEdit_text_changed():
-	if $"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit".text.is_valid_float():
-		var newradius = $"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit".text.to_float()
+	if radius_edit.text.is_valid_float():
+		var newradius = radius_edit.text.to_float()
 		for t in trajectories:
 			t.set_radius(newradius)
