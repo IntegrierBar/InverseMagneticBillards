@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://addons/dockable_container/layout_split.gd" type="Script" id=8]
 [ext_resource path="res://ControlPanel/ScrollContainer.gd" type="Script" id=9]
 [ext_resource path="res://Viewport/ViewportContainerScript.gd" type="Script" id=10]
+[ext_resource path="res://Viewport/MarginContainerScript.gd" type="Script" id=11]
 [ext_resource path="res://ImportedDesignElements/CustomFont/TitilliumText-Regular.otf" type="DynamicFontData" id=12]
 
 [sub_resource type="Resource" id=8]
@@ -347,8 +348,6 @@ margin_bottom = 300.406
 margin_right = 289.067
 margin_bottom = 292.406
 stretch = true
-script = ExtResource( 10 )
-camera = NodePath("Viewport/Camera2D")
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer"]
 size = Vector2( 289, 292 )
@@ -369,6 +368,8 @@ margin_left = -200.0
 margin_top = -200.0
 margin_right = 200.0
 margin_bottom = 200.0
+script = ExtResource( 11 )
+camera = NodePath("../Camera2D")
 
 [node name="PhaseSpace" type="TextureRect" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer" groups=["PhaseSpace"]]
 margin_right = 400.0

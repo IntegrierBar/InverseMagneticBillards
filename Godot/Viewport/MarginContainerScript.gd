@@ -1,4 +1,4 @@
-extends HSplitContainer
+extends MarginContainer
 
 export(NodePath) var camera
 
