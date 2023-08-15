@@ -404,6 +404,9 @@ margin_bottom = 283.0
 stretch = true
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer"]
+size = Vector2( 228, 283 )
+handle_input_locally = false
+render_target_update_mode = 3
 
 [node name="Camera2D" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport" instance=ExtResource( 1 )]
 
