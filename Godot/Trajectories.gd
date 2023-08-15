@@ -16,6 +16,8 @@
 
 extends Node2D
 
+var mouse_inside = false
+
 #onready var trajectory_scene = preload("res://Trajectory.tscn")
 var phase_space# = $"../../../../Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace"
 var polygon_instr
@@ -150,10 +152,11 @@ func iterate_batch():
 
 ####################### USER INPUT #################################################################
 func _input(event):
-	if event is InputEventMouseButton:
-		#print("test")
-		if event.button_index == BUTTON_LEFT and event.pressed:
-			mouse_input()
+	if mouse_inside:
+		if event is InputEventMouseButton:
+			#print("test")
+			if event.button_index == BUTTON_LEFT and event.pressed:
+				mouse_input()
 
 func mouse_input():
 	#print("hi")
@@ -207,8 +210,17 @@ func _on_TextEdit_text_changed():
 			t.set_radius(newradius)
 
 
+
 func _on_Add_Trajectory_Button_pressed():
 	current_state = STATES.SET_START
 	add_trajectorie(Vector2(2,0), Vector2(1,-1), Color.aqua)
 	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
 	# traj_control.add_child()
+
+# used to know if mouse is inside the clickable area or not
+func _set_inside():
+	mouse_inside = true
+
+func _set_outside():
+	mouse_inside = false
+
