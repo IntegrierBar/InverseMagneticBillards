@@ -22,6 +22,7 @@ namespace godot {
         register_method((char*)"add_trajectory", &InverseMagneticBillard::add_trajectory);
         register_method((char*)"add_trajectory_phasespace", &InverseMagneticBillard::add_trajectory_phasespace);
         register_method((char*)"remove_trajectory", &InverseMagneticBillard::remove_trajectory);
+        register_method((char*)"clear_trajectories", &InverseMagneticBillard::clear_trajectories);
         register_method((char*)"get_trajectory_colors", &InverseMagneticBillard::get_trajectory_colors);
         register_method((char*)"set_color", &InverseMagneticBillard::set_color);
         register_method((char*)"reset_trajectories", &InverseMagneticBillard::reset_trajectories);
