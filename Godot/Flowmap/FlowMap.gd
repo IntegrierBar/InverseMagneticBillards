@@ -46,8 +46,8 @@ func fill_flow_map():
 
 # iterates all trajectories once
 func iterate_once():
-	var points = trajectories.iterate_batch(1)
-	var colors = []#= trajectories.get_trajectory_colors()
+	var points = trajectories.iterate_batch(1)	# TODO ERROR HERE probably
+	var colors = trajectories.get_trajectory_colors()
 	flow_map.fill(Color.black)
 	flow_map.lock()
 	for i in range(colors.size()):

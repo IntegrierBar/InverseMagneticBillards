@@ -61,9 +61,10 @@ func _ready():
 	trajectory_instr = get_tree().get_nodes_in_group("TrajectoriesInstructions")[0]
 	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
 	traj_control = get_tree().get_nodes_in_group("TrajectoriesControlPart")[0]
-	batch = 10000
+	batch = 100000
 	trajectories.maxCount = 100
-	radius = 1
+	radius = 0.001
+	trajectories.set_radius(radius)
 	polygon_closed = false
 	polygon = []
 	polygon_color = Color(1, 1, 1)
@@ -108,7 +109,7 @@ func add_polygon_vertex(vertex: Vector2):
 func close_polygon():
 	if polygon_closed || polygon.size() < 3:
 		return
-	emit_signal("close_polygon", polygon)	# signal flow map, that polygon is closed
+	#emit_signal("close_polygon", polygon)	# signal flow map, that polygon is closed
 	polygon.append(polygon[0])
 	trajectories.close_polygon()
 	polygon_closed = true

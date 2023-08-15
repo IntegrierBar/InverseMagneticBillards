@@ -99,6 +99,7 @@ namespace godot {
         }
         double min_distance = INFINITY;
         vec2_d pointProjected;
+        currentIndexOnPolygon = 0; // does not fix the problem. can delete or keep whatever, I hate this. Rust is better
         for (int i = 0; i < polygon.size() - 1; i++)
         {
             //Godot::print("should not reach");
