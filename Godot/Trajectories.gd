@@ -37,6 +37,8 @@ var polygon_closed: bool
 
 onready var trajectories = $Trajectory
 
+signal close_polygon(p)
+
 var batch: int
 var max_count: int
 var radius: float
@@ -68,7 +70,8 @@ func _ready():
 	add_polygon_vertex(Vector2(0,0))
 	add_polygon_vertex(Vector2(10,0))
 	add_polygon_vertex(Vector2(0,-10))
-	close_polygon()
+	#close_polygon()
+	current_state = STATES.SET_POLYGON
 	add_trajectorie(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
 	trajectory_to_edit = 0 # TODO needs button to change
 
@@ -105,13 +108,13 @@ func add_polygon_vertex(vertex: Vector2):
 func close_polygon():
 	if polygon_closed || polygon.size() < 3:
 		return
+	emit_signal("close_polygon", polygon)	# signal flow map, that polygon is closed
 	polygon.append(polygon[0])
 	trajectories.close_polygon()
 	polygon_closed = true
 	update()
 
 func clear_polygon():
-	print("clearing polygon")
 	polygon = []
 	polygon_closed = false
 	trajectories.clear_polygon()

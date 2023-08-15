@@ -50,15 +50,33 @@ namespace godot {
 
     void Trajectory::set_initial_values(vec2_d pos)
     {
+        if (polygonLength.size() < 3)
+        {
+            Godot::print("tried adding phasespace point, but there is no poly");
+            return;
+        }
+        if (pos.x > 1 || pos.y > 1)
+        {
+            Godot::print("coords to big");
+            return;
+        }
+
         double distance_left = pos.x * polygonLength.back();
         currentIndexOnPolygon = 0;
         while (distance_left - polygonLength[currentIndexOnPolygon + 1] > 0)
         {
+            //Godot::print(Vector2(currentIndexOnPolygon, 0));
             currentIndexOnPolygon++; 
+            if (currentIndexOnPolygon + 1 >= polygonLength.size())
+            {
+                Godot::print("how defuq did I get here?");
+                return;
+            }
         }
 
         currentPosition = polygon[currentIndexOnPolygon] + (distance_left - polygonLength[currentIndexOnPolygon]) * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
 
+        //pos.y = -pos.y;
         mat2_d rotator = mat2_d(std::cos(M_PI * pos.y), -std::sin(M_PI * pos.y), std::sin(M_PI * pos.y), std::cos(M_PI * pos.y));
         currentDirection = rotator * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
 
@@ -83,7 +101,7 @@ namespace godot {
         vec2_d pointProjected;
         for (int i = 0; i < polygon.size() - 1; i++)
         {
-            Godot::print("should not reach");
+            //Godot::print("should not reach");
             double t = (length_squared(currentPosition) - dot(currentPosition, polygon[i])) / dot(currentPosition, polygon[i + 1] - polygon[i]);
             // snap to corners of edge
             if (t < 0) {
