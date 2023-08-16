@@ -30,8 +30,10 @@ func set_polygon(vertices: Array):
 		#print(v)
 		trajectories.add_polygon_vertex(v)
 	trajectories.close_polygon()
+	
 	#print("adding poly works")
 	fill_flow_map()
+	#print(trajectories.get_trajectories())
 	iterate_once()
 
 # for now this will launch a trajectory for each pixel
@@ -46,14 +48,17 @@ func fill_flow_map():
 
 # iterates all trajectories once
 func iterate_once():
-	var points = trajectories.iterate_batch(1)	# TODO ERROR HERE probably
 	var colors = trajectories.get_trajectory_colors()
+	print(colors)
+	print(trajectories.get_trajectories())
+	var points = trajectories.iterate_batch(1)	# TODO ERROR HERE probably
 	flow_map.fill(Color.black)
 	flow_map.lock()
 	for i in range(colors.size()):
-		for point in rescale(points[i]):
-			#print(point)
-			flow_map.set_pixelv(point, colors[i])
+#		for point in rescale(points[i]):
+#			#print(point)
+#			flow_map.set_pixelv(point, colors[i])
+		pass
 	flow_map.unlock()
 	# set image
 	image.set_data(flow_map)

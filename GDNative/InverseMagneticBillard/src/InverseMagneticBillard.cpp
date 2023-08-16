@@ -24,6 +24,7 @@ namespace godot {
         register_method((char*)"remove_trajectory", &InverseMagneticBillard::remove_trajectory);
         register_method((char*)"clear_trajectories", &InverseMagneticBillard::clear_trajectories);
         register_method((char*)"get_trajectory_colors", &InverseMagneticBillard::get_trajectory_colors);
+        register_method((char*)"get_trajectories", &InverseMagneticBillard::get_trajectories);
         register_method((char*)"set_color", &InverseMagneticBillard::set_color);
         register_method((char*)"reset_trajectories", &InverseMagneticBillard::reset_trajectories);
         register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch);
@@ -74,8 +75,8 @@ namespace godot {
     void InverseMagneticBillard::clear_polygon()
     {
         polygonClosed = false;
-        polygon = {};
-        polygonLength = {};
+        polygon.clear();
+        polygonLength.clear();
         reset_trajectories();
         update();
     }
@@ -180,7 +181,17 @@ namespace godot {
 
     void InverseMagneticBillard::clear_trajectories()
     {
-        trajectories = {};
+        trajectories.clear();
+    }
+
+    Array InverseMagneticBillard::get_trajectories()
+    {
+        Array ts = Array();
+        for (size_t i = 0; i < trajectories.size(); i++)
+        {
+            ts.push_back(trajectories[i].currentPosition.to_godot());
+        }
+        return ts;
     }
 
     Array InverseMagneticBillard::iterate_batch(int batch)

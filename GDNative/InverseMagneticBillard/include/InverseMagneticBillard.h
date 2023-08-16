@@ -64,7 +64,7 @@ namespace godot {
 
         PoolColorArray get_trajectory_colors(); // use this to access all colors of the trajectories
 
-
+        Array get_trajectories();
         Array iterate_batch(int batch); // returns array of PoolVector2Arrays of the phasespace coords of all trajectories
     };
 }

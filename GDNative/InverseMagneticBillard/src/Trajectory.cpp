@@ -127,7 +127,7 @@ namespace godot {
 
     Vector2 Trajectory::iterate()
     {
-        //Godot::print("iteration point :");
+        
 
         // the line inside the polygon
         auto intersection = intersect_polygon_line(currentPosition, currentDirection);
@@ -194,6 +194,7 @@ namespace godot {
         double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
         phaseSpaceTrajectory = { vec2_d(pos, abs(anglePhasespace) / M_PI) };
         count++;
+        // Godot::print(Vector2(currentIndexOnPolygon, 0));
         return Vector2(pos, abs(anglePhasespace) / M_PI);
     }
 
