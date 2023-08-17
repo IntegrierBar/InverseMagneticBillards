@@ -78,19 +78,19 @@ namespace godot {
 		operator float* () const { return (float*)this; }
 	};
 
-	inline vec2_d operator*(const vec2_d& v, const mat2_d& mat) {
-		return v[0] * mat[0] + v[1] * mat[1];
-	}
+	//inline vec2_d operator*(const vec2_d& v, const mat2_d& mat) {
+	//	return v[0] * mat[0] + v[1] * mat[1];
+	//}
 
 	inline vec2_d operator*(const mat2_d& mat, const vec2_d& v) {
 		return vec2_d(dot(mat[0], v), dot(mat[1], v));
 	}
 
-	inline mat2_d operator*(const mat2_d& left, const mat2_d& right) {
-		mat2_d result;
-		for (int i = 0; i < 2; i++) result.rows[i] = left.rows[i] * right;
-		return result;
-	}
+	//inline mat2_d operator*(const mat2_d& left, const mat2_d& right) {
+	//	mat2_d result;
+	//	for (int i = 0; i < 2; i++) result.rows[i] = left.rows[i] * right;
+	//	return result;
+	//}
 
 }
 
