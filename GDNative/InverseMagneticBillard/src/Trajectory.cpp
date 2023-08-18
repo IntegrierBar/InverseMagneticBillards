@@ -303,7 +303,7 @@ namespace godot {
                 if (i != currentIndexOnPolygon && u < min_distance && u > 0) // TODO might need bigger coefficient, since u = 0 is also a solution. Could potentially use additional index to prevent this
                 {
                     min_distance = u;
-                    intersection = start + u * dir; // TODO there could be an error in this
+                    intersection = start + u * dir;
                     index = i;
                 }
             }

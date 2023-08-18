@@ -16,6 +16,7 @@
 #include <Color.hpp>
 #include <Trajectory.h>
 #include <OS.hpp>
+#include <InverseTrajectory.h>
 
 namespace godot {
     class InverseMagneticBillard : public Node2D {
