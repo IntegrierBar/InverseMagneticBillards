@@ -18,6 +18,10 @@ func _ready():
 	image.create_from_image(flow_map)
 	self.texture = image
 
+# Godot uses negative y-axis. Nedd to invert y to get correct coords
+func invert_y(p: Vector2) -> Vector2:
+	return Vector2(p.x, -p.y)
+
 # this function gets an array of Vector2 that are the vertices of the polygon
 # IMPORTANT: last vertex != first index, we close the polygon ourself
 # gets called from main Trajectories node
@@ -28,7 +32,7 @@ func set_polygon(vertices: Array):
 	#print("clearing works")
 	for v in vertices:
 		#print(v)
-		trajectories.add_polygon_vertex(v)
+		trajectories.add_polygon_vertex(invert_y(v))
 	trajectories.close_polygon()
 	
 	#print("adding poly works")
