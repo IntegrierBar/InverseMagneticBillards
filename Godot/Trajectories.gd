@@ -225,10 +225,10 @@ func _on_TextEdit_text_changed():
 
 
 
-func _on_Add_Trajectory_Button_pressed():
-	current_state = STATES.SET_START
-	add_trajectorie(Vector2(2,0), Vector2(1,-1), Color.aqua)
-	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
+#func _on_Add_Trajectory_Button_pressed():
+#	current_state = STATES.SET_START
+#	add_trajectorie(Vector2(2,0), Vector2(1,-1), Color.aqua)
+#	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
 	# traj_control.add_child()
 
 # used to know if mouse is inside the clickable area or not

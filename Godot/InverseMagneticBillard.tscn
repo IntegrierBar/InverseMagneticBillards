@@ -31,7 +31,7 @@ current_tab = 0
 resource_name = "Split"
 script = ExtResource( 8 )
 direction = 1
-percent = 0.5
+percent = 0.566406
 first = SubResource( 8 )
 second = SubResource( 11 )
 
@@ -140,11 +140,11 @@ __meta__ = {
 margin_left = 4.0
 margin_top = 8.0
 margin_right = 232.155
-margin_bottom = 291.0
+margin_bottom = 330.977
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DockableContainer/ControlPanel"]
 margin_right = 228.155
-margin_bottom = 283.0
+margin_bottom = 322.977
 script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
@@ -306,7 +306,7 @@ clip_text = true
 
 [node name="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" instance=ExtResource( 14 )]
 
-[node name="Button" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
+[node name="NewTrajectoriesButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
 margin_top = 66.0
 margin_right = 216.0
 margin_bottom = 86.0
@@ -377,17 +377,17 @@ margin_bottom = 598.0
 
 [node name="Flowmap" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
 margin_left = 4.0
-margin_top = 315.0
+margin_top = 354.977
 margin_right = 232.155
 margin_bottom = 598.0
 
 [node name="ViewportContainer" type="ViewportContainer" parent="CanvasLayer/DockableContainer/Flowmap"]
 margin_right = 228.155
-margin_bottom = 283.0
+margin_bottom = 243.023
 stretch = true
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer"]
-size = Vector2( 228, 283 )
+size = Vector2( 228, 243 )
 handle_input_locally = false
 render_target_update_mode = 3
 
@@ -414,5 +414,5 @@ visible = false
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_TextEdit_text_changed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/Button" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Add_Trajectory_Button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/NewTrajectoriesButton" to="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer" method="_on_NewTrajectoriesButton_pressed"]
 [connection signal="size_changed" from="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_Viewport_size_changed"]
