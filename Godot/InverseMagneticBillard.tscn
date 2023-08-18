@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://Viewport/MarginContainerScript.gd" type="Script" id=11]
 [ext_resource path="res://ImportedDesignElements/CustomFont/TitilliumText-Regular.otf" type="DynamicFontData" id=12]
 [ext_resource path="res://Flowmap/FlowMap.gd" type="Script" id=13]
+[ext_resource path="res://ControlPanel/OneTrajectoryControlContainer.tscn" type="PackedScene" id=14]
 
 [sub_resource type="Resource" id=8]
 resource_name = "Tabs"
@@ -148,7 +149,7 @@ script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 216.155
-margin_bottom = 302.0
+margin_bottom = 326.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -293,7 +294,7 @@ clip_text = true
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
 margin_top = 204.0
 margin_right = 216.0
-margin_bottom = 284.0
+margin_bottom = 308.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -303,42 +304,24 @@ margin_bottom = 14.0
 text = "Trajectories"
 clip_text = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
-margin_top = 18.0
-margin_right = 216.0
-margin_bottom = 38.0
-
-[node name="ButtonStartPos1" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer"]
-margin_right = 106.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-text = "New start position"
-clip_text = true
-
-[node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer"]
-margin_left = 110.0
-margin_right = 216.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" instance=ExtResource( 14 )]
 
 [node name="Button" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
-margin_top = 42.0
+margin_top = 66.0
 margin_right = 216.0
-margin_bottom = 62.0
+margin_bottom = 86.0
 text = "Add new trajectory"
 
 [node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" groups=["TrajectoriesInstructions"]]
-margin_top = 66.0
+margin_top = 90.0
 margin_right = 216.0
-margin_bottom = 80.0
+margin_bottom = 104.0
 clip_text = true
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 288.0
+margin_top = 312.0
 margin_right = 216.0
-margin_bottom = 302.0
+margin_bottom = 326.0
 size_flags_horizontal = 3
 
 [node name="CurrentMousePosition" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
@@ -431,6 +414,5 @@ visible = false
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_TextEdit_text_changed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/HBoxContainer/ButtonStartPos1" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonStartPos_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/Button" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Add_Trajectory_Button_pressed"]
 [connection signal="size_changed" from="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_Viewport_size_changed"]
