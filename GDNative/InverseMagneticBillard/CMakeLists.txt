@@ -7,6 +7,8 @@ set(SOURCES
     include/Vectors.h
     include/Trajectory.h
     src/Trajectory.cpp
+    include/InverseTrajectory.h
+    src/InverseTrajectory.cpp
     )
 
 if(EMSCRIPTEN)

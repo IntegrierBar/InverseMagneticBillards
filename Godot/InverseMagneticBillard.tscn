@@ -419,8 +419,8 @@ script = ExtResource( 11 )
 camera = NodePath("../Camera2D")
 
 [node name="FlowMap" type="TextureRect" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/MarginContainer" groups=["FlowMap"]]
-margin_right = 100.0
-margin_bottom = 100.0
+margin_right = 40.0
+margin_bottom = 40.0
 script = ExtResource( 13 )
 
 [node name="Trajectory" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/MarginContainer/FlowMap" instance=ExtResource( 4 )]

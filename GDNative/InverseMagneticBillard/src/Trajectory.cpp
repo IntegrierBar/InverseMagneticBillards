@@ -47,7 +47,7 @@ namespace godot {
         count = 0;
         trajectory = { currentPosition };
         trajectoryToDraw = {};
-        trajectoryToDraw.push_back(currentPosition.to_godot());
+        trajectoryToDraw.push_back(currentPosition.to_draw());
     }
 
     void Trajectory::set_initial_values(vec2_d pos)
@@ -114,7 +114,7 @@ namespace godot {
         phaseSpaceTrajectory = { pos };
         trajectory = { currentPosition };
         trajectoryToDraw = {};
-        trajectoryToDraw.push_back(currentPosition.to_godot());
+        trajectoryToDraw.push_back(currentPosition.to_draw());
     }
 
     void Trajectory::reset_trajectory()
@@ -168,18 +168,18 @@ namespace godot {
             Godot::print("currentIndexOnPolygon is to large on second occasion");
             return Vector2(0, 0);
         }
-        trajectory.push_back(nextIterate);
+        // trajectory.push_back(nextIterate);
         if (count < maxCount)
         {
-            trajectoryToDraw.push_back(nextIterate.to_godot());   // is done together with the circle
+            trajectoryToDraw.push_back(nextIterate.to_draw());   // is done together with the circle
         }
         
         currentPosition = nextIterate;  // direction stays the same
 
         
         // the cirlce outide the polygon
-        vec2_d center = currentPosition + radius * vec2_d(currentDirection.y, -currentDirection.x); // center of the circle
-        auto next = intersect_polygon_circle(currentPosition, currentPosition, center);
+        vec2_d center = currentPosition + radius * vec2_d(-currentDirection.y, currentDirection.x); // center of the circle
+        auto next = intersect_polygon_circle(currentPosition, currentDirection, center);
         nextIterate = next.first;
         currentIndexOnPolygon = next.second;
         if (currentIndexOnPolygon >= polygon.size() - 1)
@@ -190,7 +190,7 @@ namespace godot {
         //double angle = std::atan2(det((currentPosition - center), (nextIterate - center)), dot((currentPosition - center), (nextIterate - center))); // dont touch it magically works
         if (count < maxCount)
         {
-            double angle = angle_between((nextIterate - center), (currentPosition - center));
+            double angle = angle_between((currentPosition - center), (nextIterate - center));
             if (angle < 0)
             {
                 angle += 2 * M_PI;
@@ -199,13 +199,13 @@ namespace godot {
             int n = int(radius * 20);   // to draw a circle, we draw a regular n-gon. Use radius to dynamically upscale
 
             // divide angle for step size
-            double step = -angle / double(n);
+            double step = angle / double(n);
             mat2_d rotation = mat2_d(std::cos(step), -std::sin(step), std::sin(step), std::cos(step));
             vec2_d currentAngle = currentPosition - center; // line from center to point on circle
             for (size_t i = 0; i < n; i++)
             {
                 currentAngle = rotation * currentAngle;
-                trajectoryToDraw.push_back((currentAngle + center).to_godot());
+                trajectoryToDraw.push_back((currentAngle + center).to_draw());
 
                 // IDEA: rotate start point around circle n times, until done
                 /*vec2_d vertex = vec2_d(radius * cos(-2 * M_PI * i / n), radius * sin(-2 * M_PI * i / n)) + center;
@@ -214,7 +214,7 @@ namespace godot {
                     trajectoryToDraw.push_back(vertex.to_godot());
                 }*/
             }
-            trajectoryToDraw.push_back(nextIterate.to_godot());
+            trajectoryToDraw.push_back(nextIterate.to_draw());
         }
         
         //if (angle < 0)
@@ -228,11 +228,11 @@ namespace godot {
         trajectory.push_back(nextIterate);
         
         currentPosition = nextIterate;
-        currentDirection = normalize(vec2_d(-(center - nextIterate).y, (center - nextIterate).x));
+        currentDirection = normalize(vec2_d((center - nextIterate).y, -(center - nextIterate).x));
 
         double anglePhasespace = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
         double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
-        phaseSpaceTrajectory = { vec2_d(pos, abs(anglePhasespace) / M_PI) };
+        phaseSpaceTrajectory.push_back(vec2_d(pos, abs(anglePhasespace) / M_PI) );
         count++;
         // Godot::print(Vector2(currentIndexOnPolygon, 0));
         return Vector2(pos, abs(anglePhasespace) / M_PI);
@@ -347,9 +347,9 @@ namespace godot {
             double t = (-b - discriminant) / (2 * a);  // TODO consider optimising here as well with regards to error cancelations
             if (0 <= t && t <= 1) { // consider using eps here
                 vec2_d intersection = polygon[i] + t * d;
-                if (length_squared(intersection - start) > eps) // check if intersection point is different from starting point TODO Maybe something smarte with angle might be possible here
+                if (length_squared(intersection - start) > eps) // check if intersection point is different from starting point TODO Maybe something smarter with angle might be possible here
                 {
-                    double angle = angleStart - (intersection - center).angle(); // need to do some cursed shit since y is inverted
+                    double angle = (intersection - center).angle() - angleStart; // need to do some cursed shit since y is inverted NOT ANYMORE
                     if (angle < 0) angle += 2 * M_PI; // we need to make sure that we always have positive angles!
                     if (angle < smallestAngle) {
                         smallestAngle = angle;
@@ -363,7 +363,7 @@ namespace godot {
                 vec2_d intersection = polygon[i] + t * d;
                 if (length_squared(intersection - start) > eps)
                 {
-                    double angle = angleStart - (intersection - center).angle(); // need to do some cursed shit since y is inverted
+                    double angle = (intersection - center).angle() - angleStart; // need to do some cursed shit since y is inverted NOT ANYMORE
                     if (angle < 0) angle += 2 * M_PI; // we need to make sure that we always have positive angles!
                     if (angle < smallestAngle) {
                         smallestAngle = angle;

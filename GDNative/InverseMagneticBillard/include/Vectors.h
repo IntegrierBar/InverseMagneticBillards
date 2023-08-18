@@ -23,6 +23,7 @@ namespace godot {
 		vec2_d operator*(const vec2_d& v) const { return vec2_d(x * v.x, y * v.y); }
 		vec2_d operator-() const { return vec2_d(-x, -y); }
 		Vector2 to_godot() const { return Vector2(x, y); }
+		Vector2 to_draw() const { return Vector2(x, -y); }
 		inline double angle() const {
 			double angle = std::atan2(y, x);
 			if (angle < 0) return angle + 2 * M_PI; // make sure angle is always positive!

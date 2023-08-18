@@ -61,7 +61,7 @@ func _ready():
 	trajectory_instr = get_tree().get_nodes_in_group("TrajectoriesInstructions")[0]
 	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
 	traj_control = get_tree().get_nodes_in_group("TrajectoriesControlPart")[0]
-	batch = 1000
+	batch = 1
 	trajectories.maxCount = 100
 	radius = 1
 	trajectories.set_radius(radius)
@@ -101,10 +101,15 @@ func _draw():
 
 
 ####################### POLYGON ####################################################################
+# Godot uses negative y-axis. Nedd to invert y to get correct coords
+func invert_y(p: Vector2) -> Vector2:
+	return Vector2(p.x, -p.y)
+
+
 func add_polygon_vertex(vertex: Vector2):
 	if !polygon_closed:		# dont allow adding of vertices when polygon is closed
 		polygon.append(vertex)
-		trajectories.add_polygon_vertex(vertex)
+		trajectories.add_polygon_vertex(invert_y(vertex))
 	update()
 
 func close_polygon():
@@ -141,9 +146,8 @@ func snap_to_polygon(point: Vector2) -> Vector2:
 
 ##################### TRAJECTORIES #################################################################
 func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
-	trajectories.add_trajectory(start, dir, color)
+	trajectories.add_trajectory(invert_y(start), invert_y(dir), color)
 	#phase_space.add_trajectory(color)
-	
 
 
 func iterate_batch():
@@ -154,6 +158,8 @@ func iterate_batch():
 #		#print(coordsPhasespace)
 #		phase_space.add_points_to_trajectory(i, coordsPhasespace)
 
+func set_initial_values(index: int, start: Vector2, dir: Vector2):
+	trajectories.set_initial_values(index, invert_y(start), invert_y(dir))
 
 
 
@@ -177,7 +183,8 @@ func mouse_input():
 			trajectory_instr.text = "Click to choose a new direction"
 			# $"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new direction"
 		STATES.SET_DIRECTION:
-			trajectories.set_initial_values(trajectory_to_edit, newpos, get_local_mouse_position() - newpos)
+			set_initial_values(trajectory_to_edit, newpos, get_local_mouse_position() - newpos)
+			#trajectories.set_initial_values(trajectory_to_edit, newpos, get_local_mouse_position() - newpos) DEPRECATED SINCE INVERSION OF Y
 			current_state = STATES.ITERATE
 			trajectory_instr.text = ""
 			#$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = ""  # this can probably be done nicer

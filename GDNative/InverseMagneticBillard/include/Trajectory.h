@@ -27,6 +27,7 @@ namespace godot {
         std::vector<vec2_d> trajectory;
         std::vector<vec2_d> phaseSpaceTrajectory;   // the trajectory points in the phase space [0,1] x [0,1] CONVENTION: first variable is coord on polygon, second is angle
         // use one long polyline for drawing
+        // Important: Godot drawing works with negative y axis. Therefore use .to_draw() conversion
         PoolVector2Array trajectoryToDraw;
 
 
