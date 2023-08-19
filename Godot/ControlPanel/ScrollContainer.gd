@@ -15,10 +15,12 @@ func _ready():
 #	pass
 
 
-func _on_NewTrajectoriesButton_pressed():
-	var count = traj_control.get_child_count()
-	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
-	var newTrajControl = scene.instance()
-	traj_control.add_child(newTrajControl)
-	traj_control.move_child(newTrajControl, count - 2)
-	pass # Replace with function body.
+#func _on_NewTrajectoriesButton_pressed():
+#	pass
+#	var count = traj_control.get_child_count()
+#	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
+#	var newTrajControl = scene.instance()
+#	traj_control.add_child(newTrajControl)
+#	traj_control.move_child(newTrajControl, count - 2)
+	# instruction window has to show: Please choose trajectory colour, colour cannot be changed after set the start position
+	# also need to make sure that button is disabled afterwards 

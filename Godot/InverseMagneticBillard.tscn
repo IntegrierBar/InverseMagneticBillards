@@ -140,11 +140,11 @@ __meta__ = {
 margin_left = 4.0
 margin_top = 8.0
 margin_right = 232.155
-margin_bottom = 330.977
+margin_bottom = 330.976
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DockableContainer/ControlPanel"]
 margin_right = 228.155
-margin_bottom = 322.977
+margin_bottom = 322.976
 script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
@@ -377,13 +377,13 @@ margin_bottom = 598.0
 
 [node name="Flowmap" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
 margin_left = 4.0
-margin_top = 354.977
+margin_top = 354.976
 margin_right = 232.155
 margin_bottom = 598.0
 
 [node name="ViewportContainer" type="ViewportContainer" parent="CanvasLayer/DockableContainer/Flowmap"]
 margin_right = 228.155
-margin_bottom = 243.023
+margin_bottom = 243.024
 stretch = true
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer"]
@@ -414,5 +414,5 @@ visible = false
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_TextEdit_text_changed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/NewTrajectoriesButton" to="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer" method="_on_NewTrajectoriesButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/NewTrajectoriesButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_NewTrajectoriesButton_pressed"]
 [connection signal="size_changed" from="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_Viewport_size_changed"]

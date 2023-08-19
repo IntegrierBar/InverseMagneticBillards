@@ -61,6 +61,7 @@ func _ready():
 	trajectory_instr = get_tree().get_nodes_in_group("TrajectoriesInstructions")[0]
 	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
 	traj_control = get_tree().get_nodes_in_group("TrajectoriesControlPart")[0]
+	
 	batch = 1
 	trajectories.maxCount = 100
 	radius = 1
@@ -76,6 +77,9 @@ func _ready():
 	current_state = STATES.SET_POLYGON
 	add_trajectorie(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
 	trajectory_to_edit = 0 # TODO needs button to change
+	
+	var inst = traj_control.find_node("VBoxContainer")
+	inst.connect("change_start_position", self, "_on_ButtonStartPos_pressed")
 
 func _process(_delta):
 	match current_state:
@@ -191,8 +195,9 @@ func mouse_input():
 
 # iterate Button pressed
 func _on_Button_pressed():
-	update()	# used to get rid of the line indicating the direction
-	iterate_batch()
+	if current_state == STATES.ITERATE:
+		update()	# used to get rid of the line indicating the direction
+		iterate_batch()
 
 # user wants to make new polygon
 func _on_ButtonPolygon_pressed():
@@ -210,8 +215,10 @@ func _on_ButtonClosePolygon_pressed():
 		#$"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to choose a new start position"
 
 # user wants to input new start position
-func _on_ButtonStartPos_pressed():
+func _on_ButtonStartPos_pressed(id):
 	current_state = STATES.SET_START
+	var node = instance_from_id(id)  #not sure if this is needed
+	trajectory_to_edit = node.get_index()   # same here
 	phase_space.reset_image() # TODO THIS IS UGLY
 	trajectory_instr.text = "Click to choose a new start position"
 	# $"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/TrajectoriesLabel".text = "Click to choose a new start position"
@@ -225,12 +232,6 @@ func _on_TextEdit_text_changed():
 
 
 
-#func _on_Add_Trajectory_Button_pressed():
-#	current_state = STATES.SET_START
-#	add_trajectorie(Vector2(2,0), Vector2(1,-1), Color.aqua)
-#	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
-	# traj_control.add_child()
-
 # used to know if mouse is inside the clickable area or not
 func _set_inside():
 	mouse_inside = true
@@ -238,3 +239,24 @@ func _set_inside():
 func _set_outside():
 	mouse_inside = false
 
+
+
+func _on_NewTrajectoriesButton_pressed():
+	current_state = STATES.SET_START
+	
+	var random_colour = Color(randf(), randf(), randf())
+	
+	add_trajectorie(Vector2(2,0), Vector2(1,-1), random_colour)
+	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
+	
+	var count = traj_control.get_child_count()
+	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
+	var newTrajControl = scene.instance()
+	
+	traj_control.add_child(newTrajControl)
+	traj_control.move_child(newTrajControl, count - 2)
+	
+	var colourPicker = newTrajControl.get_child(1).get_child(1)
+	colourPicker.set_pick_color(random_colour)
+	
+	# traj_control.add_child()
