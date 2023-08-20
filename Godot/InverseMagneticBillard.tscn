@@ -149,7 +149,7 @@ script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 216.155
-margin_bottom = 326.0
+margin_bottom = 334.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -170,7 +170,7 @@ clip_text = true
 [node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 24.0
 margin_right = 216.0
-margin_bottom = 80.0
+margin_bottom = 84.0
 size_flags_horizontal = 3
 
 [node name="IterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
@@ -204,30 +204,31 @@ text = "Iterate"
 [node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
 margin_top = 42.0
 margin_right = 216.0
-margin_bottom = 56.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer2"]
 margin_right = 106.0
-margin_bottom = 14.0
+margin_bottom = 18.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Set #iterations: "
+valign = 1
 clip_text = true
 
 [node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer2"]
 margin_left = 110.0
 margin_right = 216.0
-margin_bottom = 14.0
+margin_bottom = 18.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "1
-"
+text = "1"
 
 [node name="Radius" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 84.0
+margin_top = 88.0
 margin_right = 216.0
-margin_bottom = 116.0
+margin_bottom = 124.0
 size_flags_horizontal = 3
 
 [node name="RadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
@@ -239,29 +240,32 @@ clip_text = true
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
 margin_top = 18.0
 margin_right = 216.0
-margin_bottom = 32.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
 [node name="SetRadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer"]
+margin_top = 2.0
 margin_right = 106.0
-margin_bottom = 14.0
+margin_bottom = 16.0
 size_flags_horizontal = 3
 size_flags_vertical = 6
 text = "Set radius: "
+valign = 1
 clip_text = true
 
 [node name="SetRadiusTextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer" groups=["RadiusEdit"]]
 margin_left = 110.0
 margin_right = 216.0
-margin_bottom = 14.0
+margin_bottom = 18.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "1 "
 
 [node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 120.0
+margin_top = 128.0
 margin_right = 216.0
-margin_bottom = 200.0
+margin_bottom = 208.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -292,9 +296,9 @@ margin_bottom = 80.0
 clip_text = true
 
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
-margin_top = 204.0
+margin_top = 212.0
 margin_right = 216.0
-margin_bottom = 308.0
+margin_bottom = 316.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -319,9 +323,9 @@ margin_bottom = 104.0
 clip_text = true
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 312.0
+margin_top = 320.0
 margin_right = 216.0
-margin_bottom = 326.0
+margin_bottom = 334.0
 size_flags_horizontal = 3
 
 [node name="CurrentMousePosition" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]

@@ -50,5 +50,4 @@ margin_bottom = 20.0
 rect_min_size = Vector2( 25, 0 )
 color = Color( 0, 1, 0, 1 )
 
-[connection signal="pressed" from="HBoxContainer/ButtonStartPos1" to="." method="_on_ButtonStartPos1_pressed"]
 [connection signal="pressed" from="HBoxContainer/DeleteTrajButton" to="." method="_on_DeleteTrajButton_pressed"]

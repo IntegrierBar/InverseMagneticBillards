@@ -13,6 +13,14 @@
 
 
 
+# Fix Bugs:
+# - Setting colours crashes the program currently, the "feature" is currently only available for buttons belonging
+#   to additional trajectories! The colorpickerbutton of the first trajectory is not connected!
+# - Under some circumstances, the local coordinates in the normal coordinate space with the polygon are shifted,
+#   meaning that the position of the mouse is further left than the indicated position of the mouse when drawing 
+#   a new polygon or choosing a direction, it seems to appear if the left part is made bigger
+
+
 
 extends Node2D
 
@@ -79,7 +87,12 @@ func _ready():
 	trajectory_to_edit = 0 # TODO needs button to change
 	
 	var inst = traj_control.find_node("VBoxContainer")
-	inst.connect("change_start_position", self, "_on_ButtonStartPos_pressed")
+	var newStartPos = inst.get_child(0).get_child(0)
+	var id = inst.get_instance_id()
+	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id])
+	var deleteTraj = inst.get_child(0).get_child(1)
+	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
+	# inst.connect("change_start_position", self, "_on_NewStartPos_pressed")
 
 func _process(_delta):
 	match current_state:
@@ -96,11 +109,12 @@ func _draw():
 		draw_polyline(polygon, polygon_color)
 	match current_state:
 		STATES.SET_DIRECTION:
-			draw_line(newpos, get_local_mouse_position(), Color.green)
+			draw_line(newpos, get_local_mouse_position(), trajectories.get_trajectory_colors()[trajectory_to_edit])
+			# It does what I want it to do but is this really the correct way or is there a more elegant solution?
 		STATES.SET_POLYGON:
 			draw_line(polygon.back(), get_local_mouse_position(), polygon_color)
 		STATES.SET_START:
-			draw_circle(snap_to_polygon(get_local_mouse_position()), 1.0, Color.green)
+			draw_circle(snap_to_polygon(get_local_mouse_position()), 1.0, trajectories.get_trajectory_colors()[trajectory_to_edit])
 
 
 
@@ -130,7 +144,23 @@ func close_polygon():
 func clear_polygon():
 	polygon = []
 	polygon_closed = false
+	
+	var trajcount = trajectories.get_trajectory_colors().size()
+	print(trajcount)
+	if trajcount > 1:
+		for i in range(1, trajcount): # Note: it like Godot and C++ have different ways to handle how to remove objects! Watch out with the indices!
+			print(i)
+			var container = traj_control.get_child(1 + i) # this index has to change with the iterations despite the node at the position being removed
+			container.queue_free()
+			print(container)
+			trajectories.remove_trajectory(1) # this index has to be the same because the trajectory previously at position 2 is removed in the previous iteration
+	
 	trajectories.clear_polygon()
+	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
+	# does not work at the moment but I am working on it
+	
+	
+		
 	# potentially put this some place else
 	#phase_space.reset_trajectories()
 
@@ -171,12 +201,10 @@ func set_initial_values(index: int, start: Vector2, dir: Vector2):
 func _input(event):
 	if mouse_inside:
 		if event is InputEventMouseButton:
-			#print("test")
 			if event.button_index == BUTTON_LEFT and event.pressed:
 				mouse_input()
 
 func mouse_input():
-	#print("hi")
 	match current_state:
 		STATES.SET_POLYGON: 
 			add_polygon_vertex(get_local_mouse_position())
@@ -214,17 +242,19 @@ func _on_ButtonClosePolygon_pressed():
 		polygon_instr.text = "Click to choose a new start position"
 		#$"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to choose a new start position"
 
-# user wants to input new start position
-func _on_ButtonStartPos_pressed(id):
+	# user wants to input new start position
+func _on_NewStartPos_pressed(id):
 	current_state = STATES.SET_START
-	var node = instance_from_id(id)  #not sure if this is needed
-	trajectory_to_edit = node.get_index()   # same here
+	var node = instance_from_id(id)  
+	trajectory_to_edit = node.get_index() - 1
+	# print(trajectory_to_edit)  
 	phase_space.reset_image() # TODO THIS IS UGLY
 	trajectory_instr.text = "Click to choose a new start position"
 	# $"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/TrajectoriesLabel".text = "Click to choose a new start position"
 
+
 # radius is set
-func _on_TextEdit_text_changed():
+func _on_TextEdit_text_changed(): # this is currently not working at all apparently
 	if radius_edit.text.is_valid_float():
 		var newradius = radius_edit.text.to_float()
 		for t in trajectories:
@@ -253,10 +283,44 @@ func _on_NewTrajectoriesButton_pressed():
 	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
 	var newTrajControl = scene.instance()
 	
+	
 	traj_control.add_child(newTrajControl)
 	traj_control.move_child(newTrajControl, count - 2)
 	
 	var colourPicker = newTrajControl.get_child(1).get_child(1)
 	colourPicker.set_pick_color(random_colour)
 	
-	# traj_control.add_child()
+	
+	# connect the change start position button
+	var newStartPos = newTrajControl.get_child(0).get_child(0)
+	var id = newTrajControl.get_instance_id()
+	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id]) 
+	
+	# connect color picker button
+	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
+	
+	# connect the delete trajectory button
+	var deleteTraj = newTrajControl.get_child(0).get_child(1)
+	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
+	
+
+func _on_delete_trajectory_pressed(id):
+	var node = instance_from_id(id)  
+	trajectory_to_edit = node.get_index() - 1
+	node.queue_free()
+	trajectories.remove_trajectory(trajectory_to_edit)
+	
+func _on_color_changed(id):
+	var node = instance_from_id(id)  
+	trajectory_to_edit = node.get_index() - 1
+	
+	var colourPicker = node.get_child(1).get_child(1)
+	var c = colourPicker.get_pick_color()
+	trajectories.set_color(c) # setting the colour currently crashes the program, is this caused by the c++ code? 
+	
+	
+	
+	
+	
+	
+
