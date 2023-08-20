@@ -14,8 +14,7 @@
 
 
 # Fix Bugs:
-# - Setting colours crashes the program currently, the "feature" is currently only available for buttons belonging
-#   to additional trajectories! The colorpickerbutton of the first trajectory is not connected!
+# - Add update to delete trajectory and set_color in C++ code!
 # - Under some circumstances, the local coordinates in the normal coordinate space with the polygon are shifted,
 #   meaning that the position of the mouse is further left than the indicated position of the mouse when drawing 
 #   a new polygon or choosing a direction, it seems to appear if the left part is made bigger
@@ -257,8 +256,7 @@ func _on_NewStartPos_pressed(id):
 func _on_TextEdit_text_changed(): # this is currently not working at all apparently
 	if radius_edit.text.is_valid_float():
 		var newradius = radius_edit.text.to_float()
-		for t in trajectories:
-			t.set_radius(newradius)
+		trajectories.set_radius(newradius)
 
 
 
@@ -309,6 +307,7 @@ func _on_delete_trajectory_pressed(id):
 	trajectory_to_edit = node.get_index() - 1
 	node.queue_free()
 	trajectories.remove_trajectory(trajectory_to_edit)
+
 	
 func _on_color_changed(id):
 	var node = instance_from_id(id)  
@@ -316,8 +315,8 @@ func _on_color_changed(id):
 	
 	var colourPicker = node.get_child(1).get_child(1)
 	var c = colourPicker.get_pick_color()
-	trajectories.set_color(c) # setting the colour currently crashes the program, is this caused by the c++ code? 
-	
+	trajectories.set_color(trajectory_to_edit, c) # setting the colour currently crashes the program, is this caused by the c++ code? 
+
 	
 	
 	
