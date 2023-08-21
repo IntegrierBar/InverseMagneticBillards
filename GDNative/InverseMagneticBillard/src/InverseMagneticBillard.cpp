@@ -26,6 +26,7 @@ namespace godot {
         register_method((char*)"get_trajectory_colors", &InverseMagneticBillard::get_trajectory_colors);
         register_method((char*)"get_trajectories", &InverseMagneticBillard::get_trajectories);
         register_method((char*)"set_color", &InverseMagneticBillard::set_color);
+        register_method((char*)"set_max_count", &InverseMagneticBillard::set_max_count);
         register_method((char*)"reset_trajectories", &InverseMagneticBillard::reset_trajectories);
         register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch);
         register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
@@ -177,6 +178,7 @@ namespace godot {
     void InverseMagneticBillard::remove_trajectory(int index)
     {
         trajectories.erase(trajectories.begin() + index);
+        update();
     }
 
     void InverseMagneticBillard::clear_trajectories()
@@ -224,6 +226,12 @@ namespace godot {
     void InverseMagneticBillard::set_color(int index, Color c)
     {
         trajectories[index].trajectoryColor = c;
+        update();
+    }
+
+    void InverseMagneticBillard::set_max_count(int index, int newMaxCount)
+    {
+        trajectories[index].maxCount = newMaxCount;
     }
 
     PoolColorArray InverseMagneticBillard::get_trajectory_colors()

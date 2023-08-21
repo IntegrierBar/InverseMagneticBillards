@@ -62,6 +62,7 @@ namespace godot {
         void reset_trajectories();
         void set_initial_values(int index, Vector2 start, Vector2 dir);
         void set_color(int index, Color c); // set color of trajectory 'index'
+        void set_max_count(int index, int newMaxCount);
 
         PoolColorArray get_trajectory_colors(); // use this to access all colors of the trajectories
 
