@@ -31,6 +31,7 @@ var polygon_instr
 var trajectory_instr
 var radius_edit
 var traj_control
+var batch_edit
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -68,6 +69,7 @@ func _ready():
 	trajectory_instr = get_tree().get_nodes_in_group("TrajectoriesInstructions")[0]
 	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
 	traj_control = get_tree().get_nodes_in_group("TrajectoriesControlPart")[0]
+	batch_edit = get_tree().get_nodes_in_group("BatchSizeEdit")[0]
 	
 	batch = 1
 	trajectories.maxCount = 100
@@ -91,6 +93,9 @@ func _ready():
 	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id])
 	var deleteTraj = inst.get_child(0).get_child(1)
 	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
+	var colourPicker = inst.get_child(1).get_child(1)
+	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
+	
 	# inst.connect("change_start_position", self, "_on_NewStartPos_pressed")
 
 func _process(_delta):
@@ -253,7 +258,7 @@ func _on_NewStartPos_pressed(id):
 
 
 # radius is set
-func _on_TextEdit_text_changed(): # this is currently not working at all apparently
+func _on_TextEdit_text_changed(): 
 	if radius_edit.text.is_valid_float():
 		var newradius = radius_edit.text.to_float()
 		trajectories.set_radius(newradius)
@@ -315,11 +320,12 @@ func _on_color_changed(id):
 	
 	var colourPicker = node.get_child(1).get_child(1)
 	var c = colourPicker.get_pick_color()
-	trajectories.set_color(trajectory_to_edit, c) # setting the colour currently crashes the program, is this caused by the c++ code? 
+	trajectories.set_color(trajectory_to_edit, c) 
 
 	
 	
 	
-	
-	
-
+func _on_EditBatchSize_text_changed():
+	if batch_edit.text.is_valid_integer():
+		var newbatch = int(batch_edit.text)
+		batch = newbatch
