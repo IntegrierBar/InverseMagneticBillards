@@ -32,6 +32,7 @@ var trajectory_instr
 var radius_edit
 var traj_control
 var batch_edit
+var single_ps_traj
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -70,6 +71,7 @@ func _ready():
 	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
 	traj_control = get_tree().get_nodes_in_group("TrajectoriesControlPart")[0]
 	batch_edit = get_tree().get_nodes_in_group("BatchSizeEdit")[0]
+	single_ps_traj = get_tree().get_nodes_in_group("SinglePSTraj")[0]
 	
 	batch = 1
 	trajectories.maxCount = 100
@@ -187,6 +189,8 @@ func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
 	trajectories.add_trajectory(invert_y(start), invert_y(dir), color)
 	#phase_space.add_trajectory(color)
 
+func add_trajectorie_ps(pos: Vector2, color: Color):
+	trajectories.add_trajectory_phasespace(pos, color)
 
 func iterate_batch():
 	var phase_space_points = trajectories.iterate_batch(batch)
@@ -272,16 +276,8 @@ func _set_inside():
 func _set_outside():
 	mouse_inside = false
 
-
-
-func _on_NewTrajectoriesButton_pressed():
-	current_state = STATES.SET_START
-	
-	var random_colour = Color(randf(), randf(), randf())
-	
-	add_trajectorie(Vector2(2,0), Vector2(1,-1), random_colour)
-	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
-	
+# spawns and connects single trajectory control 
+func _new_trajectory_added(colour):
 	var count = traj_control.get_child_count()
 	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
 	var newTrajControl = scene.instance()
@@ -291,7 +287,7 @@ func _on_NewTrajectoriesButton_pressed():
 	traj_control.move_child(newTrajControl, count - 2)
 	
 	var colourPicker = newTrajControl.get_child(1).get_child(1)
-	colourPicker.set_pick_color(random_colour)
+	colourPicker.set_pick_color(colour)
 	
 	
 	# connect the change start position button
@@ -305,6 +301,41 @@ func _on_NewTrajectoriesButton_pressed():
 	# connect the delete trajectory button
 	var deleteTraj = newTrajControl.get_child(0).get_child(1)
 	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
+
+
+func _on_NewTrajectoriesButton_pressed():
+	current_state = STATES.SET_START
+	
+	var random_colour = Color(randf(), randf(), randf())
+	
+	add_trajectorie(Vector2(2,0), Vector2(1,-1), random_colour)
+	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
+	
+	_new_trajectory_added(random_colour)
+	
+#	var count = traj_control.get_child_count()
+#	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
+#	var newTrajControl = scene.instance()
+#
+#
+#	traj_control.add_child(newTrajControl)
+#	traj_control.move_child(newTrajControl, count - 2)
+#
+#	var colourPicker = newTrajControl.get_child(1).get_child(1)
+#	colourPicker.set_pick_color(random_colour)
+#
+#
+#	# connect the change start position button
+#	var newStartPos = newTrajControl.get_child(0).get_child(0)
+#	var id = newTrajControl.get_instance_id()
+#	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id]) 
+#
+#	# connect color picker button
+#	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
+#
+#	# connect the delete trajectory button
+#	var deleteTraj = newTrajControl.get_child(0).get_child(1)
+#	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
 	
 
 func _on_delete_trajectory_pressed(id):
@@ -321,11 +352,25 @@ func _on_color_changed(id):
 	var colourPicker = node.get_child(1).get_child(1)
 	var c = colourPicker.get_pick_color()
 	trajectories.set_color(trajectory_to_edit, c) 
-
-	
 	
 	
 func _on_EditBatchSize_text_changed():
 	if batch_edit.text.is_valid_integer():
 		var newbatch = int(batch_edit.text)
 		batch = newbatch
+
+
+func _on_SpawnPSTrajOnCoords_pressed():
+	var coord1 = single_ps_traj.get_child(4).get_child(0).text
+	var coord2 = single_ps_traj.get_child(4).get_child(1).text
+	
+	var colour = single_ps_traj.get_child(0).get_child(1).get_pick_color()
+	
+	if coord1.is_valid_float() and coord2.is_valid_float():
+		var c1 = coord1.to_float()
+		var c2 = coord2.to_float()
+		if c1 > 0 and c1 < 1 and c2 > 0 and c2 < 1:
+			var ps_pos = Vector2(c1, c2)
+			add_trajectorie_ps(ps_pos, colour)
+		
+			_new_trajectory_added(colour)
