@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 uniform float radius;
-uniform int n;	// is equall to #vertices + 1 since polygon is closed
+uniform int n;	// largest index of polygon
 uniform sampler2D polygon; // need to pass polygon as texture since arrays cant be passed in godot 3
 uniform sampler2D polygonLength;
 
@@ -26,18 +26,18 @@ float angle_between(vec2 v1, vec2 v2) {
 // calculates start and dir from phasespace coords
 // same code as in C++ code
 // first 2 elements of the return are start other 2 are direction
-vec4 phaseSpaceToR2 (vec2 pos) {
-	float distance_left = pos.x * getPolyLength(n);
+mat3 phaseSpaceToR2 (vec2 pos) {
+	float distance_left = pos.x * getPolyLength(n-1);
 	int currentIndexOnPolygon = 0;
 	while ( distance_left - getPolyLength(currentIndexOnPolygon + 1) > 0.0)
 	{
 	    //Godot::print(Vector2(currentIndexOnPolygon, 0));
 	    currentIndexOnPolygon++;
-	//        if (currentIndexOnPolygon + 1 >= n)
-	//        {
-	//            Godot::print("how defuq did I get here?");
-	//            return;
-	//        }
+		if (currentIndexOnPolygon + 1 > n)
+		{
+			//Godot::print("how defuq did I get here?");
+			break;
+		}
 	}
 
 	vec2 currentPosition = getPolyVertex(currentIndexOnPolygon) + (distance_left - getPolyLength(currentIndexOnPolygon)) * normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
@@ -73,21 +73,22 @@ vec4 phaseSpaceToR2 (vec2 pos) {
 	    currentDirection = rotator * normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
 	}
 	
-	return vec4(currentPosition, currentDirection);
+	return mat3(vec3(currentPosition, 0), vec3(currentDirection, 0), vec3(float(currentIndexOnPolygon), 0., 0.));
 }
 
 // calculates phasespace coords from 2d coords with knowldedge of which edge we are an the polygon
 vec2 R2ToPhaseSpace(vec2 start, vec2 dir, int currentIndexOnPolygon) {
 	float angle = angle_between(normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon)), dir);
 	// TODO need to check if angle positive or negative right now
-	return vec2( (getPolyLength(currentIndexOnPolygon) + length(getPolyVertex(currentIndexOnPolygon) - start)) / getPolyLength(n), abs(angle) / M_PI );
+	return vec2( (getPolyLength(currentIndexOnPolygon) + length(getPolyVertex(currentIndexOnPolygon) - start)) / getPolyLength(n-1), abs(angle) / M_PI );
 }
 
 // first two are the point, third is the index
-vec3 intersect_polygon_line(vec2 start, vec2 dir, int currentIndexOnPolygon) {
+// direction either +1 or -1, handles going forward and backward
+vec3 intersect_polygon_line(vec2 start, vec2 dir, int currentIndexOnPolygon, float direction) {
     int index = 0;
     vec2 intersection = vec2(0, 0);
-    float min_distance = -1e20;	// infitnity basically
+    float min_distance = 1e20;	// infitnity basically
     for (int i = 0; i < n - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
     {
         // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
@@ -100,16 +101,16 @@ vec3 intersect_polygon_line(vec2 start, vec2 dir, int currentIndexOnPolygon) {
         if (0.0 <= t && t <= 1.0) // consider adding eps here as well
         {
             float u = ((getPolyVertex(i).x - start.x) * (getPolyVertex(i).y - getPolyVertex(i + 1).y) - (getPolyVertex(i).y - start.y) * (getPolyVertex(i).x - getPolyVertex(i + 1).x)) / denominator;
-            if (i != currentIndexOnPolygon && u > min_distance && u < 0.0) // u has to be negative here since we are walking backwards
+            if (i != currentIndexOnPolygon && u*direction < min_distance && u*direction > 0.0) // u has to be negative here since we are walking backwards
             {
-                min_distance = u;
+                min_distance = u*direction;
                 intersection = start + u * dir;
                 index = i;
             }
         }
     }
     
-    if (min_distance == -1e20)
+    if (min_distance == 1e20)
     {
         // ideally this code should never execute. If it does, the program wont crash, but the calculations are wrong
         //Godot::print("could not intersect polygon with line");
@@ -120,11 +121,12 @@ vec3 intersect_polygon_line(vec2 start, vec2 dir, int currentIndexOnPolygon) {
 }
 
 // first two are the point, third is the index
-vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center) {
+vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center, float direction) {
     int index = 0;
     vec2 intersectionPoint = vec2(0, 0);
-    float largestAngle = 0.0;    // Here we want to find the smallest angle, as then the angle to our current position is minimal. Initialise with 0 since angles always positive here
-    //float angleStart = (start - center).angle(); NO NEED TO USE THIS; USE ANGLE_BETWEEN()
+    float largestAngle = 400.0;    // Here we want to find the smallest angle, as then the angle to our current position is minimal. Initialise with 0 since angles always positive here
+    //if (direction > 0.) { largestAngle = 400.;} // allowing both forward and backward iteration
+	//float angleStart = (start - center).angle(); NO NEED TO USE THIS; USE ANGLE_BETWEEN()
     // iterate through the kanten of the polygon to calculate
     for (int i = 0; i < n - 1; i++)
     {
@@ -144,8 +146,8 @@ vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center) {
             if (dot(intersection - start, intersection - start) > eps) // check if intersection point is different from starting point
             {
                 float angle = angle_between(intersection - center, start - center);	// TODO could be other way around
-                if (angle < 0.) angle += 2. * M_PI; // we need to make sure that we always have positive angles!
-                if (angle > largestAngle) {
+                if (angle*direction < 0.) angle += 2. * M_PI * direction; // we need to make sure that we always have positive angles!
+                if (angle < largestAngle) {
                     largestAngle = angle;
                     intersectionPoint = intersection;
                     index = i;
@@ -158,8 +160,8 @@ vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center) {
             if (dot(intersection - start, intersection - start) > eps)
             {
                 float angle = angle_between(intersection - center, start - center);	// TODO could be other way around
-                if (angle < 0.) angle += 2. * M_PI; // we need to make sure that we always have positive angles!
-                if (angle > largestAngle) {
+                if (angle* direction < 0.) angle += 2. * M_PI * direction; // we need to make sure that we always have positive angles!
+                if (angle < largestAngle) {
                     largestAngle = angle;
                     intersectionPoint = intersection;
                     index = i;
@@ -180,7 +182,7 @@ vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center) {
 vec2 iterateBackwards(vec2 currentPosition, vec2 currentDirection) {
 	// the cirlce outide the polygon
 	vec2 center = currentPosition + radius * vec2(-currentDirection.y, currentDirection.x); // center of the circle 
-	vec3 next = intersect_polygon_circle(currentPosition, currentDirection, center);
+	vec3 next = intersect_polygon_circle(currentPosition, currentDirection, center, -1.);
 	vec2 nextIterate = next.xy;
 	int currentIndexOnPolygon = int(next.z);
 	currentPosition = nextIterate;
@@ -188,7 +190,7 @@ vec2 iterateBackwards(vec2 currentPosition, vec2 currentDirection) {
 
 
 	// the line inside the polygon
-	vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon);
+	vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, -1.);
 	nextIterate = intersection.xy;
 	currentIndexOnPolygon = int(intersection.z);
 	currentPosition = nextIterate;  // direction stays the same
@@ -196,17 +198,39 @@ vec2 iterateBackwards(vec2 currentPosition, vec2 currentDirection) {
 	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
 }
 
+vec2 iterateForwards(vec2 currentPosition, vec2 currentDirection, int currentIndexOnPolygon) {
+	vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, 1.);
+	vec2 nextIterate = intersection.xy;
+	currentIndexOnPolygon = int(intersection.z);
+	currentPosition = nextIterate;  // direction stays the same
+
+
+	// the cirlce outide the polygon
+	vec2 center = currentPosition + radius * vec2(-currentDirection.y, currentDirection.x); // center of the circle
+	vec3 next = intersect_polygon_circle(currentPosition, currentDirection, center, 1.);
+	nextIterate = next.xy;
+	currentIndexOnPolygon = int(next.z);
+	currentPosition = nextIterate;
+	currentDirection = normalize(vec2((center - nextIterate).y, -(center - nextIterate).x));
+
+	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
+}
+
 void fragment() {
 	vec2 pos = UV;	// phasespace coords are texture coords
 	// get start, dir, index
-	vec4 coords = phaseSpaceToR2(pos);
-	vec2 start = coords.xy;
-	vec2 dir = coords.zw;
-	vec2 next = iterateBackwards(start, dir);
-	
+	mat3 coords = phaseSpaceToR2(pos);
+	vec2 start = coords[0].xy;
+	vec2 dir = coords[1].xy;
+	int index = int(coords[2].x);
+	//vec2 next = iterateBackwards(start, dir);
+	vec2 next = iterateForwards(start, dir, index);
 	// DETERMINE COLOR FROM next PHASESPACE COORDS
-	//COLOR = texture(TEXTURE, next);
-	COLOR = vec4(next, 0., 1.);
+	//COLOR = texture(TEXTURE, UV + vec2(getPolyLength(n-1)*0.01, 0));
+	//COLOR = texture(TEXTURE, UV + getPolyVertex(n)*0.1);
+	//COLOR = texture(TEXTURE, UV + next*0.01);
+	//COLOR = vec4(next, 0., 1.);
+	COLOR = texture(TEXTURE, next);
 }
 
 

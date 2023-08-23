@@ -1,4 +1,4 @@
-extends TextureRect
+extends Sprite
 
 var radius: float = 1.0;
 
