@@ -406,13 +406,13 @@ margin_bottom = 273.594
 script = ExtResource( 15 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer"]
-margin_right = 289.067
-margin_bottom = 273.594
+margin_right = 277.067
+margin_bottom = 282.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PSControlTitle" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 14.0
 text = "Phasespace Trajectories Control"
 align = 1
@@ -420,32 +420,32 @@ clip_text = true
 
 [node name="Label" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 18.0
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 32.0
 text = "Single Trajectories"
 clip_text = true
 
 [node name="SinglePSTrajectoryControl" type="VBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer" groups=["SinglePSTraj"]]
 margin_top = 36.0
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 174.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 20.0
 
 [node name="Label" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer"]
 margin_top = 3.0
-margin_right = 260.0
+margin_right = 248.0
 margin_bottom = 17.0
 size_flags_horizontal = 3
 text = "Trajectory Colour"
 clip_text = true
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer"]
-margin_left = 264.0
-margin_right = 289.0
+margin_left = 252.0
+margin_right = 277.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 25, 0 )
 size_flags_horizontal = 0
@@ -454,44 +454,44 @@ color = Color( 0, 1, 0, 1 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
 margin_top = 24.0
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 48.0
 
 [node name="StartingCoords" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer2"]
 margin_top = 5.0
-margin_right = 261.0
+margin_right = 249.0
 margin_bottom = 19.0
 size_flags_horizontal = 3
 text = "Trajectory drawn in normal space"
 clip_text = true
 
 [node name="DrawnInNormalSpace" type="CheckBox" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer2"]
-margin_left = 265.0
-margin_right = 289.0
+margin_left = 253.0
+margin_right = 277.0
 margin_bottom = 24.0
 
 [node name="SpawnTrajOnClickButton" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
 margin_top = 52.0
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 72.0
 text = "Spawn PS trajectory on click"
 clip_text = true
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
 margin_top = 76.0
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 90.0
 
 [node name="Label" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer3"]
-margin_right = 142.0
+margin_right = 136.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 text = "1st Coordinate"
 clip_text = true
 
 [node name="Label2" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer3"]
-margin_left = 146.0
-margin_right = 289.0
+margin_left = 140.0
+margin_right = 277.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 text = "2nd Coordinate"
@@ -499,52 +499,73 @@ clip_text = true
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
 margin_top = 94.0
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 114.0
 
 [node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer4"]
-margin_right = 142.0
+margin_right = 136.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
 size_flags_horizontal = 3
 
 [node name="TextEdit2" type="TextEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer4"]
-margin_left = 146.0
-margin_right = 289.0
+margin_left = 140.0
+margin_right = 277.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 
 [node name="SpawnPSTrajOnCoords" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
 margin_top = 118.0
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 138.0
 text = "Spawn PS trajectory on coordinates"
 clip_text = true
 
 [node name="Label2" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 178.0
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 192.0
 text = "Trajectory Batches"
 clip_text = true
 
-[node name="SpawnTrajBatch" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 196.0
-margin_right = 289.0
+margin_right = 277.0
 margin_bottom = 216.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_top = 3.0
+margin_right = 136.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
+text = "#Trajectories in batch"
+clip_text = true
+
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_left = 140.0
+margin_right = 277.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+
+[node name="SpawnTrajBatch" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
+margin_top = 220.0
+margin_right = 277.0
+margin_bottom = 240.0
 text = "Spawn PS trajectory batch"
 clip_text = true
 
 [node name="TrajBatchInstructions" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer" groups=["TrajBatchInstr"]]
-margin_top = 220.0
-margin_right = 289.0
-margin_bottom = 234.0
+margin_top = 244.0
+margin_right = 277.0
+margin_bottom = 258.0
 clip_text = true
 
 [node name="ClearPSTrajectories" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 238.0
-margin_right = 289.0
-margin_bottom = 258.0
+margin_top = 262.0
+margin_right = 277.0
+margin_bottom = 282.0
 size_flags_horizontal = 3
 text = "Clear Phasespace"
 clip_text = true
