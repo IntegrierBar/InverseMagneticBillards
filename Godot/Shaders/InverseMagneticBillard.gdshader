@@ -205,7 +205,8 @@ void fragment() {
 	vec2 next = iterateBackwards(start, dir);
 	
 	// DETERMINE COLOR FROM next PHASESPACE COORDS
-	COLOR = texture(TEXTURE, next);
+	//COLOR = texture(TEXTURE, next);
+	COLOR = vec4(next, 0., 0.);
 }
 
 
