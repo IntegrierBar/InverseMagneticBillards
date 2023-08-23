@@ -110,6 +110,8 @@ func _process(_delta):
 		STATES.SET_START:
 			update()
 
+			
+
 func _draw():
 	if polygon.size() > 1:
 		draw_polyline(polygon, polygon_color)
@@ -154,12 +156,15 @@ func clear_polygon():
 	var trajcount = trajectories.get_trajectory_colors().size()
 	print(trajcount)
 	if trajcount > 1:
-		for i in range(1, trajcount): # Note: it like Godot and C++ have different ways to handle how to remove objects! Watch out with the indices!
+		for i in range(1, trajcount): 
+			# Note: it looks like Godot and C++ have different ways to handle how to remove objects! Watch out with the indices!
 			print(i)
-			var container = traj_control.get_child(1 + i) # this index has to change with the iterations despite the node at the position being removed
+			var container = traj_control.get_child(1 + i)
+			# this index has to change with the iterations despite the node at the position being removed
 			container.queue_free()
 			print(container)
-			trajectories.remove_trajectory(1) # this index has to be the same because the trajectory previously at position 2 is removed in the previous iteration
+			trajectories.remove_trajectory(1)
+			# this index has to be the same because the trajectory previously at position 2 is removed in the previous iteration
 	
 	trajectories.clear_polygon()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
@@ -221,13 +226,11 @@ func mouse_input():
 			#trajectories[trajectory_to_edit].set_start(newpos)
 			current_state = STATES.SET_DIRECTION
 			trajectory_instr.text = "Click to choose a new direction"
-			# $"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = "Click to choose a new direction"
 		STATES.SET_DIRECTION:
 			set_initial_values(trajectory_to_edit, newpos, get_local_mouse_position() - newpos)
-			#trajectories.set_initial_values(trajectory_to_edit, newpos, get_local_mouse_position() - newpos) DEPRECATED SINCE INVERSION OF Y
 			current_state = STATES.ITERATE
 			trajectory_instr.text = ""
-			#$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Trajectories/InstructionsTrajectoriesLabel".text = ""  # this can probably be done nicer
+			
 
 # iterate Button pressed
 func _on_Button_pressed():
@@ -240,15 +243,15 @@ func _on_ButtonPolygon_pressed():
 	current_state = STATES.SET_POLYGON
 	clear_polygon()
 	polygon_instr.text = "Click to position at least 3 points to create an new polygon"
-	#$"../CanvasLayer/Panel/MarginContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to position at least 3 points to create an new polygon"
+	
 
 # close polygon button pressed
 func _on_ButtonClosePolygon_pressed():
 	if current_state == STATES.SET_POLYGON:
 		close_polygon()
 		current_state = STATES.SET_START
-		polygon_instr.text = "Click to choose a new start position"
-		#$"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/LabelInstructions".text = "Click to choose a new start position"
+		polygon_instr.text = " "
+		
 
 	# user wants to input new start position
 func _on_NewStartPos_pressed(id):
@@ -258,8 +261,7 @@ func _on_NewStartPos_pressed(id):
 	# print(trajectory_to_edit)  
 	phase_space.reset_image() # TODO THIS IS UGLY
 	trajectory_instr.text = "Click to choose a new start position"
-	# $"../CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/TrajectoriesLabel".text = "Click to choose a new start position"
-
+	
 
 # radius is set
 func _on_TextEdit_text_changed(): 
@@ -374,3 +376,10 @@ func _on_SpawnPSTrajOnCoords_pressed():
 			add_trajectorie_ps(ps_pos, colour)
 		
 			_new_trajectory_added(colour)
+
+
+func _spawn_ps_traj_on_click(ps_coord):
+	var colour = single_ps_traj.get_child(0).get_child(1).get_pick_color()
+	add_trajectorie_ps(ps_coord, colour)
+	_new_trajectory_added(colour)
+	

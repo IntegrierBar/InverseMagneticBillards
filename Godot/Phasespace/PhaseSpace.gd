@@ -1,6 +1,7 @@
 extends TextureRect
 
 
+
 #var bounding_box_color = Color.red
 
 var trajectories_to_draw: Array = []
@@ -12,6 +13,21 @@ var background : ImageTexture = null
 onready var sizex = rect_size.x
 onready var sizey = rect_size.y
 
+var traj_script 
+var mouse_inside = false
+var instr_label
+
+enum STATES {
+	REST,
+	SINGLE,
+	BATCH1, 
+	BATCH2
+}
+
+var current_state = STATES.REST
+var batch_coord1
+
+
 func _ready():
 	phase_space = Image.new()
 	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
@@ -20,6 +36,45 @@ func _ready():
 	background = ImageTexture.new()
 	background.create_from_image(phase_space)
 	self.texture = background
+	
+	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
+	instr_label = get_tree().get_nodes_in_group("TrajBatchInstr")[0]
+	
+	connect("mouse_entered", self, "_set_inside")
+	connect("mouse_exited", self, "_set_outside")
+	
+
+func _set_inside():
+	mouse_inside = true
+	
+func _set_outside():
+	mouse_inside = false
+
+	
+func _input(event):
+	if mouse_inside:
+		if event is InputEventMouseButton:
+			if event.button_index == BUTTON_LEFT and event.pressed:
+				mouse_input()
+
+
+func mouse_input():
+	match current_state:
+		STATES.SINGLE:
+			var ps_coord = local_to_ps()
+			traj_script._spawn_ps_traj_on_click(ps_coord)
+			current_state = STATES.REST
+		STATES.BATCH1:
+			batch_coord1 = local_to_ps()
+			current_state = STATES.BATCH2
+		STATES.BATCH2:
+			var batch_coord2 = local_to_ps()
+			
+			current_state = STATES.REST
+			instr_label.text = " "
+		STATES.REST:
+			pass
+
 
 func reset_image():
 	phase_space.fill(Color.black)
@@ -30,8 +85,7 @@ func rescale_image(size):
 	sizex = size.x
 	sizey = size.y
 	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
-	phase_space.fill(Color.black)
-	
+	phase_space.fill(Color.black)	
 	background = ImageTexture.new()
 	background.create_from_image(phase_space)
 	self.texture = background
@@ -58,7 +112,30 @@ func add_points_to_image(points: Array, colors: PoolColorArray):
 	self.texture = background
 	update()
 
+func local_to_ps() -> Vector2:
+	var locpos = get_local_mouse_position()
+	var x = locpos[0] / sizex
+	var y = locpos[1] / sizey
+	return Vector2(x, y)
+	
 
+
+func _on_Viewport_size_changed():
+	print("size change")
+	var viewport = $".."
+	#rescale_image(viewport.size)
+
+
+func _on_SpawnTrajOnClickButton_pressed():
+	current_state = STATES.SINGLE
+	
+	
+
+func _on_SpawnTrajBatch_pressed():
+	current_state = STATES.BATCH1
+	instr_label.text = "Click twice to select two phasespace coordinates"
+	
+	
 
 #func _draw():
 	# draw bounding box of image FOR NOW SKIP THIS
@@ -98,11 +175,3 @@ func add_points_to_image(points: Array, colors: PoolColorArray):
 #	for i in range(trajectory_count):
 #		trajectories_to_draw.append([])
 #	update()
-
-
-
-
-func _on_Viewport_size_changed():
-	print("size change")
-	var viewport = $".."
-	#rescale_image(viewport.size)

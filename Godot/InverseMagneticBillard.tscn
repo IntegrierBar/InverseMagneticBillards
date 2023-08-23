@@ -145,7 +145,7 @@ physics_object_picking = true
 [node name="Camera2D" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport" instance=ExtResource( 1 )]
 position = Vector2( 252.155, 8 )
 
-[node name="Trajectories" type="Node2D" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport"]
+[node name="Trajectories" type="Node2D" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport" groups=["Trajectories"]]
 position = Vector2( 250, 10 )
 script = ExtResource( 3 )
 __meta__ = {
@@ -528,14 +528,14 @@ margin_bottom = 192.0
 text = "Trajectory Batches"
 clip_text = true
 
-[node name="Button" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
+[node name="SpawnTrajBatch" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 196.0
 margin_right = 289.0
 margin_bottom = 216.0
 text = "Spawn PS trajectory batch"
 clip_text = true
 
-[node name="TrajBatchInstructions" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
+[node name="TrajBatchInstructions" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer" groups=["TrajBatchInstr"]]
 margin_top = 220.0
 margin_right = 289.0
 margin_bottom = 234.0
@@ -598,4 +598,6 @@ script = ExtResource( 17 )
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/NewTrajectoriesButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_NewTrajectoriesButton_pressed"]
 [connection signal="size_changed" from="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_Viewport_size_changed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnTrajOnClickButton" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_SpawnTrajOnClickButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnPSTrajOnCoords" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SpawnPSTrajOnCoords_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SpawnTrajBatch" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_SpawnTrajBatch_pressed"]
