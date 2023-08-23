@@ -95,6 +95,7 @@ namespace godot {
         // if even amount of intersections, the we went the wrong direction
         if (intersections % 2 == 0)
         {
+            // TODO BIG ERRROR HERE; DO NOT USE mat2_d rotator but just rotator, SONST SHADOWING!!!!!!!!!
             mat2_d rotator = mat2_d(std::cos(-M_PI * pos.y), -std::sin(-M_PI * pos.y), std::sin(-M_PI * pos.y), std::cos(-M_PI * pos.y));
             currentDirection = rotator * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
         }
