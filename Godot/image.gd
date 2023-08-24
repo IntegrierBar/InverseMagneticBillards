@@ -23,7 +23,9 @@ func _ready():
 
 
 func store_polygon_as_image(polygon: Array, polygonLength: Array):
-	# pass the size to shader
+	# pass the size to 
+	#print(polygon)
+	#print(polygonLength)
 	material.set_shader_param("n", polygon.size())
 	material.set_shader_param("radius", radius)
 	# convert array to imageTexture and send it to shader
