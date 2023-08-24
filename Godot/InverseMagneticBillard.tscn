@@ -169,7 +169,7 @@ script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 217.901
-margin_bottom = 337.0
+margin_bottom = 361.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -320,7 +320,7 @@ clip_text = true
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
 margin_top = 215.0
 margin_right = 217.0
-margin_bottom = 319.0
+margin_bottom = 343.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -345,10 +345,16 @@ margin_right = 217.0
 margin_bottom = 104.0
 clip_text = true
 
-[node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 323.0
+[node name="DeleteAllTrajectories" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
+margin_top = 108.0
 margin_right = 217.0
-margin_bottom = 337.0
+margin_bottom = 128.0
+text = "Delete all trajectories"
+
+[node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
+margin_top = 347.0
+margin_right = 217.0
+margin_bottom = 361.0
 size_flags_horizontal = 3
 
 [node name="CurrentMousePosition" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
@@ -623,6 +629,7 @@ script = ExtResource( 17 )
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/NewTrajectoriesButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_NewTrajectoriesButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/DeleteAllTrajectories" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_DeleteAllTrajectories_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnTrajOnClickButton" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajOnClickButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnPSTrajOnCoords" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SpawnPSTrajOnCoords_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SpawnTrajBatch" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajBatch_pressed"]
