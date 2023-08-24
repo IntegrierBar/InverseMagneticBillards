@@ -154,15 +154,15 @@ func clear_polygon():
 	polygon_closed = false
 	
 	var trajcount = trajectories.get_trajectory_colors().size()
-	print(trajcount)
+	# print(trajcount)
 	if trajcount > 1:
 		for i in range(1, trajcount): 
 # Note: it looks like Godot and C++ have different ways to handle how to remove objects! Watch out with the indices!
-			print(i)
+			# print(i)
 			var container = traj_control.get_child(1 + i)
 # this index has to change with the iterations despite the node at the position being removed
 			container.queue_free()
-			print(container)
+			# print(container)
 			trajectories.remove_trajectory(1)
 # this index has to be the same because the trajectory previously at position 2 is removed in the previous iteration
 	
@@ -288,7 +288,7 @@ func _new_trajectory_added(colour):
 	
 	
 	traj_control.add_child(newTrajControl)
-	traj_control.move_child(newTrajControl, count - 2)
+	traj_control.move_child(newTrajControl, count - 3)
 	
 	var colourPicker = newTrajControl.get_child(1).get_child(1)
 	colourPicker.set_pick_color(colour)
@@ -445,3 +445,16 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 			positions.append(pos + xymin) 
 	
 	return positions
+
+
+func _on_DeleteAllTrajectories_pressed():
+	var trajcount = trajectories.get_trajectory_colors().size()
+	for i in range(trajcount): 
+		var container = traj_control.get_child(1 + i)
+		container.queue_free()
+		trajectories.remove_trajectory(0)
+	
+	phase_space.reset_image()
+	# Note: moving the position of the delete button means that the code for adding new trajectories
+	# has to be changed as well! The new trajectories are currentlly moved to a fixed position in 
+	# relation to the other children of the parent!
