@@ -145,10 +145,10 @@ vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center, float direction
             vec2 intersection = getPolyVertex(i) + t * d;
             if (dot(intersection - start, intersection - start) > eps) // check if intersection point is different from starting point
             {
-                float angle = angle_between(intersection - center, start - center);	// TODO could be other way around
-                if (angle*direction < 0.) angle += 2. * M_PI * direction; // we need to make sure that we always have positive angles!
-                if (angle < largestAngle) {
-                    largestAngle = angle;
+                float angle = angle_between(start - center, intersection - center);	// TODO could be other way around
+                if (angle < 0.) angle += 2. * M_PI; // we need to make sure that we always have positive angles!
+                if (angle * direction < largestAngle) {
+                    largestAngle = angle * direction;
                     intersectionPoint = intersection;
                     index = i;
                 }
@@ -159,10 +159,10 @@ vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center, float direction
             vec2 intersection = getPolyVertex(i) + t * d;
             if (dot(intersection - start, intersection - start) > eps)
             {
-                float angle = angle_between(intersection - center, start - center);	// TODO could be other way around
-                if (angle* direction < 0.) angle += 2. * M_PI * direction; // we need to make sure that we always have positive angles!
-                if (angle < largestAngle) {
-                    largestAngle = angle;
+                float angle = angle_between(start - center, intersection - center);	// TODO could be other way around
+                if (angle < 0.) angle += 2. * M_PI ; // we need to make sure that we always have positive angles!
+                if (angle * direction < largestAngle) {
+                    largestAngle = angle * direction;
                     intersectionPoint = intersection;
                     index = i;
                 }
@@ -229,7 +229,7 @@ void fragment() {
 	//COLOR = texture(TEXTURE, UV + vec2(getPolyLength(n-1)*0.01, 0));
 	//COLOR = texture(TEXTURE, UV + getPolyVertex(n)*0.1);
 	//COLOR = texture(TEXTURE, UV + next*0.01);
-	COLOR = vec4(next, 0., 1.);
+	COLOR = vec4(next.x, next.y, 0., 1.);
 	//COLOR = texture(TEXTURE, next);
 }
 
