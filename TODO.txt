@@ -1,0 +1,7 @@
+was noch connected werden muss:
+reset_image in Phasespace mit eigenem button, new polygon, change radius
+
+Flowmap muss ordentlich gemacht werden (an radius anbinden)
+Bild ändern vielleicht?
+
+Phasespace trajectory on click muss pixel gesetzt werden

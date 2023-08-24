@@ -229,8 +229,8 @@ void fragment() {
 	//COLOR = texture(TEXTURE, UV + vec2(getPolyLength(n-1)*0.01, 0));
 	//COLOR = texture(TEXTURE, UV + getPolyVertex(n)*0.1);
 	//COLOR = texture(TEXTURE, UV + next*0.01);
-	//COLOR = vec4(next, 0., 1.);
-	COLOR = texture(TEXTURE, next);
+	COLOR = vec4(next, 0., 1.);
+	//COLOR = texture(TEXTURE, next);
 }
 
 
