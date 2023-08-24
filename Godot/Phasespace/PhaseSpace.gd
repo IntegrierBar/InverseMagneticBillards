@@ -155,6 +155,11 @@ func _on_SpawnTrajBatch_pressed():
 	
 	
 
+
+func _on_ClearPSTrajectories_pressed():
+	reset_image()
+
+
 #func _draw():
 	# draw bounding box of image FOR NOW SKIP THIS
 	#draw_rect(Rect2(rect_position, rect_size), bounding_box_color, false)

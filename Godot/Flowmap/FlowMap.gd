@@ -22,11 +22,17 @@ func _ready():
 func invert_y(p: Vector2) -> Vector2:
 	return Vector2(p.x, -p.y)
 
+func invert_y_array(a: Array) -> Array:
+	var inverted = []
+	for p in a:
+		inverted.append(invert_y(p))
+	return inverted
+
 func set_polygon_map(vertices: Array):
 	var l_array: Array = [0.0]
 	for i in range(vertices.size()-1):
 		l_array.append( l_array[i] + (vertices[i] - vertices[i+1]).length())
-	$"../../FlowMap".store_polygon_as_image(vertices, l_array)
+	$"../../FlowMap".store_polygon_as_image(invert_y_array(vertices), l_array)
 
 # this function gets an array of Vector2 that are the vertices of the polygon
 # IMPORTANT: last vertex != first index, we close the polygon ourself

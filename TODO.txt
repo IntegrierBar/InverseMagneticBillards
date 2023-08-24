@@ -1,7 +1,14 @@
 was noch connected werden muss:
-reset_image in Phasespace mit eigenem button, new polygon, change radius
+reset_image in Phasespace mit eigenem button, new polygon, change radius  X
 
 Flowmap muss ordentlich gemacht werden (an radius anbinden)
 Bild ändern vielleicht?
 
-Phasespace trajectory on click muss pixel gesetzt werden
+Phasespace trajectory on click muss pixel gesetzt werden  X
+Note: Trajektorien, die über Phasespace control hinzugefügt werden, bekommen ihre Startcoordinaten in den 
+phasespace gemalt, Trajektorien die über die normale control hinzugefügt werden, bekommen ihre Startkoordinaten
+NICHT in den phasespace gemalt, erst nach einer Iteration tauchen sie im phasespace auf!
+
+Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
+
+Füge remove all trajectories button hinzu

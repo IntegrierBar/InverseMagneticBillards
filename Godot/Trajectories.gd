@@ -242,6 +242,7 @@ func _on_Button_pressed():
 func _on_ButtonPolygon_pressed():
 	current_state = STATES.SET_POLYGON
 	clear_polygon()
+	phase_space.reset_image()
 	polygon_instr.text = "Click to position at least 3 points to create an new polygon"
 	
 
@@ -266,6 +267,7 @@ func _on_NewStartPos_pressed(id):
 # radius is set
 func _on_TextEdit_text_changed(): 
 	if radius_edit.text.is_valid_float():
+		phase_space.reset_image()
 		var newradius = radius_edit.text.to_float()
 		trajectories.set_radius(newradius)
 
@@ -374,13 +376,14 @@ func _on_SpawnPSTrajOnCoords_pressed():
 		if c1 > 0 and c1 < 1 and c2 > 0 and c2 < 1:
 			var ps_pos = Vector2(c1, c2)
 			add_trajectorie_ps(ps_pos, colour)
-		
+			phase_space.add_initial_coords_to_image([ps_pos], [colour])
 			_new_trajectory_added(colour)
 
 
 func _spawn_ps_traj_on_click(ps_coord):
 	var colour = single_ps_traj.get_child(0).get_child(1).get_pick_color()
 	add_trajectorie_ps(ps_coord, colour)
+	phase_space.add_initial_coords_to_image([ps_coord], [colour])
 	_new_trajectory_added(colour)
 	
 
