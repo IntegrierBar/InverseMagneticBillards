@@ -157,14 +157,14 @@ func clear_polygon():
 	print(trajcount)
 	if trajcount > 1:
 		for i in range(1, trajcount): 
-			# Note: it looks like Godot and C++ have different ways to handle how to remove objects! Watch out with the indices!
+# Note: it looks like Godot and C++ have different ways to handle how to remove objects! Watch out with the indices!
 			print(i)
 			var container = traj_control.get_child(1 + i)
-			# this index has to change with the iterations despite the node at the position being removed
+# this index has to change with the iterations despite the node at the position being removed
 			container.queue_free()
 			print(container)
 			trajectories.remove_trajectory(1)
-			# this index has to be the same because the trajectory previously at position 2 is removed in the previous iteration
+# this index has to be the same because the trajectory previously at position 2 is removed in the previous iteration
 	
 	trajectories.clear_polygon()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
@@ -383,3 +383,62 @@ func _spawn_ps_traj_on_click(ps_coord):
 	add_trajectorie_ps(ps_coord, colour)
 	_new_trajectory_added(colour)
 	
+
+func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int):
+	var xmin
+	var xmax
+	var ymin
+	var ymax
+	
+	if bc1[0] > bc2[0]:
+		xmin = bc2[0]
+		xmax = bc1[0]
+	else:
+		xmin = bc1[0]
+		xmax = bc2[0]
+		
+	if bc1[1] > bc2[1]:
+		ymin = bc2[1]
+		ymax = bc1[1]
+	else:
+		ymin = bc1[1]
+		ymax = bc2[1]
+	
+	var w = xmax - xmin
+	var h = ymax - ymin
+	var xymin = Vector2(xmin, ymin)
+	
+	var pos = traj_batch_pos(n, w, h, xymin)
+	
+	var colours : PoolColorArray 
+	colours.resize(pos.size())
+	colours.fill(Color.aqua)
+	#for i in range(colours.size()):
+	#	colours[i] = Color(pos[i].x, pos[i].y, 0, 1)
+	
+	phase_space.add_initial_coords_to_image(pos, colours)
+	
+	for i in range(pos.size()):
+		add_trajectorie_ps(pos[i], colours[i])
+		
+		_new_trajectory_added(colours[i])
+	
+	
+	
+	
+
+func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
+	var x = int(sqrt(n))
+	var y = x
+	var xstep = w / (x - 1)
+	var ystep = h / (y - 1)
+	
+	var positions : Array
+	
+	for i in range(x):
+		for j in range(y):
+			
+			var pos = Vector2(i * xstep, j * ystep)
+			positions.append(pos + xymin) 
+	
+	return positions

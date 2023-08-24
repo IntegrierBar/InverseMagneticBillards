@@ -16,6 +16,7 @@ onready var sizey = rect_size.y
 var traj_script 
 var mouse_inside = false
 var instr_label
+var num_traj_in_batch
 
 enum STATES {
 	REST,
@@ -39,6 +40,7 @@ func _ready():
 	
 	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
 	instr_label = get_tree().get_nodes_in_group("TrajBatchInstr")[0]
+	num_traj_in_batch = get_tree().get_nodes_in_group("NumberTrajInBatch")[0]
 	
 	connect("mouse_entered", self, "_set_inside")
 	connect("mouse_exited", self, "_set_outside")
@@ -72,6 +74,8 @@ func mouse_input():
 			
 			current_state = STATES.REST
 			instr_label.text = " "
+			var n = int(num_traj_in_batch.text)
+			traj_script._spawn_ps_traj_batch(batch_coord1, batch_coord2, n)
 		STATES.REST:
 			pass
 
@@ -111,6 +115,19 @@ func add_points_to_image(points: Array, colors: PoolColorArray):
 	background.set_data(phase_space)
 	self.texture = background
 	update()
+	
+func add_initial_coords_to_image(points: Array, colors: PoolColorArray):
+	phase_space.lock()
+	points = rescale(points)
+	for i in range(points.size()):
+		print(points[i])
+		phase_space.set_pixelv(points[i], colors[i])
+	phase_space.unlock()
+	# set image
+	background.set_data(phase_space)
+	self.texture = background
+	update()
+
 
 func local_to_ps() -> Vector2:
 	var locpos = get_local_mouse_position()
@@ -132,8 +149,11 @@ func _on_SpawnTrajOnClickButton_pressed():
 	
 
 func _on_SpawnTrajBatch_pressed():
-	current_state = STATES.BATCH1
-	instr_label.text = "Click twice to select two phasespace coordinates"
+	if num_traj_in_batch.text.is_valid_integer():
+		current_state = STATES.BATCH1
+		instr_label.text = "Click twice to select two phasespace coordinates"
+	else: 
+		instr_label.text = "Number of trajectories in the batch needed"
 	
 	
 

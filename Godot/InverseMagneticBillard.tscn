@@ -542,12 +542,13 @@ size_flags_horizontal = 3
 text = "#Trajectories in batch"
 clip_text = true
 
-[node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="NumberTrajectoriesInBatch" type="TextEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/HBoxContainer" groups=["NumberTrajInBatch"]]
 margin_left = 140.0
 margin_right = 277.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
 size_flags_horizontal = 3
+text = "100"
 
 [node name="SpawnTrajBatch" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 220.0
