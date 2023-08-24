@@ -36,21 +36,20 @@ func _set_zoom_level(value: float) -> void:
 func input(event):
 	#if mouse_inside:
 	#if get_viewport_rect().has_point(get_global_mouse_position()):
-		#print("moving by mouse")
-	if true:
-		if event.is_action_pressed("zoom_in"):
-			_set_zoom_level(_zoom_level/zoom_factor)
-		if event.is_action_pressed("zoom_out"):
-			_set_zoom_level(_zoom_level*zoom_factor)
-		# make camera dragable
-		if event is InputEventMouseMotion:
-			if event.button_mask == BUTTON_MASK_RIGHT:
-				position -= event.relative * zoom
-
-func _set_inside():
-	#print("inside")
-	mouse_inside = true
-
-func _set_outside():
-	#print("outiside")
-	mouse_inside = false
+		#print("moving by mouse"):
+	if event.is_action_pressed("zoom_in"):
+		_set_zoom_level(_zoom_level/zoom_factor)
+	if event.is_action_pressed("zoom_out"):
+		_set_zoom_level(_zoom_level*zoom_factor)
+	# make camera dragable
+	if event is InputEventMouseMotion:
+		if event.button_mask == BUTTON_MASK_RIGHT:
+			position -= event.relative * zoom
+#
+#func _set_inside():
+#	#print("inside")
+#	mouse_inside = true
+#
+#func _set_outside():
+#	#print("outiside")
+#	mouse_inside = false

@@ -10,7 +10,7 @@
 [ext_resource path="res://addons/dockable_container/layout_split.gd" type="Script" id=8]
 [ext_resource path="res://ControlPanel/ScrollContainer.gd" type="Script" id=9]
 [ext_resource path="res://Viewport/ViewportContainerScript.gd" type="Script" id=10]
-[ext_resource path="res://Viewport/MarginContainerScript.gd" type="Script" id=11]
+[ext_resource path="res://test.gd" type="Script" id=11]
 [ext_resource path="res://ImportedDesignElements/CustomFont/TitilliumText-Regular.otf" type="DynamicFontData" id=12]
 [ext_resource path="res://Flowmap/FlowMap.gd" type="Script" id=13]
 [ext_resource path="res://ControlPanel/OneTrajectoryControlContainer.tscn" type="PackedScene" id=14]
@@ -132,7 +132,6 @@ margin_right = 457.032
 margin_bottom = 590.0
 stretch = true
 script = ExtResource( 10 )
-camera = NodePath("Viewport/Camera2D")
 trajectories = NodePath("Viewport/Trajectories")
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer"]
@@ -142,6 +141,8 @@ disable_3d = true
 usage = 0
 render_target_update_mode = 3
 physics_object_picking = true
+script = ExtResource( 19 )
+camera = NodePath("Camera2D")
 
 [node name="Camera2D" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport" instance=ExtResource( 1 )]
 position = Vector2( 252.155, 8 )
@@ -365,34 +366,33 @@ margin_bottom = 300.406
 margin_right = 289.067
 margin_bottom = 292.406
 stretch = true
+script = ExtResource( 11 )
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer"]
 size = Vector2( 289, 292 )
 handle_input_locally = false
 render_target_update_mode = 3
 physics_object_picking = true
+script = ExtResource( 19 )
+camera = NodePath("Camera2D")
 
 [node name="Camera2D" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" instance=ExtResource( 1 )]
 _zoom_level = 2.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
+visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 alignment = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
+visible = false
 margin_left = -200.0
 margin_top = -200.0
 margin_right = 200.0
 margin_bottom = 200.0
-script = ExtResource( 11 )
-camera = NodePath("../Camera2D")
 
-[node name="PhaseSpace" type="TextureRect" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer" groups=["PhaseSpace"]]
-margin_right = 400.0
-margin_bottom = 400.0
-expand = true
-stretch_mode = 1
+[node name="PhaseSpace" type="Sprite" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" groups=["PhaseSpace"]]
 script = ExtResource( 2 )
 
 [node name="PSControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
@@ -600,8 +600,6 @@ margin_left = -15.0
 margin_top = -15.0
 margin_right = 25.0
 margin_bottom = 25.0
-script = ExtResource( 11 )
-camera = NodePath("../Camera2D")
 
 [node name="FlowMap" type="TextureRect" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/MarginContainer" groups=["FlowMap"]]
 visible = false
@@ -612,7 +610,7 @@ script = ExtResource( 13 )
 [node name="Trajectory" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/MarginContainer/FlowMap" instance=ExtResource( 4 )]
 visible = false
 
-[node name="TextureRect" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
+[node name="FlowMap" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
 show_behind_parent = true
 material = SubResource( 18 )
 texture = ExtResource( 16 )
@@ -625,7 +623,6 @@ script = ExtResource( 17 )
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/NewTrajectoriesButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_NewTrajectoriesButton_pressed"]
-[connection signal="size_changed" from="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_Viewport_size_changed"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnTrajOnClickButton" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_SpawnTrajOnClickButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnTrajOnClickButton" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajOnClickButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnPSTrajOnCoords" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SpawnPSTrajOnCoords_pressed"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SpawnTrajBatch" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace" method="_on_SpawnTrajBatch_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SpawnTrajBatch" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajBatch_pressed"]

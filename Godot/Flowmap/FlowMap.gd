@@ -26,7 +26,7 @@ func set_polygon_map(vertices: Array):
 	var l_array: Array = [0.0]
 	for i in range(vertices.size()-1):
 		l_array.append( l_array[i] + (vertices[i] - vertices[i+1]).length())
-	$"../../TextureRect".store_polygon_as_image(vertices, l_array)
+	$"../../FlowMap".store_polygon_as_image(vertices, l_array)
 
 # this function gets an array of Vector2 that are the vertices of the polygon
 # IMPORTANT: last vertex != first index, we close the polygon ourself
@@ -86,4 +86,6 @@ func rescale(points: Array) -> Array:
 
 
 func _on_Trajectories_close_polygon(p):
-	set_polygon(p)
+	p.append(p[0])
+	set_polygon_map(p)
+	#set_polygon(p)

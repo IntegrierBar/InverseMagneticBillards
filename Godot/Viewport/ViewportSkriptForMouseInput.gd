@@ -9,5 +9,5 @@ func _ready():
 
 func _input(event):
 	if get_visible_rect().has_point(get_mouse_position()):
-		print(event)
+		#print(event)
 		get_node(camera).input(event)

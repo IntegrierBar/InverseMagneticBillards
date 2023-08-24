@@ -1,4 +1,4 @@
-extends TextureRect
+extends Sprite#TextureRect
 
 
 
@@ -10,8 +10,8 @@ var trajectory_count = 0
 
 var phase_space: Image
 var background : ImageTexture = null
-onready var sizex = rect_size.x
-onready var sizey = rect_size.y
+onready var sizex = 400#rect_size.x
+onready var sizey = 400#rect_size.y
 
 var traj_script 
 var mouse_inside = false
@@ -42,11 +42,12 @@ func _ready():
 	instr_label = get_tree().get_nodes_in_group("TrajBatchInstr")[0]
 	num_traj_in_batch = get_tree().get_nodes_in_group("NumberTrajInBatch")[0]
 	
-	connect("mouse_entered", self, "_set_inside")
-	connect("mouse_exited", self, "_set_outside")
+	#connect("mouse_entered", self, "_set_inside")
+	#connect("mouse_exited", self, "_set_outside")
 	
 
 func _set_inside():
+	#print("inside")
 	mouse_inside = true
 	
 func _set_outside():
@@ -82,6 +83,8 @@ func mouse_input():
 
 func reset_image():
 	phase_space.fill(Color.black)
+	background.set_data(phase_space)
+	self.texture = background
 	update()
 
 func rescale_image(size):
@@ -120,7 +123,7 @@ func add_initial_coords_to_image(points: Array, colors: PoolColorArray):
 	phase_space.lock()
 	points = rescale(points)
 	for i in range(points.size()):
-		print(points[i])
+		#print(points[i])
 		phase_space.set_pixelv(points[i], colors[i])
 	phase_space.unlock()
 	# set image
@@ -131,16 +134,11 @@ func add_initial_coords_to_image(points: Array, colors: PoolColorArray):
 
 func local_to_ps() -> Vector2:
 	var locpos = get_local_mouse_position()
+	locpos = locpos + Vector2(sizex/2, sizey/2)
+	#print(locpos)
 	var x = locpos[0] / sizex
 	var y = locpos[1] / sizey
 	return Vector2(x, y)
-	
-
-
-func _on_Viewport_size_changed():
-	print("size change")
-	var viewport = $".."
-	#rescale_image(viewport.size)
 
 
 func _on_SpawnTrajOnClickButton_pressed():

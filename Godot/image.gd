@@ -1,25 +1,25 @@
 extends Sprite
 
 var radius: float = 1.0;
-
-func _ready():
-	var c = Color(10, 12, 13)
-	print("color")
-	print(c.r)
-	print(c.g)
-	print(c.b)
-	
-	var test = []
-	var length = []
-	test.append(Vector2(0.0, 0.0))
-	length.append(0.0)
-	test.append(Vector2(10.0, 0.0))
-	length.append(10.0)
-	test.append(Vector2(0.0, 10.0))
-	length.append(10.0+sqrt(200.0))
-	test.append(Vector2(0.0, 0.0))
-	length.append(10.0+sqrt(200.0) + 10.0)
-	store_polygon_as_image(test, length)
+#
+#func _ready():
+#	var c = Color(10, 12, 13)
+#	print("color")
+#	print(c.r)
+#	print(c.g)
+#	print(c.b)
+#
+#	var test = []
+#	var length = []
+#	test.append(Vector2(0.0, 0.0))
+#	length.append(0.0)
+#	test.append(Vector2(10.0, 0.0))
+#	length.append(10.0)
+#	test.append(Vector2(0.0, 10.0))
+#	length.append(10.0+sqrt(200.0))
+#	test.append(Vector2(0.0, 0.0))
+#	length.append(10.0+sqrt(200.0) + 10.0)
+#	store_polygon_as_image(test, length)
 
 
 func store_polygon_as_image(polygon: Array, polygonLength: Array):

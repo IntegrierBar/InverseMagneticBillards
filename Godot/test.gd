@@ -8,11 +8,7 @@ extends ViewportContainer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+		connect("mouse_entered",$Viewport/PhaseSpace , "_set_inside")
+		connect("mouse_exited",$Viewport/PhaseSpace , "_set_outside")
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	#print("hi")
-	if has_focus():
-		print("I have focus")
 
