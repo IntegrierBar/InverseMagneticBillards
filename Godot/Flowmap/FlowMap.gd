@@ -22,6 +22,12 @@ func _ready():
 func invert_y(p: Vector2) -> Vector2:
 	return Vector2(p.x, -p.y)
 
+func set_polygon_map(vertices: Array):
+	var l_array: Array = [0.0]
+	for i in range(vertices.size()-1):
+		l_array.append( l_array[i] + (vertices[i] - vertices[i+1]).length())
+	$"../../TextureRect".store_polygon_as_image(vertices, l_array)
+
 # this function gets an array of Vector2 that are the vertices of the polygon
 # IMPORTANT: last vertex != first index, we close the polygon ourself
 # gets called from main Trajectories node
@@ -39,6 +45,8 @@ func set_polygon(vertices: Array):
 	fill_flow_map()
 	#print(trajectories.get_trajectories())
 	iterate_once()
+	vertices.append(vertices[0])
+	set_polygon_map(vertices)
 
 # for now this will launch a trajectory for each pixel
 # ONLY CALL AFTER POLYGON WAS CREATED AND CLOSED!

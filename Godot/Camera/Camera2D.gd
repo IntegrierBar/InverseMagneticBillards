@@ -1,6 +1,7 @@
 extends Camera2D
 
 var mouse_inside: bool = false
+export(NodePath) var ViewPort
 
 
 # Lower cap for the `_zoom_level`.
@@ -32,8 +33,11 @@ func _set_zoom_level(value: float) -> void:
 	tween.tween_property(self, "zoom", Vector2(_zoom_level, _zoom_level), zoom_duration)
 
 
-func _input(event):
-	if mouse_inside:
+func input(event):
+	#if mouse_inside:
+	#if get_viewport_rect().has_point(get_global_mouse_position()):
+		#print("moving by mouse")
+	if true:
 		if event.is_action_pressed("zoom_in"):
 			_set_zoom_level(_zoom_level/zoom_factor)
 		if event.is_action_pressed("zoom_out"):
