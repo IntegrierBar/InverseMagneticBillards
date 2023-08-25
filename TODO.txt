@@ -12,3 +12,15 @@ NICHT in den phasespace gemalt, erst nach einer Iteration tauchen sie im phasesp
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 
 Füge remove all trajectories button hinzu
+
+Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
+Flowmap control 
+- Anzahl Iterationen
+- Vorwärts/Rückwärts
+- Nur Position, nur Winkel, beides
+- Zeige Ableitung (ftle)
+- Soll hide/show verwenden
+
+Flowmap bei(während) click zeigt Trajectorie in normalem Polygon an 
+
+Überprüfen das Flowmap und Phasespace gleich orientiert sind
