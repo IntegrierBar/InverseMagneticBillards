@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -19,6 +19,7 @@
 [ext_resource path="res://image.gd" type="Script" id=17]
 [ext_resource path="res://Shaders/InverseMagneticBillard.gdshader" type="Shader" id=18]
 [ext_resource path="res://Viewport/ViewportSkriptForMouseInput.gd" type="Script" id=19]
+[ext_resource path="res://Flowmap/FlowmapControl.gd" type="Script" id=20]
 
 [sub_resource type="Resource" id=8]
 resource_name = "Tabs"
@@ -169,7 +170,7 @@ script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 217.901
-margin_bottom = 361.0
+margin_bottom = 367.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -354,12 +355,13 @@ text = "Delete all trajectories"
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 347.0
 margin_right = 217.0
-margin_bottom = 361.0
+margin_bottom = 367.0
 size_flags_horizontal = 3
 
-[node name="CurrentMousePosition" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
+[node name="FlowmapControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
 margin_right = 217.0
-margin_bottom = 14.0
+margin_bottom = 20.0
+text = "Open Flowmap Control"
 clip_text = true
 
 [node name="Phasespace" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
@@ -621,13 +623,106 @@ material = SubResource( 18 )
 texture = ExtResource( 16 )
 script = ExtResource( 17 )
 
-[node name="WindowDialog" type="WindowDialog" parent="CanvasLayer/DockableContainer/Flowmap"]
+[node name="FlowmapControl" type="WindowDialog" parent="CanvasLayer/DockableContainer/Flowmap"]
 visible = true
 margin_left = 12.0
+margin_top = 20.0
 margin_right = 229.901
 margin_bottom = 243.024
+size_flags_horizontal = 3
+size_flags_vertical = 3
 window_title = "Flowmap Control"
 resizable = true
+script = ExtResource( 20 )
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl"]
+anchor_right = 0.996
+anchor_bottom = 0.995
+margin_left = 5.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer"]
+margin_right = 207.0
+margin_bottom = 211.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_vertical_enabled = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer"]
+margin_right = 207.0
+margin_bottom = 211.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FMIterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_right = 207.0
+margin_bottom = 14.0
+text = "Iterations"
+clip_text = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 18.0
+margin_right = 207.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 0, 20 )
+
+[node name="Label" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_top = 3.0
+margin_right = 101.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
+text = "Set #iterations:"
+clip_text = true
+
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_left = 105.0
+margin_right = 207.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 42.0
+margin_right = 207.0
+margin_bottom = 66.0
+size_flags_horizontal = 3
+
+[node name="IterateForwardLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_top = 5.0
+margin_right = 179.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Iterate forwards:"
+clip_text = true
+
+[node name="IterateForwardCheck" type="CheckBox" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 183.0
+margin_right = 207.0
+margin_bottom = 24.0
+pressed = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 70.0
+margin_right = 207.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+
+[node name="IterateBackwardLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer3"]
+margin_top = 5.0
+margin_right = 179.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Iterate backwards:"
+clip_text = true
+
+[node name="IterateBackwardCheck" type="CheckBox" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 183.0
+margin_right = 207.0
+margin_bottom = 24.0
 
 [connection signal="close_polygon" from="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/MarginContainer/FlowMap" method="_on_Trajectories_close_polygon"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer/IterateButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Button_pressed"]
@@ -637,7 +732,10 @@ resizable = true
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/NewTrajectoriesButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_NewTrajectoriesButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/DeleteAllTrajectories" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_DeleteAllTrajectories_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other/FlowmapControlButton" to="CanvasLayer/DockableContainer/Flowmap/FlowmapControl" method="_on_FlowmapControlButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnTrajOnClickButton" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajOnClickButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnPSTrajOnCoords" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SpawnPSTrajOnCoords_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SpawnTrajBatch" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajBatch_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/ClearPSTrajectories" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_ClearPSTrajectories_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/IterateForwardCheck" to="CanvasLayer/DockableContainer/Flowmap/FlowmapControl" method="_on_IterateForwardCheck_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer3/IterateBackwardCheck" to="CanvasLayer/DockableContainer/Flowmap/FlowmapControl" method="_on_IterateBackwardCheck_pressed"]
