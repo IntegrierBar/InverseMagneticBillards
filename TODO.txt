@@ -15,7 +15,7 @@ Füge remove all trajectories button hinzu
 
 Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
 Flowmap control 
-- Anzahl Iterationen
+- Anzahl Iterationen X
 - Vorwärts/Rückwärts
 - Nur Position, nur Winkel, beides
 - Zeige Ableitung (ftle)
@@ -24,3 +24,5 @@ Flowmap control
 Flowmap bei(während) click zeigt Trajectorie in normalem Polygon an 
 
 Überprüfen das Flowmap und Phasespace gleich orientiert sind
+
+additional Slider für radius

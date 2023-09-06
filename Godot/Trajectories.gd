@@ -27,6 +27,7 @@ var mouse_inside = false
 
 #onready var trajectory_scene = preload("res://Trajectory.tscn")
 var phase_space# = $"../../../../Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace"
+var flow_map
 var polygon_instr
 var trajectory_instr
 var radius_edit
@@ -66,6 +67,7 @@ var trajectory_to_edit: int
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	phase_space = get_tree().get_nodes_in_group("PhaseSpace")[0]
+	flow_map = get_tree().get_nodes_in_group("FlowMap")[0]
 	polygon_instr = get_tree().get_nodes_in_group("PolygonInstructions")[0]
 	trajectory_instr = get_tree().get_nodes_in_group("TrajectoriesInstructions")[0]
 	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
@@ -142,8 +144,8 @@ func close_polygon():
 	trajectories.reset_trajectories()
 	if polygon_closed || polygon.size() < 3:
 		return
-	emit_signal("close_polygon", polygon)	# signal flow map, that polygon is closed
 	polygon.append(polygon[0])
+	emit_signal("close_polygon", polygon)	# signal flow map, that polygon is closed
 	trajectories.close_polygon()
 	polygon_closed = true
 	trajectories.reset_trajectories()
@@ -270,6 +272,8 @@ func _on_TextEdit_text_changed():
 		phase_space.reset_image()
 		var newradius = radius_edit.text.to_float()
 		trajectories.set_radius(newradius)
+		flow_map.set_radius(newradius)
+		
 
 
 

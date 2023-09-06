@@ -5,6 +5,10 @@ uniform int n;	// largest index of polygon
 uniform sampler2D polygon; // need to pass polygon as texture since arrays cant be passed in godot 3
 uniform sampler2D polygonLength;
 
+uniform int iterations; 	// how many iterations should be done
+uniform bool forwards;		// should we iterate forwards or backwards?
+
+
 const float M_PI = 3.14159265;
 const float eps = 1e-6;
 
@@ -93,7 +97,7 @@ vec3 intersect_polygon_line(vec2 start, vec2 dir, int currentIndexOnPolygon, flo
     {
         // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
         float denominator = (getPolyVertex(i + 1).x - getPolyVertex(i).x) * dir.y - (getPolyVertex(i + 1).y - getPolyVertex(i).y) * dir.x;
-        if (abs(denominator) < 1e-6)
+        if (abs(denominator) < eps)
         {
             continue; // no intersection possible, since lines near parallel
         }
@@ -143,7 +147,7 @@ vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center, float direction
         float t = (-b - discriminant) / (2.0 * a);
         if (0. <= t && t <= 1.) { // consider using eps here
             vec2 intersection = getPolyVertex(i) + t * d;
-            if (dot(intersection - start, intersection - start) > eps) // check if intersection point is different from starting point
+            if (dot(intersection - start, intersection - start) > eps*radius) // check if intersection point is different from starting point
             {
                 float angle = angle_between(start - center, intersection - center);	// TODO could be other way around
                 if (angle < 0.) angle += 2. * M_PI; // we need to make sure that we always have positive angles!
@@ -157,7 +161,7 @@ vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center, float direction
         t = (-b + discriminant) / (2. * a); // also check the other intersection
         if (0. <= t && t <= 1.) { // consider using eps here
             vec2 intersection = getPolyVertex(i) + t * d;
-            if (dot(intersection - start, intersection - start) > eps)
+            if (dot(intersection - start, intersection - start) > eps*radius)
             {
                 float angle = angle_between(start - center, intersection - center);	// TODO could be other way around
                 if (angle < 0.) angle += 2. * M_PI ; // we need to make sure that we always have positive angles!
@@ -219,17 +223,35 @@ vec2 iterateForwards(vec2 currentPosition, vec2 currentDirection, int currentInd
 void fragment() {
 	vec2 pos = UV;	// phasespace coords are texture coords
 	// get start, dir, index
-	mat3 coords = phaseSpaceToR2(pos);
-	vec2 start = coords[0].xy;
-	vec2 dir = coords[1].xy;
-	int index = int(coords[2].x);
+//	mat3 coords = phaseSpaceToR2(pos);
+//	vec2 start = coords[0].xy;
+//	vec2 dir = coords[1].xy;
+//	int index = int(coords[2].x);
+	if (forwards) {
+		for (int i=0; i < iterations; i++) {
+			mat3 coords = phaseSpaceToR2(pos);
+			vec2 start = coords[0].xy;
+			vec2 dir = coords[1].xy;
+			int index = int(coords[2].x);
+			pos = iterateForwards(start, dir, index);
+		}
+	}
+	else {
+		for (int i=0; i < iterations; i++) {
+			mat3 coords = phaseSpaceToR2(pos);
+			vec2 start = coords[0].xy;
+			vec2 dir = coords[1].xy;
+			//int index = int(coords[2].x);
+			pos = iterateBackwards(start, dir);
+		}
+	}
 	//vec2 next = iterateBackwards(start, dir);
-	vec2 next = iterateForwards(start, dir, index);
+	//vec2 next = iterateForwards(start, dir, index);
 	// DETERMINE COLOR FROM next PHASESPACE COORDS
 	//COLOR = texture(TEXTURE, UV + vec2(getPolyLength(n-1)*0.01, 0));
 	//COLOR = texture(TEXTURE, UV + getPolyVertex(n)*0.1);
 	//COLOR = texture(TEXTURE, UV + next*0.01);
-	COLOR = vec4(next.x, next.y, 0., 1.);
+	COLOR = vec4(pos.x, pos.y, 0., 1.);
 	//COLOR = texture(TEXTURE, next);
 }
 

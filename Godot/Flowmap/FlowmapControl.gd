@@ -5,10 +5,13 @@ extends WindowDialog
 # var a = 2
 # var b = "text"
 
+var FlowMap
+var iterations_edit
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	FlowMap = get_tree().get_nodes_in_group("FlowMap")[0]
+	iterations_edit = get_tree().get_nodes_in_group("FMIterationsEdit")[0]
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,3 +29,9 @@ func _on_IterateForwardCheck_pressed():
 
 func _on_IterateBackwardCheck_pressed():
 	pass # Replace with function body.
+
+
+func _on_TextEdit_text_changed():
+	var text = iterations_edit.text
+	if text.is_valid_integer():
+		FlowMap.set_iterations(int(text))
