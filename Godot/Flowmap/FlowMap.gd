@@ -67,6 +67,9 @@ func set_radius(r):
 func set_iterations(iter: int):
 	material.set_shader_param("iterations", iter)
 
+func set_direction(b: bool): # forwards is true
+	material.set_shader_param("forwards", b)
+
 func invert_y(p: Vector2) -> Vector2:
 	return Vector2(p.x, -p.y)
 

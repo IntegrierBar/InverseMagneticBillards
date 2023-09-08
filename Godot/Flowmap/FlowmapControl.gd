@@ -19,19 +19,24 @@ func _ready():
 #	pass
 
 
-func _on_FlowmapControlButton_pressed():
+func _on_FlowmapControlButton_pressed(): 
 	self.show()
 
 
-func _on_IterateForwardCheck_pressed():
-	pass # Replace with function body.
-
-
-func _on_IterateBackwardCheck_pressed():
-	pass # Replace with function body.
 
 
 func _on_TextEdit_text_changed():
 	var text = iterations_edit.text
 	if text.is_valid_integer():
 		FlowMap.set_iterations(int(text))
+
+
+
+
+func _on_ForwardBackwardToggle_toggled(button_pressed):
+	# for the shader true is forwards, false is backwards
+	# here, forwards is false and backwards is true
+	FlowMap.set_direction(!button_pressed)
+
+
+
