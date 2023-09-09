@@ -462,3 +462,13 @@ func _on_DeleteAllTrajectories_pressed():
 	# Note: moving the position of the delete button means that the code for adding new trajectories
 	# has to be changed as well! The new trajectories are currentlly moved to a fixed position in 
 	# relation to the other children of the parent!
+
+
+func R2ToPS(start: Vector2, dir: Vector2, currentIndexOnPolygon: int): 
+	# Where do I get the current Index on polygon from??? 
+	pass
+#vec2 R2ToPhaseSpace(vec2 start, vec2 dir, int currentIndexOnPolygon) {
+#	float angle = angle_between(normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon)), dir);
+#	// TODO need to check if angle positive or negative right now
+#	return vec2( (getPolyLength(currentIndexOnPolygon) + length(getPolyVertex(currentIndexOnPolygon) - start)) / getPolyLength(n-1), abs(angle) / M_PI );
+#}

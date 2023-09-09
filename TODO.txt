@@ -11,7 +11,7 @@ NICHT in den phasespace gemalt, erst nach einer Iteration tauchen sie im phasesp
 
 Startpunkt der Trajektorien die über den normal Space gespawnt werden muss in den phasespace eingefügt werden
 
-Delete trajectories sollte Trajektorien auch aus dem phasespace entefernen
+Delete trajectories sollte Trajektorien auch aus dem phasespace entefernen (ich weiß nicht ob das geht)
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 
