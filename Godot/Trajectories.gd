@@ -31,6 +31,7 @@ var flow_map
 var polygon_instr
 var trajectory_instr
 var radius_edit
+var radius_slider
 var traj_control
 var batch_edit
 var single_ps_traj
@@ -71,6 +72,7 @@ func _ready():
 	polygon_instr = get_tree().get_nodes_in_group("PolygonInstructions")[0]
 	trajectory_instr = get_tree().get_nodes_in_group("TrajectoriesInstructions")[0]
 	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
+	radius_slider = get_tree().get_nodes_in_group("RadiusSlider")[0]
 	traj_control = get_tree().get_nodes_in_group("TrajectoriesControlPart")[0]
 	batch_edit = get_tree().get_nodes_in_group("BatchSizeEdit")[0]
 	single_ps_traj = get_tree().get_nodes_in_group("SinglePSTraj")[0]
@@ -79,6 +81,7 @@ func _ready():
 	trajectories.maxCount = 100
 	radius = 1
 	trajectories.set_radius(radius)
+	radius_slider.value = radius
 	trajectories.reset_trajectories()
 	polygon_closed = false
 	polygon = []
@@ -209,7 +212,8 @@ func iterate_batch():
 
 func set_initial_values(index: int, start: Vector2, dir: Vector2):
 	trajectories.set_initial_values(index, invert_y(start), invert_y(dir))
-	R2ToPS(start, dir)
+	var pscoord = R2ToPS(start, dir)
+	phase_space.add_initial_coords_to_image([pscoord], [trajectories.get_trajectory_colors()[index]])
 
 
 
@@ -270,13 +274,36 @@ func _on_NewStartPos_pressed(id):
 # radius is set
 func _on_TextEdit_text_changed(): 
 	if radius_edit.text.is_valid_float():
-		phase_space.reset_image()
+		#phase_space.reset_image()
 		var newradius = radius_edit.text.to_float()
-		trajectories.set_radius(newradius)
-		flow_map.set_radius(newradius)
+		#trajectories.set_radius(newradius)
+		#flow_map.set_radius(newradius)
+		if newradius <= radius_slider.max_value: 
+			radius_slider.value = newradius
+		else: 
+			# this allows to set the radius larger than 20 via the text field
+			radius_slider.value = radius_slider.max_value
+			phase_space.reset_image()
+			trajectories.set_radius(newradius)
+			flow_map.set_radius(newradius)
+		
 		
 
-
+func _on_RadiusSlider_value_changed(newradius):
+	# slider receives update even when it is updated via script
+	# slider can be used up to 19.99, for larger values the text field is needed
+	
+	if newradius != radius_slider.max_value:
+		# necessary to avoid the cursor in the text edit field to jump back to the front,
+		# making entering twodigit numbers a pain
+		if radius_edit.text != String(newradius): 
+			radius_edit.text = String(newradius) 
+		phase_space.reset_image()
+		trajectories.set_radius(newradius)
+		flow_map.set_radius(newradius)
+	else: 
+		pass
+	
 
 # used to know if mouse is inside the clickable area or not
 func _set_inside():
@@ -322,29 +349,6 @@ func _on_NewTrajectoriesButton_pressed():
 	
 	_new_trajectory_added(random_colour)
 	
-#	var count = traj_control.get_child_count()
-#	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
-#	var newTrajControl = scene.instance()
-#
-#
-#	traj_control.add_child(newTrajControl)
-#	traj_control.move_child(newTrajControl, count - 2)
-#
-#	var colourPicker = newTrajControl.get_child(1).get_child(1)
-#	colourPicker.set_pick_color(random_colour)
-#
-#
-#	# connect the change start position button
-#	var newStartPos = newTrajControl.get_child(0).get_child(0)
-#	var id = newTrajControl.get_instance_id()
-#	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id]) 
-#
-#	# connect color picker button
-#	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
-#
-#	# connect the delete trajectory button
-#	var deleteTraj = newTrajControl.get_child(0).get_child(1)
-#	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
 	
 
 func _on_delete_trajectory_pressed(id):
@@ -416,11 +420,13 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int):
 	var h = ymax - ymin
 	var xymin = Vector2(xmin, ymin)
 	
-	var pos = traj_batch_pos(n, w, h, xymin)
+	var res = traj_batch_pos(n, w, h, xymin)
 	
-	var colours : PoolColorArray 
-	colours.resize(pos.size())
-	colours.fill(Color.aqua)
+	var pos = res[0]
+	
+	var colours = res[1]
+	#colours.resize(pos.size())
+	#colours.fill(Color.aqua)
 	#for i in range(colours.size()):
 	#	colours[i] = Color(pos[i].x, pos[i].y, 0, 1)
 	
@@ -442,14 +448,17 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 	var ystep = h / (y - 1)
 	
 	var positions : Array
+	var colors : PoolColorArray
 	
 	for i in range(x):
 		for j in range(y):
 			
 			var pos = Vector2(i * xstep, j * ystep)
 			positions.append(pos + xymin) 
+			colors.append(Color(pos[0], pos[1], 0.5, 1)) 
+			# colors still not very good, different but difficult to see, not bright enough
 	
-	return positions
+	return [positions, colors]
 
 
 func _on_DeleteAllTrajectories_pressed():
@@ -465,7 +474,7 @@ func _on_DeleteAllTrajectories_pressed():
 	# relation to the other children of the parent!
 
 
-func R2ToPS(start: Vector2, dir: Vector2): 
+func R2ToPS(start: Vector2, dir: Vector2) -> Vector2: 
 	var index: int = 0
 	var min_distance: float = INF
 	for i in range(polygon.size()-1):	# -1 since polygon is closed
@@ -486,6 +495,7 @@ func R2ToPS(start: Vector2, dir: Vector2):
 	pos += (polygon[index] - start).length()
 	
 	var pscoords = Vector2(pos / polylength, angle / PI)
+	return pscoords
 
 	
 	
@@ -498,3 +508,7 @@ func R2ToPS(start: Vector2, dir: Vector2):
 #float angle_between(vec2 v1, vec2 v2) {
 #	return atan(determinant(mat2(v1, v2)), dot(v1, v2));
 #}
+
+
+
+

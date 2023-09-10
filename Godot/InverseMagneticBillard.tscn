@@ -181,7 +181,7 @@ script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 217.901
-margin_bottom = 367.0
+margin_bottom = 387.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -262,7 +262,7 @@ text = "1"
 [node name="Radius" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 91.0
 margin_right = 217.0
-margin_bottom = 127.0
+margin_bottom = 147.0
 size_flags_horizontal = 3
 
 [node name="RadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
@@ -296,10 +296,19 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "1 "
 
-[node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 131.0
+[node name="RadiusSlider" type="HSlider" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius" groups=["RadiusSlider"]]
+margin_top = 40.0
 margin_right = 217.0
-margin_bottom = 211.0
+margin_bottom = 56.0
+min_value = 0.01
+max_value = 20.0
+step = 0.01
+value = 1.0
+
+[node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
+margin_top = 151.0
+margin_right = 217.0
+margin_bottom = 231.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -330,9 +339,9 @@ margin_bottom = 80.0
 clip_text = true
 
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
-margin_top = 215.0
+margin_top = 235.0
 margin_right = 217.0
-margin_bottom = 343.0
+margin_bottom = 363.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -364,9 +373,9 @@ margin_bottom = 128.0
 text = "Delete all trajectories"
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 347.0
+margin_top = 367.0
 margin_right = 217.0
-margin_bottom = 367.0
+margin_bottom = 387.0
 size_flags_horizontal = 3
 
 [node name="FlowmapControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
@@ -625,6 +634,7 @@ texture = ExtResource( 16 )
 [node name="FlowmapControl" type="WindowDialog" parent="CanvasLayer/DockableContainer/Flowmap"]
 visible = true
 margin_left = 12.0
+margin_top = 30.0
 margin_right = 229.901
 margin_bottom = 243.024
 rect_min_size = Vector2( 0, 40 )
@@ -646,13 +656,13 @@ size_flags_vertical = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer"]
 margin_right = 207.0
-margin_bottom = 231.0
+margin_bottom = 201.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer"]
 margin_right = 207.0
-margin_bottom = 231.0
+margin_bottom = 201.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -782,6 +792,7 @@ margin_bottom = 40.0
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer/IterateButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Button_pressed"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer2/EditBatchSize" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditBatchSize_text_changed"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_TextEdit_text_changed"]
+[connection signal="value_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/RadiusSlider" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_RadiusSlider_value_changed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/NewTrajectoriesButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_NewTrajectoriesButton_pressed"]

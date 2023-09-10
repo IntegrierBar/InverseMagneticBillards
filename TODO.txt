@@ -9,32 +9,39 @@ Note: Trajektorien, die über Phasespace control hinzugefügt werden, bekommen i
 phasespace gemalt, Trajektorien die über die normale control hinzugefügt werden, bekommen ihre Startkoordinaten
 NICHT in den phasespace gemalt, erst nach einer Iteration tauchen sie im phasespace auf!
 
-Startpunkt der Trajektorien die über den normal Space gespawnt werden muss in den phasespace eingefügt werden
+Startpunkt der Trajektorien die über den normal Space gespawnt werden muss in den phasespace eingefügt werden  X
 
 Delete trajectories sollte Trajektorien auch aus dem phasespace entefernen (ich weiß nicht ob das geht)
+Clear phasespace entfernt Trajektorien aus dem normal space nicht, soll das so bleiben??
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 
 Füge remove all trajectories button hinzu X
+
 Soll der Button an einen anderen Ort? Zum Beispiel ganz nach oben, bedenke dass die Position der Knöpfe wichtig für
 das spawnen und entfernen von Trajektorien ist, sollte der Knopf verschoben werden, muss das angepasst werden!
 
 Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
+Notizen: Wenn ich es richtig sehe, müssen wir dafür Objekte für die Eckpunkte erzeugen die mit den Clicks gespawnt 
+werden und dann draggable sind
+
 Flowmap control 
 - Anzahl Iterationen X
-- Vorwärts/Rückwärts X (ich weiß nicht ob die rückwärtsiteration schön aussieht)
-- Nur Position, nur Winkel, beides (Knöpfe sind da, aber Funktionen zum Anbinden fehlen glaub noch)
-- Zeige Ableitung (ftle)
-- Soll hide/show verwenden
+- Vorwärts/Rückwärts X (ich weiß nicht ob die rückwärtsiteration richtig aussieht)
+- Nur Position, nur Winkel, beides X
+- Zeige Ableitung (ftle) X
+- Soll hide/show verwenden X
 
 Flowmap bei(während) click zeigt Trajectorie in normalem Polygon an 
 (das ist glaube ich wichtig, wir müssen überprüfen ob die Flowmapberechnungen passen!)
 Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
 
-Überprüfen das Flowmap und Phasespace gleich orientiert sind
+Überprüfen, dass Flowmap und Phasespace gleich orientiert sind
 
-additional Slider für radius
+additional Slider für radius   X
+Problem: Eingabe von zweistelligen Zahlen ist sehr anstrengend aktuell, das muss gefixt werden -> fixed   X
 
-Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann
+Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
+(Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
 Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
 nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist 

@@ -1,5 +1,7 @@
 extends Sprite
 
+var mouse_inside = false
+
 #var radius: float = 1.0;
 #
 #func _ready():
@@ -102,3 +104,33 @@ func _on_FMPositionCheck_toggled(button_pressed):
 
 func _on_FMAngleCheck_toggled(button_pressed):
 	material.set_shader_param("showAngle", button_pressed)
+	
+	
+
+func local_to_ps() -> Vector2:
+	# TODO
+	# in the phasespace function, the x and y size of the texture was used, how do I do this with shaders?
+	var locpos = get_local_mouse_position() 
+	print(locpos)
+	return locpos
+	
+
+# does currently not detect when mouse is inside the flowmap window
+func _set_inside():
+	# print("inside")
+	mouse_inside = true
+	
+func _set_outside():
+	mouse_inside = false
+
+	
+func _input(event):
+	if mouse_inside:
+		if event is InputEventMouseButton:
+			if event.button_index == BUTTON_LEFT and event.pressed:
+				mouse_input()
+				
+
+func mouse_input():
+	var pos = local_to_ps()
+	print(pos)
