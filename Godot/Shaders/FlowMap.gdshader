@@ -1,5 +1,3 @@
-// Copy of Flowmap Shader, nothing changed yet
-
 shader_type canvas_item;
 
 uniform float radius;
@@ -9,6 +7,8 @@ uniform sampler2D polygonLength;
 
 uniform int iterations; 	// how many iterations should be done
 uniform bool forwards;		// should we iterate forwards or backwards?
+uniform bool showPosition;	// determine if Position should be added to COLOR
+uniform bool showAngle;		// determine if Agnle should be added to COLOR
 
 
 const float M_PI = 3.14159265;
@@ -253,7 +253,13 @@ void fragment() {
 	//COLOR = texture(TEXTURE, UV + vec2(getPolyLength(n-1)*0.01, 0));
 	//COLOR = texture(TEXTURE, UV + getPolyVertex(n)*0.1);
 	//COLOR = texture(TEXTURE, UV + next*0.01);
-	COLOR = vec4(pos.x, pos.y, 0., 1.);
+	COLOR = vec4(0., 0., 0., 1.);
+	if (showPosition) {
+		COLOR += vec4(pos.x, 0., 0., 0.);
+	}
+	if (showAngle) {
+		COLOR += vec4(0., pos.y, 0., 0.);
+	}
 	//COLOR = texture(TEXTURE, next);
 }
 

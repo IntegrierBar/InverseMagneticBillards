@@ -209,6 +209,7 @@ func iterate_batch():
 
 func set_initial_values(index: int, start: Vector2, dir: Vector2):
 	trajectories.set_initial_values(index, invert_y(start), invert_y(dir))
+	R2ToPS(start, dir)
 
 
 
@@ -464,11 +465,36 @@ func _on_DeleteAllTrajectories_pressed():
 	# relation to the other children of the parent!
 
 
-func R2ToPS(start: Vector2, dir: Vector2, currentIndexOnPolygon: int): 
-	# Where do I get the current Index on polygon from??? 
-	pass
+func R2ToPS(start: Vector2, dir: Vector2): 
+	var index: int = 0
+	var min_distance: float = INF
+	for i in range(polygon.size()-1):	# -1 since polygon is closed
+		var point_projected = Geometry.get_closest_point_to_segment_2d(start, polygon[i], polygon[i+1])
+		var distance = start.distance_squared_to(point_projected)
+		if min_distance > distance:
+			index = i
+			min_distance = distance
+	
+	var angle = abs((polygon[index + 1] - polygon[index]).angle_to(dir))
+	
+	var polylength = 0
+	var pos = 0
+	for j in range(polygon.size() - 1):
+		polylength += (polygon[j] - polygon[j + 1]).length()
+		if j == index - 1:
+			pos = polylength
+	pos += (polygon[index] - start).length()
+	
+	var pscoords = Vector2(pos / polylength, angle / PI)
+
+	
+	
 #vec2 R2ToPhaseSpace(vec2 start, vec2 dir, int currentIndexOnPolygon) {
 #	float angle = angle_between(normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon)), dir);
 #	// TODO need to check if angle positive or negative right now
 #	return vec2( (getPolyLength(currentIndexOnPolygon) + length(getPolyVertex(currentIndexOnPolygon) - start)) / getPolyLength(n-1), abs(angle) / M_PI );
+#}
+
+#float angle_between(vec2 v1, vec2 v2) {
+#	return atan(determinant(mat2(v1, v2)), dot(v1, v2));
 #}

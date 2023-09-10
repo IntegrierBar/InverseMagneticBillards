@@ -1,3 +1,5 @@
+// Copy of Flowmap Shader, nothing changed yet
+
 shader_type canvas_item;
 
 uniform float radius;
@@ -222,6 +224,8 @@ vec2 iterateForwards(vec2 currentPosition, vec2 currentDirection, int currentInd
 
 void fragment() {
 	vec2 pos = UV;	// phasespace coords are texture coords
+	
+	float diff;
 	// get start, dir, index
 //	mat3 coords = phaseSpaceToR2(pos);
 //	vec2 start = coords[0].xy;
@@ -234,6 +238,14 @@ void fragment() {
 			vec2 dir = coords[1].xy;
 			int index = int(coords[2].x);
 			pos = iterateForwards(start, dir, index);
+			
+			mat3 coords2 = phaseSpaceToR2(pos + vec2(1e-2));
+			vec2 start2 = coords2[0].xy;
+			vec2 dir2 = coords2[1].xy;
+			int index2 = int(coords2[2].x);
+			vec2 delpos = iterateForwards(start2, dir2, index2);
+			
+			diff = dot(pos - delpos, pos - delpos);
 		}
 	}
 	else {
@@ -243,6 +255,14 @@ void fragment() {
 			vec2 dir = coords[1].xy;
 			//int index = int(coords[2].x);
 			pos = iterateBackwards(start, dir);
+			
+			mat3 coords2 = phaseSpaceToR2(pos + vec2(1e-2));
+			vec2 start2 = coords2[0].xy;
+			vec2 dir2 = coords2[1].xy;
+			int index2 = int(coords2[2].x);
+			vec2 delpos = iterateBackwards(start2, dir2);
+			
+			diff = dot(pos - delpos, pos - delpos);
 		}
 	}
 	//vec2 next = iterateBackwards(start, dir);
@@ -251,7 +271,7 @@ void fragment() {
 	//COLOR = texture(TEXTURE, UV + vec2(getPolyLength(n-1)*0.01, 0));
 	//COLOR = texture(TEXTURE, UV + getPolyVertex(n)*0.1);
 	//COLOR = texture(TEXTURE, UV + next*0.01);
-	COLOR = vec4(pos.x, pos.y, 0., 1.);
+	COLOR = vec4(0, diff, 0., 1.);
 	//COLOR = texture(TEXTURE, next);
 }
 

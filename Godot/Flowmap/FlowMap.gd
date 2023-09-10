@@ -25,6 +25,11 @@ func _ready():
 	material.set_shader_param("iterations", 1)
 	material.set_shader_param("forwards", true)
 	material.set_shader_param("radius", 1.0)
+	material.set_shader_param("showAngle", true)
+	material.set_shader_param("showPosition", true)
+	$"../FTLE".material.set_shader_param("iterations", 1)
+	$"../FTLE".material.set_shader_param("forwards", true)
+	$"../FTLE".material.set_shader_param("radius", 1.0)
 
 
 func store_polygon_as_image(polygon: Array, polygonLength: Array):
@@ -32,6 +37,7 @@ func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	#print(polygon)
 	#print(polygonLength)
 	material.set_shader_param("n", polygon.size())
+	$"../FTLE".material.set_shader_param("n", polygon.size())
 	#material.set_shader_param("radius", radius)
 	# convert array to imageTexture and send it to shader
 	var img = Image.new()
@@ -54,6 +60,8 @@ func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	lengthTexture.create_from_image(polyLength, 0)
 	material.set_shader_param("polygon", texture)
 	material.set_shader_param("polygonLength", lengthTexture)
+	$"../FTLE".material.set_shader_param("polygon", texture)
+	$"../FTLE".material.set_shader_param("polygonLength", lengthTexture)
 
 func _on_Trajectories_close_polygon(p):
 	var l_array: Array = [0.0]
@@ -63,12 +71,15 @@ func _on_Trajectories_close_polygon(p):
 
 func set_radius(r):
 	material.set_shader_param("radius", r)
+	$"../FTLE".material.set_shader_param("radius", r)
 
 func set_iterations(iter: int):
 	material.set_shader_param("iterations", iter)
+	$"../FTLE".material.set_shader_param("iterations", iter)
 
 func set_direction(b: bool): # forwards is true
 	material.set_shader_param("forwards", b)
+	$"../FTLE".material.set_shader_param("forwards", b)
 
 func invert_y(p: Vector2) -> Vector2:
 	return Vector2(p.x, -p.y)
@@ -78,3 +89,16 @@ func invert_y_array(a: Array) -> Array:
 	for p in a:
 		inverted.append(invert_y(p))
 	return inverted
+
+
+func _on_FTLEButton_toggled(button_pressed):
+	self.visible = !button_pressed
+	$"../FTLE".visible = button_pressed
+
+
+func _on_FMPositionCheck_toggled(button_pressed):
+	material.set_shader_param("showPosition", button_pressed)
+
+
+func _on_FMAngleCheck_toggled(button_pressed):
+	material.set_shader_param("showAngle", button_pressed)

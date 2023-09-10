@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -16,6 +16,8 @@
 [ext_resource path="res://ControlPanel/OneTrajectoryControlContainer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://PhasespaceControl/ScrollContainer.gd" type="Script" id=15]
 [ext_resource path="res://icon.png" type="Texture" id=16]
+[ext_resource path="res://Shaders/FlowMap.gdshader" type="Shader" id=17]
+[ext_resource path="res://Shaders/FTLE.gdshader" type="Shader" id=18]
 [ext_resource path="res://Viewport/ViewportSkriptForMouseInput.gd" type="Script" id=19]
 [ext_resource path="res://Flowmap/FlowmapControl.gd" type="Script" id=20]
 
@@ -101,6 +103,20 @@ size = 14
 font_data = ExtResource( 12 )
 
 [sub_resource type="ShaderMaterial" id=18]
+shader = ExtResource( 17 )
+shader_param/radius = null
+shader_param/n = null
+shader_param/iterations = null
+shader_param/forwards = null
+shader_param/showPosition = null
+shader_param/showAngle = null
+
+[sub_resource type="ShaderMaterial" id=19]
+shader = ExtResource( 18 )
+shader_param/radius = null
+shader_param/n = null
+shader_param/iterations = null
+shader_param/forwards = null
 
 [node name="InverseMagneticBillard" type="Node2D"]
 
@@ -583,12 +599,11 @@ margin_bottom = 598.0
 
 [node name="ViewportContainer" type="ViewportContainer" parent="CanvasLayer/DockableContainer/Flowmap"]
 show_behind_parent = true
-margin_right = 229.901
 margin_bottom = 243.024
 stretch = true
 
 [node name="Viewport" type="Viewport" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer"]
-size = Vector2( 229, 243 )
+size = Vector2( 0, 243 )
 handle_input_locally = false
 render_target_update_mode = 3
 script = ExtResource( 19 )
@@ -602,9 +617,14 @@ material = SubResource( 18 )
 texture = ExtResource( 16 )
 script = ExtResource( 13 )
 
+[node name="FTLE" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
+visible = false
+material = SubResource( 19 )
+texture = ExtResource( 16 )
+
 [node name="FlowmapControl" type="WindowDialog" parent="CanvasLayer/DockableContainer/Flowmap"]
+visible = true
 margin_left = 12.0
-margin_top = 30.0
 margin_right = 229.901
 margin_bottom = 243.024
 rect_min_size = Vector2( 0, 40 )
@@ -626,13 +646,13 @@ size_flags_vertical = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer"]
 margin_right = 207.0
-margin_bottom = 201.0
+margin_bottom = 231.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer"]
 margin_right = 207.0
-margin_bottom = 201.0
+margin_bottom = 231.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -773,3 +793,6 @@ margin_bottom = 40.0
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/ClearPSTrajectories" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_ClearPSTrajectories_pressed"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/TextEdit" to="CanvasLayer/DockableContainer/Flowmap/FlowmapControl" method="_on_TextEdit_text_changed"]
 [connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/ForwardBackwardToggle" to="CanvasLayer/DockableContainer/Flowmap/FlowmapControl" method="_on_ForwardBackwardToggle_toggled"]
+[connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/ColorPositionCOntrol/FMPositionCheck" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_FMPositionCheck_toggled"]
+[connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/ColorAngleControl/FMAngleCheck" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_FMAngleCheck_toggled"]
+[connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer3/FTLEButton" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_FTLEButton_toggled"]
