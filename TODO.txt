@@ -1,7 +1,39 @@
+
+Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
+(Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
+Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
+nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist 
+
+Flowmap bei(während) click zeigt Trajectorie in normalem Polygon an 
+(das ist glaube ich wichtig, wir müssen überprüfen ob die Flowmapberechnungen passen!)
+Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
+
+Überprüfen, dass Flowmap und Phasespace gleich orientiert sind
+Delete trajectories sollte Trajektorien auch aus dem phasespace entfernen (ich weiß nicht ob das geht)
+
+Clear phasespace entfernt Trajektorien aus dem normal space nicht, soll das so bleiben??
+
+Reset all trajectories button,in normal control, löscht alles austrajektorien außer startpunktund startrichtung, sollte 
+phasespace ebenfalls entsprechend zurücksetzen 
+
+Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
+
+Soll der Button an einen anderen Ort? Zum Beispiel ganz nach oben, bedenke dass die Position der Knöpfe wichtig für
+das spawnen und entfernen von Trajektorien ist, sollte der Knopf verschoben werden, muss das angepasst werden!
+"Add new trajectory", "delete all trajectories" und "open flow map control" müssen ünber die trajectorien.
+
+Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
+Notizen: Wenn ich es richtig sehe, müssen wir dafür Objekte für die Eckpunkte erzeugen die mit den Clicks gespawnt 
+werden und dann draggable sind
+
+--------------------------------------------------------------------------------------------------------------------
+erledigt:
+--------------------------------------------------------------------------------------------------------------------
+
 was noch connected werden muss:
 reset_image in Phasespace mit eigenem button, new polygon, change radius  X
 
-Flowmap muss ordentlich gemacht werden (an radius anbinden)
+Flowmap muss ordentlich gemacht werden (an radius anbinden) X
 Bild ändern vielleicht?
 
 Phasespace trajectory on click muss pixel gesetzt werden  X
@@ -11,19 +43,7 @@ NICHT in den phasespace gemalt, erst nach einer Iteration tauchen sie im phasesp
 
 Startpunkt der Trajektorien die über den normal Space gespawnt werden muss in den phasespace eingefügt werden  X
 
-Delete trajectories sollte Trajektorien auch aus dem phasespace entefernen (ich weiß nicht ob das geht)
-Clear phasespace entfernt Trajektorien aus dem normal space nicht, soll das so bleiben??
-
-Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
-
 Füge remove all trajectories button hinzu X
-
-Soll der Button an einen anderen Ort? Zum Beispiel ganz nach oben, bedenke dass die Position der Knöpfe wichtig für
-das spawnen und entfernen von Trajektorien ist, sollte der Knopf verschoben werden, muss das angepasst werden!
-
-Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
-Notizen: Wenn ich es richtig sehe, müssen wir dafür Objekte für die Eckpunkte erzeugen die mit den Clicks gespawnt 
-werden und dann draggable sind
 
 Flowmap control 
 - Anzahl Iterationen X
@@ -32,16 +52,5 @@ Flowmap control
 - Zeige Ableitung (ftle) X
 - Soll hide/show verwenden X
 
-Flowmap bei(während) click zeigt Trajectorie in normalem Polygon an 
-(das ist glaube ich wichtig, wir müssen überprüfen ob die Flowmapberechnungen passen!)
-Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
-
-Überprüfen, dass Flowmap und Phasespace gleich orientiert sind
-
 additional Slider für radius   X
 Problem: Eingabe von zweistelligen Zahlen ist sehr anstrengend aktuell, das muss gefixt werden -> fixed   X
-
-Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
-(Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
-Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
-nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist 

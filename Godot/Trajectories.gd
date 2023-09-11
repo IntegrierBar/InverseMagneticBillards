@@ -447,8 +447,8 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 	var xstep = w / (x - 1)
 	var ystep = h / (y - 1)
 	
-	var positions : Array
-	var colors : PoolColorArray
+	var positions : Array = []
+	var colors : PoolColorArray = []
 	
 	for i in range(x):
 		for j in range(y):

@@ -2,6 +2,8 @@ extends Sprite
 
 var mouse_inside = false
 
+var sizex: float
+var sizey: float
 #var radius: float = 1.0;
 #
 #func _ready():
@@ -32,6 +34,9 @@ func _ready():
 	$"../FTLE".material.set_shader_param("iterations", 1)
 	$"../FTLE".material.set_shader_param("forwards", true)
 	$"../FTLE".material.set_shader_param("radius", 1.0)
+	
+	sizey = texture.get_height()
+	sizex = texture.get_width()
 
 
 func store_polygon_as_image(polygon: Array, polygonLength: Array):
