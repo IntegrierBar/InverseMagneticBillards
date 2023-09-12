@@ -1,4 +1,3 @@
-
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
 Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
@@ -25,6 +24,25 @@ das spawnen und entfernen von Trajektorien ist, sollte der Knopf verschoben werd
 Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
 Notizen: Wenn ich es richtig sehe, müssen wir dafür Objekte für die Eckpunkte erzeugen die mit den Clicks gespawnt 
 werden und dann draggable sind
+
+FTLE: 
+4 trajectorien starten, Jacobimatrix damit berechnen, spektralnorm nehmen und als Helligkeit verwenden
+Abstand der trajectorien mit zoom faktor ändern
+
+Anleitung schreiben
+
+Auf Github zum laufen bekommen
+
+Aus Flowmap trajectorien spawnen und nur anzeigen (Button entscheidet was davon passiert bei linker Maustaste klick/press)
+
+Bug mit Flowmapcontrollfenster fixen (im zweifel per ready funktion)
+
+Project resizeable machen (bekomme Größe zum Beispiel über Browser mitgeteilt)
+
+(FlowMap und Phasespace kamera bekommen limits für rechts und links bewegung, damit man nicht mehr sieht als die Bilder)
+
+ÜBERPRÜFEN, DASS SHADER RICHTIG SIND!!!!!!!!!!!!!!!!!!
+
 
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
