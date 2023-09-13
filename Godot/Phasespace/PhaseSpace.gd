@@ -61,23 +61,26 @@ func _input(event):
 
 
 func mouse_input():
-	match current_state:
-		STATES.SINGLE:
-			var ps_coord = local_to_ps()
-			traj_script._spawn_ps_traj_on_click(ps_coord)
-			current_state = STATES.REST
-		STATES.BATCH1:
-			batch_coord1 = local_to_ps()
-			current_state = STATES.BATCH2
-		STATES.BATCH2:
-			var batch_coord2 = local_to_ps()
+	var ps_coord = local_to_ps()
+	var valid_coord = ps_coord[0] >= 0 and ps_coord[0] <=1 and ps_coord[1] >= 0 and ps_coord[1] <= 1
+	if valid_coord:
+		match current_state:
+			STATES.SINGLE:
+				# var ps_coord = local_to_ps()
+				traj_script._spawn_ps_traj_on_click(ps_coord)
+				current_state = STATES.REST
+			STATES.BATCH1:
+				batch_coord1 = ps_coord
+				current_state = STATES.BATCH2
+			STATES.BATCH2:
+				# var batch_coord2 = local_to_ps()
 			
-			current_state = STATES.REST
-			instr_label.text = " "
-			var n = int(num_traj_in_batch.text)
-			traj_script._spawn_ps_traj_batch(batch_coord1, batch_coord2, n)
-		STATES.REST:
-			pass
+				current_state = STATES.REST
+				instr_label.text = " "
+				var n = int(num_traj_in_batch.text)
+				traj_script._spawn_ps_traj_batch(batch_coord1, ps_coord, n)
+			STATES.REST:
+				pass
 
 
 func reset_image():

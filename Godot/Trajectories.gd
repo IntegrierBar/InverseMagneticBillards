@@ -437,7 +437,14 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int):
 		_new_trajectory_added(colours[i])
 	
 	
-	
+func _spawn_fm_traj_on_click(ps_coord):
+	var coord = PSToR2(ps_coord)
+	var colour = Color(randf(), randf(), randf())
+	# var colour = single_ps_traj.get_child(0).get_child(1).get_pick_color()
+	add_trajectorie(coord[0], coord[1], colour)
+	phase_space.add_initial_coords_to_image([ps_coord], [colour])
+	_new_trajectory_added(colour)
+
 	
 
 func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
@@ -449,12 +456,18 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 	var positions : Array = []
 	var colors : PoolColorArray = []
 	
+	print(x)
+	print(y)
+	
 	for i in range(x):
 		for j in range(y):
 			
 			var pos = Vector2(i * xstep, j * ystep)
 			positions.append(pos + xymin) 
-			colors.append(Color(pos[0], pos[1], 0.5, 1)) 
+			var c = Color(min(1, 2 - ((i + 1)/float(x) + j/float(y))), (i + 1)/float(x), j/float(y), 1)  
+			# TODO: I should probably find out how to apply barycentric coords to this ...
+			print(c)
+			colors.append(c) 
 			# colors still not very good, different but difficult to see, not bright enough
 	
 	return [positions, colors]
@@ -524,12 +537,36 @@ func PSToR2(psc: Vector2) -> Array:
 	var normside = (polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]).normalized()
 	var currentPosition = polygon[currentIndexOnPolygon] + (distance_left - currentlength) * normside
 	
+	#var rotator = [Vector2( cos(PI * psc[1]), sin(PI * psc[1]) ), Vector2 (-sin(PI * psc[1]), cos(PI * psc[1]))]
+	var currentDirection = normside.rotated(PI * psc[1])
 	
-	return [Vector2(0,0), Vector2(0,0)]
+	# var dir = currentDirection
+	var start = currentPosition + 1e-6 * currentDirection
+	var is_inside = Geometry.is_point_in_polygon(start, polygon)
+	
+	if !is_inside:
+		currentDirection = normside.rotated(-PI * psc[1])
+		
+	
+	return [currentPosition, currentDirection]
 	
 
 
 
+#mat3 phaseSpaceToR2 (vec2 pos) {
+#	float distance_left = pos.x * getPolyLength(n-1);
+#	int currentIndexOnPolygon = 0;
+#	while ( distance_left - getPolyLength(currentIndexOnPolygon + 1) > 0.0)
+#	{
+#	    //Godot::print(Vector2(currentIndexOnPolygon, 0));
+#	    currentIndexOnPolygon++;
+#		if (currentIndexOnPolygon + 1 > n)
+#		{
+#			//Godot::print("how defuq did I get here?");
+#			break;
+#		}
+#	}
+#
 #	vec2 currentPosition = getPolyVertex(currentIndexOnPolygon) + (distance_left - getPolyLength(currentIndexOnPolygon)) * normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
 #	// need to find out which direction we need to rotate to rotate inside the polygon
 #	mat2 rotator = mat2(vec2(cos(M_PI * pos.y), sin(M_PI * pos.y)), vec2(-sin(M_PI * pos.y), cos(M_PI * pos.y)));	// TODO CHECK
@@ -567,20 +604,7 @@ func PSToR2(psc: Vector2) -> Array:
 #}
 
 
-#mat3 phaseSpaceToR2 (vec2 pos) {
-#	float distance_left = pos.x * getPolyLength(n-1);
-#	int currentIndexOnPolygon = 0;
-#	while ( distance_left - getPolyLength(currentIndexOnPolygon + 1) > 0.0)
-#	{
-#	    //Godot::print(Vector2(currentIndexOnPolygon, 0));
-#	    currentIndexOnPolygon++;
-#		if (currentIndexOnPolygon + 1 > n)
-#		{
-#			//Godot::print("how defuq did I get here?");
-#			break;
-#		}
-#	}
-#
+
 
 
 

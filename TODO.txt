@@ -41,8 +41,6 @@ Bilder)
 
 ÜBERPRÜFEN, DASS SHADER RICHTIG SIND!!!!!!!!!!!!!!!!!!
 
-Beim Trajektorien erstellen im Phasespace wird bei spawn on click nicht überprüft dass die lokalen Variablen im 
-zulässigen Bereich sind, das sollte gefixt werden!
 
 
 --------------------------------------------------------------------------------------------------------------------
@@ -79,3 +77,6 @@ das spawnen und entfernen von Trajektorien ist, sollte der Knopf verschoben werd
 "Add new trajectory", "delete all trajectories" und "open flow map control" müssen über die trajectorien.  X
 
 Bug mit Flowmapcontrollfenster fixen (im zweifel per ready funktion) X
+
+Beim Trajektorien erstellen im Phasespace wird bei spawn on click nicht überprüft dass die lokalen Variablen im 
+zulässigen Bereich sind, das sollte gefixt werden!  X

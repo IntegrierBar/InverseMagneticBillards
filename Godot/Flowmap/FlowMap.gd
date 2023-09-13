@@ -11,6 +11,9 @@ enum STATES{
 }
 
 var fmstate = STATES.SHOW
+
+var traj_script 
+
 #var radius: float = 1.0;
 #
 #func _ready():
@@ -44,6 +47,7 @@ func _ready():
 	
 	sizey = texture.get_height()
 	sizex = texture.get_width()
+	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
 
 
 func _set_inside():
@@ -63,12 +67,15 @@ func _input(event):
 
 func mouse_input():
 	# check whether local coords are between 0 and 1 before matching states? 
-	match fmstate:
-		STATES.SHOW:
-			pass
-		STATES.SPAWN:
-			var pos = local_to_ps()
-			print(pos)
+	var pos = local_to_ps()
+	var valid_coord = pos[0] >= 0 and pos[0] <=1 and pos[1] >= 0 and pos[1] <= 1
+	if valid_coord:
+		match fmstate:
+			STATES.SHOW:
+				pass
+			STATES.SPAWN:
+				
+				traj_script._spawn_fm_traj_on_click(pos)
 			
 	
 
