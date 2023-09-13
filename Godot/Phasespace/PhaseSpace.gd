@@ -47,7 +47,6 @@ func _ready():
 	
 
 func _set_inside():
-	# print("inside")
 	mouse_inside = true
 	
 func _set_outside():

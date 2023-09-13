@@ -164,7 +164,7 @@ func clear_polygon():
 		for i in range(1, trajcount): 
 # Note: it looks like Godot and C++ have different ways to handle how to remove objects! Watch out with the indices!
 			# print(i)
-			var container = traj_control.get_child(1 + i)
+			var container = traj_control.get_child(4 + i)
 # this index has to change with the iterations despite the node at the position being removed
 			container.queue_free()
 			# print(container)
@@ -265,7 +265,7 @@ func _on_ButtonClosePolygon_pressed():
 func _on_NewStartPos_pressed(id):
 	current_state = STATES.SET_START
 	var node = instance_from_id(id)  
-	trajectory_to_edit = node.get_index() - 1
+	trajectory_to_edit = node.get_index() - 4
 	# print(trajectory_to_edit)  
 	phase_space.reset_image() # TODO THIS IS UGLY
 	trajectory_instr.text = "Click to choose a new start position"
@@ -320,11 +320,10 @@ func _new_trajectory_added(colour):
 	
 	
 	traj_control.add_child(newTrajControl)
-	traj_control.move_child(newTrajControl, count - 3)
+	traj_control.move_child(newTrajControl, count - 1)
 	
 	var colourPicker = newTrajControl.get_child(1).get_child(1)
 	colourPicker.set_pick_color(colour)
-	
 	
 	# connect the change start position button
 	var newStartPos = newTrajControl.get_child(0).get_child(0)
@@ -353,14 +352,14 @@ func _on_NewTrajectoriesButton_pressed():
 
 func _on_delete_trajectory_pressed(id):
 	var node = instance_from_id(id)  
-	trajectory_to_edit = node.get_index() - 1
+	trajectory_to_edit = node.get_index() - 4
 	node.queue_free()
 	trajectories.remove_trajectory(trajectory_to_edit)
 
 	
 func _on_color_changed(id):
 	var node = instance_from_id(id)  
-	trajectory_to_edit = node.get_index() - 1
+	trajectory_to_edit = node.get_index() - 4
 	
 	var colourPicker = node.get_child(1).get_child(1)
 	var c = colourPicker.get_pick_color()
@@ -464,7 +463,7 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 func _on_DeleteAllTrajectories_pressed():
 	var trajcount = trajectories.get_trajectory_colors().size()
 	for i in range(trajcount): 
-		var container = traj_control.get_child(1 + i)
+		var container = traj_control.get_child(4 + i)
 		container.queue_free()
 		trajectories.remove_trajectory(0)
 	
@@ -472,6 +471,21 @@ func _on_DeleteAllTrajectories_pressed():
 	# Note: moving the position of the delete button means that the code for adding new trajectories
 	# has to be changed as well! The new trajectories are currentlly moved to a fixed position in 
 	# relation to the other children of the parent!
+
+
+func _on_ResetAllTrajectories_pressed():
+	trajectories.reset_trajectories()
+	# BUG: Maintaines start position but changes directions continuously when resetting to bigger angles 
+	# for a ca 10 resets the starting direction is parallel to the polygon side and an iteration is 
+	# no longer possible
+	# Where does this come from???
+
+
+func calcPolygonLength(n: int) -> float:
+	var length = 0.0
+	for i in range(n):
+		length += (polygon[i] - polygon[i + 1]).length()
+	return length
 
 
 func R2ToPS(start: Vector2, dir: Vector2) -> Vector2: 
@@ -486,6 +500,7 @@ func R2ToPS(start: Vector2, dir: Vector2) -> Vector2:
 	
 	var angle = abs((polygon[index + 1] - polygon[index]).angle_to(dir))
 	
+	# could calculate polylength with calcPolyLength, but can also just leave it like this
 	var polylength = 0
 	var pos = 0
 	for j in range(polygon.size() - 1):
@@ -498,16 +513,75 @@ func R2ToPS(start: Vector2, dir: Vector2) -> Vector2:
 	return pscoords
 
 	
+func PSToR2(psc: Vector2) -> Array:
+	var distance_left = psc[0] * calcPolygonLength(polygon.size() - 1)
+	var currentIndexOnPolygon = 0
+	while (distance_left - calcPolygonLength(currentIndexOnPolygon + 1) > 0.0):
+		currentIndexOnPolygon += 1
 	
-#vec2 R2ToPhaseSpace(vec2 start, vec2 dir, int currentIndexOnPolygon) {
-#	float angle = angle_between(normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon)), dir);
-#	// TODO need to check if angle positive or negative right now
-#	return vec2( (getPolyLength(currentIndexOnPolygon) + length(getPolyVertex(currentIndexOnPolygon) - start)) / getPolyLength(n-1), abs(angle) / M_PI );
+	
+	var currentlength = calcPolygonLength(currentIndexOnPolygon) 
+	var normside = (polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]).normalized()
+	var currentPosition = polygon[currentIndexOnPolygon] + (distance_left - currentlength) * normside
+	
+	
+	return [Vector2(0,0), Vector2(0,0)]
+	
+
+
+
+#	vec2 currentPosition = getPolyVertex(currentIndexOnPolygon) + (distance_left - getPolyLength(currentIndexOnPolygon)) * normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
+#	// need to find out which direction we need to rotate to rotate inside the polygon
+#	mat2 rotator = mat2(vec2(cos(M_PI * pos.y), sin(M_PI * pos.y)), vec2(-sin(M_PI * pos.y), cos(M_PI * pos.y)));	// TODO CHECK
+#	vec2 currentDirection = rotator * normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
+#	// Use intersection test for this
+#	vec2 dir = currentDirection;
+#	vec2 start = currentPosition + 1e-6 * currentDirection;
+#	int intersections = 0;
+#	for (int i = 0; i < n - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
+#	{
+#	    // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
+#	    float denominator = (getPolyVertex(i + 1).x - getPolyVertex(i).x) * dir.y - (getPolyVertex(i + 1).y - getPolyVertex(i).y) * dir.x;
+#	    if (abs(denominator) < 1e-8)
+#	    {
+#	        continue; // no intersection possible, since lines near parallel
+#	    }
+#	    float t = ((getPolyVertex(i).y - start.y) * dir.x - (getPolyVertex(i).x - start.x) * dir.y) / denominator;
+#	    if (0.0 <= t && t < 1.0) // allow t = 0 but not t = 1 to avoid double counting
+#	    {
+#	        float u = ((getPolyVertex(i).x - start.x) * (getPolyVertex(i).y - getPolyVertex(i + 1).y) - (getPolyVertex(i).y - start.y) * (getPolyVertex(i).x - getPolyVertex(i + 1).x)) / denominator;
+#	        if (i != currentIndexOnPolygon && u > 0.0)
+#	        {
+#	            intersections++;
+#	        }
+#	    }
+#	}
+#	// if even amount of intersections, the we went the wrong direction
+#	if (intersections % 2 == 0)
+#	{
+#		rotator = mat2(vec2(cos(-M_PI * pos.y), sin(-M_PI * pos.y)), vec2(-sin(-M_PI * pos.y), cos(-M_PI * pos.y)));	// TODO CHECK
+#	    currentDirection = rotator * normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
+#	}
+#
+#	return mat3(vec3(currentPosition, 0), vec3(currentDirection, 0), vec3(float(currentIndexOnPolygon), 0., 0.));
 #}
 
-#float angle_between(vec2 v1, vec2 v2) {
-#	return atan(determinant(mat2(v1, v2)), dot(v1, v2));
-#}
+
+#mat3 phaseSpaceToR2 (vec2 pos) {
+#	float distance_left = pos.x * getPolyLength(n-1);
+#	int currentIndexOnPolygon = 0;
+#	while ( distance_left - getPolyLength(currentIndexOnPolygon + 1) > 0.0)
+#	{
+#	    //Godot::print(Vector2(currentIndexOnPolygon, 0));
+#	    currentIndexOnPolygon++;
+#		if (currentIndexOnPolygon + 1 > n)
+#		{
+#			//Godot::print("how defuq did I get here?");
+#			break;
+#		}
+#	}
+#
+
 
 
 

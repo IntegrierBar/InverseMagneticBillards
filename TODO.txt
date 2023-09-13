@@ -12,14 +12,12 @@ Delete trajectories sollte Trajektorien auch aus dem phasespace entfernen (ich w
 
 Clear phasespace entfernt Trajektorien aus dem normal space nicht, soll das so bleiben??
 
-Reset all trajectories button,in normal control, löscht alles austrajektorien außer startpunktund startrichtung, sollte 
-phasespace ebenfalls entsprechend zurücksetzen 
+Reset all trajectories button,in normal control, löscht alles aus trajektorien außer startpunkt und startrichtung, 
+sollte phasespace ebenfalls entsprechend zurücksetzen
+BUG: Behält Startpunkte aber nicht Richtungen bei! Problem ist, dass die direction anders berechnet werden muss! 
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 
-Soll der Button an einen anderen Ort? Zum Beispiel ganz nach oben, bedenke dass die Position der Knöpfe wichtig für
-das spawnen und entfernen von Trajektorien ist, sollte der Knopf verschoben werden, muss das angepasst werden!
-"Add new trajectory", "delete all trajectories" und "open flow map control" müssen ünber die trajectorien.
 
 Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
 Notizen: Wenn ich es richtig sehe, müssen wir dafür Objekte für die Eckpunkte erzeugen die mit den Clicks gespawnt 
@@ -33,15 +31,18 @@ Anleitung schreiben
 
 Auf Github zum laufen bekommen
 
-Aus Flowmap trajectorien spawnen und nur anzeigen (Button entscheidet was davon passiert bei linker Maustaste klick/press)
-
-Bug mit Flowmapcontrollfenster fixen (im zweifel per ready funktion)
+Aus Flowmap trajectorien spawnen und nur anzeigen (Button entscheidet was davon passiert bei linker Maustaste 
+klick/press)
 
 Project resizeable machen (bekomme Größe zum Beispiel über Browser mitgeteilt)
 
-(FlowMap und Phasespace kamera bekommen limits für rechts und links bewegung, damit man nicht mehr sieht als die Bilder)
+(FlowMap und Phasespace kamera bekommen limits für rechts und links bewegung, damit man nicht mehr sieht als die 
+Bilder)
 
 ÜBERPRÜFEN, DASS SHADER RICHTIG SIND!!!!!!!!!!!!!!!!!!
+
+Beim Trajektorien erstellen im Phasespace wird bei spawn on click nicht überprüft dass die lokalen Variablen im 
+zulässigen Bereich sind, das sollte gefixt werden!
 
 
 --------------------------------------------------------------------------------------------------------------------
@@ -72,3 +73,9 @@ Flowmap control
 
 additional Slider für radius   X
 Problem: Eingabe von zweistelligen Zahlen ist sehr anstrengend aktuell, das muss gefixt werden -> fixed   X
+
+Soll der Button an einen anderen Ort? Zum Beispiel ganz nach oben, bedenke dass die Position der Knöpfe wichtig für
+das spawnen und entfernen von Trajektorien ist, sollte der Knopf verschoben werden, muss das angepasst werden!
+"Add new trajectory", "delete all trajectories" und "open flow map control" müssen über die trajectorien.  X
+
+Bug mit Flowmapcontrollfenster fixen (im zweifel per ready funktion) X

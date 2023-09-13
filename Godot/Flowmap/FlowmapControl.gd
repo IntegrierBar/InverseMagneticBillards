@@ -12,6 +12,7 @@ var iterations_edit
 func _ready():
 	FlowMap = get_tree().get_nodes_in_group("FlowMap")[0]
 	iterations_edit = get_tree().get_nodes_in_group("FMIterationsEdit")[0]
+	margin_top = 30
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -24,12 +25,10 @@ func _on_FlowmapControlButton_pressed():
 
 
 
-
-func _on_TextEdit_text_changed():
+func _on_SetIteration_text_changed():
 	var text = iterations_edit.text
 	if text.is_valid_integer():
 		FlowMap.set_iterations(int(text))
-
 
 
 

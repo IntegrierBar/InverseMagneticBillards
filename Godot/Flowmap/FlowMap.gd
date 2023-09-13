@@ -4,6 +4,13 @@ var mouse_inside = false
 
 var sizex: float
 var sizey: float
+
+enum STATES{
+	SHOW,
+	SPAWN
+}
+
+var fmstate = STATES.SHOW
 #var radius: float = 1.0;
 #
 #func _ready():
@@ -37,6 +44,40 @@ func _ready():
 	
 	sizey = texture.get_height()
 	sizex = texture.get_width()
+
+
+func _set_inside():
+	# print("inside")
+	mouse_inside = true
+	
+func _set_outside():
+	mouse_inside = false
+
+	
+func _input(event):
+	if mouse_inside:
+		if event is InputEventMouseButton:
+			if event.button_index == BUTTON_LEFT and event.pressed:
+				mouse_input()
+				
+
+func mouse_input():
+	# check whether local coords are between 0 and 1 before matching states? 
+	match fmstate:
+		STATES.SHOW:
+			pass
+		STATES.SPAWN:
+			var pos = local_to_ps()
+			print(pos)
+			
+	
+
+func _on_ShowSpawnButton_toggled(button_pressed):
+	if button_pressed:
+		fmstate = STATES.SPAWN
+	else:
+		fmstate = STATES.SHOW
+
 
 
 func store_polygon_as_image(polygon: Array, polygonLength: Array):
@@ -116,26 +157,15 @@ func local_to_ps() -> Vector2:
 	# TODO
 	# in the phasespace function, the x and y size of the texture was used, how do I do this with shaders?
 	var locpos = get_local_mouse_position() 
-	print(locpos)
-	return locpos
+	locpos = locpos + Vector2(sizex/2, sizey/2)
+	#print(locpos)
+	var x = locpos[0] / sizex
+	var y = locpos[1] / sizey
+	return Vector2(x, y)
+	
 	
 
-# does currently not detect when mouse is inside the flowmap window
-func _set_inside():
-	# print("inside")
-	mouse_inside = true
-	
-func _set_outside():
-	mouse_inside = false
 
-	
-func _input(event):
-	if mouse_inside:
-		if event is InputEventMouseButton:
-			if event.button_index == BUTTON_LEFT and event.pressed:
-				mouse_input()
-				
 
-func mouse_input():
-	var pos = local_to_ps()
-	print(pos)
+
+
