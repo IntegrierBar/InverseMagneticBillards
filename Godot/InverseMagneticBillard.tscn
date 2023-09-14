@@ -167,6 +167,8 @@ __meta__ = {
 
 [node name="Trajectory" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" instance=ExtResource( 4 )]
 
+[node name="TrajectoryToShow" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" instance=ExtResource( 4 )]
+
 [node name="ControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
 margin_left = 4.0
 margin_top = 8.0
@@ -212,13 +214,13 @@ custom_fonts/font = SubResource( 16 )
 text = "Iterations"
 clip_text = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
+[node name="IterationControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
 margin_top = 22.0
 margin_right = 217.0
 margin_bottom = 42.0
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer"]
+[node name="DrawIterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/IterationControl"]
 margin_top = 1.0
 margin_right = 106.0
 margin_bottom = 19.0
@@ -227,21 +229,21 @@ custom_fonts/font = SubResource( 17 )
 text = "Draw iterations:"
 clip_text = true
 
-[node name="IterateButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer"]
+[node name="IterateButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/IterationControl"]
 margin_left = 110.0
 margin_right = 217.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Iterate"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
+[node name="InterationCountControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
 margin_top = 46.0
 margin_right = 217.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer2"]
+[node name="SetIterationCountLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl"]
 margin_right = 106.0
 margin_bottom = 18.0
 size_flags_horizontal = 3
@@ -250,7 +252,7 @@ text = "Set #iterations: "
 valign = 1
 clip_text = true
 
-[node name="EditBatchSize" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer2" groups=["BatchSizeEdit"]]
+[node name="EditBatchSize" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl" groups=["BatchSizeEdit"]]
 margin_left = 110.0
 margin_right = 217.0
 margin_bottom = 18.0
@@ -293,7 +295,7 @@ margin_right = 217.0
 margin_bottom = 18.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "1 "
+text = "1"
 
 [node name="RadiusSlider" type="HSlider" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius" groups=["RadiusSlider"]]
 margin_top = 40.0
@@ -834,8 +836,8 @@ text = "Spawn trajectory"
 clip_text = true
 
 [connection signal="close_polygon" from="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_Trajectories_close_polygon"]
-[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer/IterateButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Button_pressed"]
-[connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/HBoxContainer2/EditBatchSize" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditBatchSize_text_changed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/IterationControl/IterateButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Button_pressed"]
+[connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl/EditBatchSize" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditBatchSize_text_changed"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_TextEdit_text_changed"]
 [connection signal="value_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/RadiusSlider" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_RadiusSlider_value_changed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]

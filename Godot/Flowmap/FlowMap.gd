@@ -14,6 +14,10 @@ var fmstate = STATES.SHOW
 
 var traj_script 
 
+var iterationcount = 1
+var hold_mouse = false # used to check whether the left mouse button is held, 
+						# needed to show trajectories 
+
 #var radius: float = 1.0;
 #
 #func _ready():
@@ -50,6 +54,7 @@ func _ready():
 	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
 
 
+
 func _set_inside():
 	# print("inside")
 	mouse_inside = true
@@ -60,24 +65,34 @@ func _set_outside():
 	
 func _input(event):
 	if mouse_inside:
-		if event is InputEventMouseButton:
-			if event.button_index == BUTTON_LEFT and event.pressed:
-				mouse_input()
-				
+		match fmstate: 
+			STATES.SPAWN:
+				if event is InputEventMouseButton:
+					if event.button_index == BUTTON_LEFT and event.pressed:
+						mouse_input()
+			STATES.SHOW:
+				if event.is_action_pressed("MouseLeftButton"):
+					hold_mouse = true
+					print("pressed")
+				if event.is_action_released("MouseLeftButton"):
+					hold_mouse = false
+					print("released")
 
 func mouse_input():
-	# check whether local coords are between 0 and 1 before matching states? 
+	# check whether local coords are between 0 and 1 before matching states
 	var pos = local_to_ps()
 	var valid_coord = pos[0] >= 0 and pos[0] <=1 and pos[1] >= 0 and pos[1] <= 1
 	if valid_coord:
-		match fmstate:
-			STATES.SHOW:
-				pass
-			STATES.SPAWN:
-				
-				traj_script._spawn_fm_traj_on_click(pos)
+		traj_script._spawn_fm_traj_on_click(pos)
 			
-	
+
+func _process(delta):
+	if hold_mouse:
+		var pos = local_to_ps()
+		var valid_coord = pos[0] >= 0 and pos[0] <=1 and pos[1] >= 0 and pos[1] <= 1
+		if valid_coord:
+			traj_script._show_fm_traj_on_click(pos)
+
 
 func _on_ShowSpawnButton_toggled(button_pressed):
 	if button_pressed:
@@ -129,6 +144,7 @@ func set_radius(r):
 	$"../FTLE".material.set_shader_param("radius", r)
 
 func set_iterations(iter: int):
+	traj_script.batch_to_show = iter
 	material.set_shader_param("iterations", iter)
 	$"../FTLE".material.set_shader_param("iterations", iter)
 

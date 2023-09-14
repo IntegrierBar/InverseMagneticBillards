@@ -47,10 +47,12 @@ var polygon_color: Color
 var polygon_closed: bool
 
 onready var trajectories = $Trajectory
+onready var trajectory_to_show = $TrajectoryToShow
 
 signal close_polygon(p)
 
 var batch: int
+var batch_to_show: int = 1
 var max_count: int
 var radius: float
 
@@ -59,9 +61,10 @@ enum STATES {
 	SET_START,
 	SET_DIRECTION,
 	SET_POLYGON,
-	ADD_TRAJECTORY
+	ADD_TRAJECTORY, 
 }
 var current_state = STATES.ITERATE
+var last_state
 
 var trajectory_to_edit: int
 
@@ -81,8 +84,10 @@ func _ready():
 	trajectories.maxCount = 100
 	radius = 1
 	trajectories.set_radius(radius)
+	trajectory_to_show.set_radius(radius)
 	radius_slider.value = radius
 	trajectories.reset_trajectories()
+	trajectory_to_show.reset_trajectories()
 	polygon_closed = false
 	polygon = []
 	polygon_color = Color(1, 1, 1)
@@ -103,6 +108,7 @@ func _ready():
 	var colourPicker = inst.get_child(1).get_child(1)
 	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
 	
+	#trajectory_to_show.add_trajectory
 	# inst.connect("change_start_position", self, "_on_NewStartPos_pressed")
 
 func _process(_delta):
@@ -141,15 +147,16 @@ func add_polygon_vertex(vertex: Vector2):
 	if !polygon_closed:		# dont allow adding of vertices when polygon is closed
 		polygon.append(vertex)
 		trajectories.add_polygon_vertex(invert_y(vertex))
+		trajectory_to_show.add_polygon_vertex(invert_y(vertex))
 	update()
 
 func close_polygon():
-	trajectories.reset_trajectories()
 	if polygon_closed || polygon.size() < 3:
 		return
 	polygon.append(polygon[0])
 	emit_signal("close_polygon", polygon)	# signal flow map, that polygon is closed
 	trajectories.close_polygon()
+	trajectory_to_show.close_polygon()
 	polygon_closed = true
 	trajectories.reset_trajectories()
 	update()
@@ -172,12 +179,8 @@ func clear_polygon():
 # this index has to be the same because the trajectory previously at position 2 is removed in the previous iteration
 	
 	trajectories.clear_polygon()
+	trajectory_to_show.clear_polygon()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
-	# does not work at the moment but I am working on it
-	
-	
-		
-	# potentially put this some place else
 	#phase_space.reset_trajectories()
 
 # prejects the point onto all sides of the polygon and returns the closest
@@ -210,10 +213,14 @@ func iterate_batch():
 #		#print(coordsPhasespace)
 #		phase_space.add_points_to_trajectory(i, coordsPhasespace)
 
+
+
+
 func set_initial_values(index: int, start: Vector2, dir: Vector2):
 	trajectories.set_initial_values(index, invert_y(start), invert_y(dir))
 	var pscoord = R2ToPS(start, dir)
 	phase_space.add_initial_coords_to_image([pscoord], [trajectories.get_trajectory_colors()[index]])
+
 
 
 
@@ -222,7 +229,10 @@ func _input(event):
 	if mouse_inside:
 		if event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT and event.pressed:
+				trajectories.show()
+				trajectory_to_show.hide()
 				mouse_input()
+		
 
 func mouse_input():
 	match current_state:
@@ -242,6 +252,8 @@ func mouse_input():
 # iterate Button pressed
 func _on_Button_pressed():
 	if current_state == STATES.ITERATE:
+		trajectories.show()
+		trajectory_to_show.hide()
 		update()	# used to get rid of the line indicating the direction
 		iterate_batch()
 
@@ -445,7 +457,23 @@ func _spawn_fm_traj_on_click(ps_coord):
 	phase_space.add_initial_coords_to_image([ps_coord], [colour])
 	_new_trajectory_added(colour)
 
-	
+
+func _show_fm_traj_on_click(ps_coord):
+	if polygon_closed:
+		update()
+		trajectory_to_show.clear_trajectories()
+		trajectories.hide()
+		trajectory_to_show.show()
+		# last_state = current_state
+		#current_state = STATES.SHOW
+		var color = Color.deeppink
+		
+		trajectory_to_show.add_trajectory_phasespace(ps_coord, color)
+		var output = trajectory_to_show.iterate_batch(batch_to_show)
+		trajectory_to_show.update()
+
+
+
 
 func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 	var x = int(sqrt(n))
@@ -550,63 +578,3 @@ func PSToR2(psc: Vector2) -> Array:
 	
 	return [currentPosition, currentDirection]
 	
-
-
-
-#mat3 phaseSpaceToR2 (vec2 pos) {
-#	float distance_left = pos.x * getPolyLength(n-1);
-#	int currentIndexOnPolygon = 0;
-#	while ( distance_left - getPolyLength(currentIndexOnPolygon + 1) > 0.0)
-#	{
-#	    //Godot::print(Vector2(currentIndexOnPolygon, 0));
-#	    currentIndexOnPolygon++;
-#		if (currentIndexOnPolygon + 1 > n)
-#		{
-#			//Godot::print("how defuq did I get here?");
-#			break;
-#		}
-#	}
-#
-#	vec2 currentPosition = getPolyVertex(currentIndexOnPolygon) + (distance_left - getPolyLength(currentIndexOnPolygon)) * normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
-#	// need to find out which direction we need to rotate to rotate inside the polygon
-#	mat2 rotator = mat2(vec2(cos(M_PI * pos.y), sin(M_PI * pos.y)), vec2(-sin(M_PI * pos.y), cos(M_PI * pos.y)));	// TODO CHECK
-#	vec2 currentDirection = rotator * normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
-#	// Use intersection test for this
-#	vec2 dir = currentDirection;
-#	vec2 start = currentPosition + 1e-6 * currentDirection;
-#	int intersections = 0;
-#	for (int i = 0; i < n - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
-#	{
-#	    // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
-#	    float denominator = (getPolyVertex(i + 1).x - getPolyVertex(i).x) * dir.y - (getPolyVertex(i + 1).y - getPolyVertex(i).y) * dir.x;
-#	    if (abs(denominator) < 1e-8)
-#	    {
-#	        continue; // no intersection possible, since lines near parallel
-#	    }
-#	    float t = ((getPolyVertex(i).y - start.y) * dir.x - (getPolyVertex(i).x - start.x) * dir.y) / denominator;
-#	    if (0.0 <= t && t < 1.0) // allow t = 0 but not t = 1 to avoid double counting
-#	    {
-#	        float u = ((getPolyVertex(i).x - start.x) * (getPolyVertex(i).y - getPolyVertex(i + 1).y) - (getPolyVertex(i).y - start.y) * (getPolyVertex(i).x - getPolyVertex(i + 1).x)) / denominator;
-#	        if (i != currentIndexOnPolygon && u > 0.0)
-#	        {
-#	            intersections++;
-#	        }
-#	    }
-#	}
-#	// if even amount of intersections, the we went the wrong direction
-#	if (intersections % 2 == 0)
-#	{
-#		rotator = mat2(vec2(cos(-M_PI * pos.y), sin(-M_PI * pos.y)), vec2(-sin(-M_PI * pos.y), cos(-M_PI * pos.y)));	// TODO CHECK
-#	    currentDirection = rotator * normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
-#	}
-#
-#	return mat3(vec3(currentPosition, 0), vec3(currentDirection, 0), vec3(float(currentIndexOnPolygon), 0., 0.));
-#}
-
-
-
-
-
-
-
-
