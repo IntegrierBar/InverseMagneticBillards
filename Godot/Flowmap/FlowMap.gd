@@ -73,10 +73,9 @@ func _input(event):
 			STATES.SHOW:
 				if event.is_action_pressed("MouseLeftButton"):
 					hold_mouse = true
-					print("pressed")
 				if event.is_action_released("MouseLeftButton"):
 					hold_mouse = false
-					print("released")
+
 
 func mouse_input():
 	# check whether local coords are between 0 and 1 before matching states

@@ -3,9 +3,9 @@ Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass m
 Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
 nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist 
 
-Flowmap bei(während) click zeigt Trajectorie in normalem Polygon an 
-(das ist glaube ich wichtig, wir müssen überprüfen ob die Flowmapberechnungen passen!)
 Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
+
+Bei show trajectory aus der flowmap sollte vorwärts/rückwärts beachtet und unterstützt werden
 
 Überprüfen, dass Flowmap und Phasespace gleich orientiert sind
 Delete trajectories sollte Trajektorien auch aus dem phasespace entfernen (ich weiß nicht ob das geht)
@@ -18,7 +18,6 @@ BUG: Behält Startpunkte aber nicht Richtungen bei! Problem ist, dass die direct
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 
-
 Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
 Notizen: Wenn ich es richtig sehe, müssen wir dafür Objekte für die Eckpunkte erzeugen die mit den Clicks gespawnt 
 werden und dann draggable sind
@@ -30,9 +29,6 @@ Abstand der trajectorien mit zoom faktor ändern
 Anleitung schreiben
 
 Auf Github zum laufen bekommen
-
-Aus Flowmap trajectorien spawnen und nur anzeigen (Button entscheidet was davon passiert bei linker Maustaste 
-klick/press)
 
 Project resizeable machen (bekomme Größe zum Beispiel über Browser mitgeteilt)
 
@@ -80,3 +76,9 @@ Bug mit Flowmapcontrollfenster fixen (im zweifel per ready funktion) X
 
 Beim Trajektorien erstellen im Phasespace wird bei spawn on click nicht überprüft dass die lokalen Variablen im 
 zulässigen Bereich sind, das sollte gefixt werden!  X
+
+Flowmap bei(während) click zeigt Trajectorie in normalem Polygon an  X
+(das ist glaube ich wichtig, wir müssen überprüfen ob die Flowmapberechnungen passen!)
+
+Aus Flowmap trajectorien spawnen und nur anzeigen (Button entscheidet was davon passiert bei linker Maustaste 
+klick/press)  X
