@@ -222,16 +222,57 @@ vec2 iterateForwards(vec2 currentPosition, vec2 currentDirection, int currentInd
 	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
 }
 
-vec2 iterateForwardsnTimes(vec2 pos, int times) {
-	vec2 final_pos = pos;
-	for (int i=0; i<times; i++) {
-		mat3 coords = phaseSpaceToR2(final_pos);
-		vec2 start = coords[0].xy;
-		vec2 dir = coords[1].xy;
-		int index = int(coords[2].x);
-		final_pos = iterateForwards(start, dir, index);
+vec2 iterateForwardsnTimes(vec2 pos) {
+	
+	mat3 coords = phaseSpaceToR2(pos);
+	vec2 currentPosition = coords[0].xy;
+	vec2 currentDirection = coords[1].xy;
+	int currentIndexOnPolygon = int(coords[2].x);
+	
+	
+	for (int i=0; i < iterations; i++) {
+		vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, 1.);
+		vec2 nextIterate = intersection.xy;
+		currentIndexOnPolygon = int(intersection.z);
+		currentPosition = nextIterate;  // direction stays the same
+
+
+		// the cirlce outide the polygon
+		vec2 center = currentPosition + radius * vec2(-currentDirection.y, currentDirection.x); // center of the circle
+		vec3 next = intersect_polygon_circle(currentPosition, currentDirection, center, 1.);
+		nextIterate = next.xy;
+		currentIndexOnPolygon = int(next.z);
+		currentPosition = nextIterate;
+		currentDirection = normalize(vec2((center - nextIterate).y, -(center - nextIterate).x));
 	}
-	return final_pos;
+
+	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
+}
+
+vec2 iterateBackwardsnTimes(vec2 pos) {
+	// the cirlce outide the polygon
+	mat3 coords = phaseSpaceToR2(pos);
+	vec2 currentPosition = coords[0].xy;
+	vec2 currentDirection = coords[1].xy;
+	int currentIndexOnPolygon; 
+	
+	for  (int i=0; i < iterations; i++) {
+		vec2 center = currentPosition + radius * vec2(-currentDirection.y, currentDirection.x); // center of the circle 
+		vec3 next = intersect_polygon_circle(currentPosition, currentDirection, center, -1.);
+		vec2 nextIterate = next.xy;
+		currentIndexOnPolygon = int(next.z);
+		currentPosition = nextIterate;
+		currentDirection = normalize(vec2((center - nextIterate).y, -(center - nextIterate).x));
+
+
+		// the line inside the polygon
+		vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, -1.);
+		nextIterate = intersection.xy;
+		currentIndexOnPolygon = int(intersection.z);
+		currentPosition = nextIterate;  // direction stays the same
+	}
+	
+	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
 }
 
 float largestEigenvalue(mat2 mat) {
@@ -247,6 +288,14 @@ float largestEigenvalue(mat2 mat) {
 }
 
 
+float loopdistance(float x, float y) {
+	float minimum = min(x,y);
+	float maximum = max(x,y);
+	float dist1 = maximum - minimum;
+	float dist2 = minimum - maximum * (-1.0);
+	return min(dist1,dist2);
+}
+
 
 void fragment() {
 	vec2 pos = UV;	// phasespace coords are texture coords
@@ -258,76 +307,45 @@ void fragment() {
 	vec2 vert = vec2(0, pixel[1]);
 	float pixelsize = length(pixel);
 	// get start, dir, index
-//	mat3 coords = phaseSpaceToR2(pos);
-//	vec2 start = coords[0].xy;
-//	vec2 dir = coords[1].xy;
-//	int index = int(coords[2].x);
 	if (forwards) {
-		//vec2 pos_right = pos + hor;
-		vec2 pos_right = iterateForwardsnTimes(pos + hor, iterations);
-		vec2 pos_left = iterateForwardsnTimes(pos - hor, iterations);
-		vec2 pos_up = iterateForwardsnTimes(pos + vert, iterations);
-		vec2 pos_down = iterateForwardsnTimes(pos - vert, iterations);
+		vec2 pos_right = iterateForwardsnTimes(pos + hor);
+		vec2 pos_left = iterateForwardsnTimes(pos - hor);
+		vec2 pos_up = iterateForwardsnTimes(pos + vert);
+		vec2 pos_down = iterateForwardsnTimes(pos - vert);
 		
 		//vec2 cd_hor = dot(pos - pos_left, pos - pos_left);
-		float J11 = abs(pos_right[0] - pos_left[0]) / (2.0 * pixelsize);
+		float J11 = loopdistance(pos_right[0], pos_left[0]) / (2.0 * pixelsize);
 		float J21 = abs(pos_right[1] - pos_left[1]) / (2.0 * pixelsize);
-		float J12 = abs(pos_up[0] - pos_down[0]) / (2.0 * pixelsize);
+		float J12 = loopdistance(pos_up[0], pos_down[0]) / (2.0 * pixelsize);
 		float J22 = abs(pos_up[1] - pos_down[1]) / (2.0 * pixelsize);
 		
 		mat2 J = mat2(vec2(J11,J12), vec2(J21, J22));
 		mat2 JTJ = matrixCompMult(transpose(J), J);
 		
-		diff = log(largestEigenvalue(JTJ));
-		// diff = dot(pos - delpos, pos - delpos);
+		diff = log(largestEigenvalue(JTJ)) / min(float(iterations) + 5.0, 12.0);
+		// Factor 5 are only here to make a good color intensity for smaller iteration numbers,
+		// minimum is used because the differences cannot be larger than the phasespace, otherwise 
+		// colors lose intensity with incresing number of iterations
 	}
 	else {
-		for (int i=0; i < iterations; i++) {
-//			mat3 coords = phaseSpaceToR2(pos);
-//			vec2 start = coords[0].xy;
-//			vec2 dir = coords[1].xy;
-//			//int index = int(coords[2].x);
-//			pos = iterateBackwards(start, dir);
-//
-//			mat3 coords2 = phaseSpaceToR2(pos + vec2(1e-2));
-//			vec2 start2 = coords2[0].xy;
-//			vec2 dir2 = coords2[1].xy;
-//			
-//			vec2 delpos = iterateBackwards(start2, dir2);
-			
-			mat3 coords_right = phaseSpaceToR2(pos + hor);
-			vec2 start_right = coords_right[0].xy;
-			vec2 dir_right = coords_right[1].xy;
-			vec2 pos_right = iterateBackwards(start_right, dir_right);
-			
-			mat3 coords_left = phaseSpaceToR2(pos - hor);
-			vec2 start_left = coords_left[0].xy;
-			vec2 dir_left = coords_left[1].xy;
-			vec2 pos_left = iterateBackwards(start_left, dir_left);
-			
-			mat3 coords_up = phaseSpaceToR2(pos + vert);
-			vec2 start_up = coords_up[0].xy;
-			vec2 dir_up = coords_up[1].xy;
-			vec2 pos_up = iterateBackwards(start_up, dir_up);
-			
-			mat3 coords_down = phaseSpaceToR2(pos - vert);
-			vec2 start_down = coords_down[0].xy;
-			vec2 dir_down = coords_down[1].xy;
-			vec2 pos_down = iterateBackwards(start_down, dir_down);
-			
-			//vec2 cd_hor = dot(pos - pos_left, pos - pos_left);
-			float J11 = abs(pos_right[0] - pos_left[0]) / (2.0 * pixelsize);
-			float J21 = abs(pos_right[1] - pos_left[1]) / (2.0 * pixelsize);
-			float J12 = abs(pos_up[0] - pos_down[0]) / (2.0 * pixelsize);
-			float J22 = abs(pos_up[1] - pos_down[1]) / (2.0 * pixelsize);
-			
-			mat2 J = mat2(vec2(J11,J12), vec2(J21, J22));
-			mat2 JTJ = matrixCompMult(transpose(J), J);
-			
-			diff = log(largestEigenvalue(JTJ));
-			
-			// diff = dot(pos - delpos, pos - delpos);
-		}
+		vec2 pos_right = iterateBackwardsnTimes(pos + hor);
+		vec2 pos_left = iterateBackwardsnTimes(pos - hor);
+		vec2 pos_up = iterateBackwardsnTimes(pos + vert);
+		vec2 pos_down = iterateBackwardsnTimes(pos - vert);
+		
+		//vec2 cd_hor = dot(pos - pos_left, pos - pos_left);
+		float J11 = loopdistance(pos_right[0], pos_left[0]) / (2.0 * pixelsize);
+		float J21 = abs(pos_right[1] - pos_left[1]) / (2.0 * pixelsize);
+		float J12 = loopdistance(pos_up[0], pos_down[0]) / (2.0 * pixelsize);
+		float J22 = abs(pos_up[1] - pos_down[1]) / (2.0 * pixelsize);
+		
+		mat2 J = mat2(vec2(J11,J12), vec2(J21, J22));
+		mat2 JTJ = matrixCompMult(transpose(J), J);
+		
+		diff = log(largestEigenvalue(JTJ)) / (float(iterations) + 5.0);
+		
+		// diff = dot(pos - delpos, pos - delpos);
+		
 	}
 	//vec2 next = iterateBackwards(start, dir);
 	//vec2 next = iterateForwards(start, dir, index);

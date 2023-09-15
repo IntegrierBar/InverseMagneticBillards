@@ -7,6 +7,8 @@ Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
 
 Bei show trajectory aus der flowmap sollte vorwärts/rückwärts beachtet und unterstützt werden
 
+Bei show trajectory wird der radius aktuell nicht berücksichtigt, das muss korrigiert werden!
+
 Überprüfen, dass Flowmap und Phasespace gleich orientiert sind
 Delete trajectories sollte Trajektorien auch aus dem phasespace entfernen (ich weiß nicht ob das geht)
 
