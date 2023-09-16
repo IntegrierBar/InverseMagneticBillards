@@ -182,7 +182,7 @@ script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 217.901
-margin_bottom = 411.0
+margin_bottom = 457.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -309,7 +309,7 @@ value = 1.0
 [node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 151.0
 margin_right = 217.0
-margin_bottom = 231.0
+margin_bottom = 277.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -333,16 +333,45 @@ margin_bottom = 62.0
 text = "Close Contour"
 clip_text = true
 
-[node name="LabelInstructions" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon" groups=["PolygonInstructions"]]
+[node name="N-GonCornerControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 66.0
 margin_right = 217.0
-margin_bottom = 80.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 18 )
+size_flags_horizontal = 3
+
+[node name="SetCornerNumberLAbel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonCornerControl"]
+margin_top = 2.0
+margin_right = 106.0
+margin_bottom = 16.0
+size_flags_horizontal = 3
+text = "Set #corners:"
+clip_text = true
+
+[node name="SetCornerNumberEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonCornerControl" groups=["SetCornerCount"]]
+margin_left = 110.0
+margin_right = 217.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 0, 18 )
+size_flags_horizontal = 3
+
+[node name="RegularNGonButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
+margin_top = 88.0
+margin_right = 217.0
+margin_bottom = 108.0
+text = "Draw regular n-gon"
+clip_text = true
+
+[node name="LabelInstructions" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon" groups=["PolygonInstructions"]]
+margin_top = 112.0
+margin_right = 217.0
+margin_bottom = 126.0
 clip_text = true
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 235.0
+margin_top = 281.0
 margin_right = 217.0
-margin_bottom = 255.0
+margin_bottom = 301.0
 size_flags_horizontal = 3
 
 [node name="FlowmapControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
@@ -352,9 +381,9 @@ text = "Open Flowmap Control"
 clip_text = true
 
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
-margin_top = 259.0
+margin_top = 305.0
 margin_right = 217.0
-margin_bottom = 411.0
+margin_bottom = 457.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -842,6 +871,7 @@ clip_text = true
 [connection signal="value_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/RadiusSlider" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_RadiusSlider_value_changed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/RegularNGonButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_RegularNGonButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other/FlowmapControlButton" to="CanvasLayer/DockableContainer/Flowmap/FlowmapControl" method="_on_FlowmapControlButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/DeleteAllTrajectories" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_DeleteAllTrajectories_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/ResetAllTrajectories" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ResetAllTrajectories_pressed"]

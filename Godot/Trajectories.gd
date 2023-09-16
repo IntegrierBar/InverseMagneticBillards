@@ -35,6 +35,7 @@ var radius_slider
 var traj_control
 var batch_edit
 var single_ps_traj
+var corner_count
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -70,6 +71,8 @@ var trajectory_to_edit: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Nodes that have to be accessed, using groups allows to change the nodes position in the tree
+	# without having to change anything here
 	phase_space = get_tree().get_nodes_in_group("PhaseSpace")[0]
 	flow_map = get_tree().get_nodes_in_group("FlowMap")[0]
 	polygon_instr = get_tree().get_nodes_in_group("PolygonInstructions")[0]
@@ -79,6 +82,7 @@ func _ready():
 	traj_control = get_tree().get_nodes_in_group("TrajectoriesControlPart")[0]
 	batch_edit = get_tree().get_nodes_in_group("BatchSizeEdit")[0]
 	single_ps_traj = get_tree().get_nodes_in_group("SinglePSTraj")[0]
+	corner_count = get_tree().get_nodes_in_group("SetCornerCount")[0]
 	
 	batch = 1
 	trajectories.maxCount = 100
@@ -99,6 +103,7 @@ func _ready():
 	add_trajectorie(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
 	trajectory_to_edit = 0 # TODO needs button to change
 	
+	# connect buttons of already existing trajectory 
 	var inst = traj_control.find_node("VBoxContainer")
 	var newStartPos = inst.get_child(0).get_child(0)
 	var id = inst.get_instance_id()
@@ -196,6 +201,23 @@ func snap_to_polygon(point: Vector2) -> Vector2:
 	return best_point_projected
 
 
+# TODO: things have to happen here, the function from the c++ code is currently not connected
+func _on_RegularNGonButton_pressed():
+	var n = corner_count.text
+	if n.is_valid_integer():
+		pass
+		# trajectories.make_regular_ngon(n)
+		# trajectory_to_show.make_regular_ngon(n)
+		# corners have to be added to polygon somehow as well
+		# polygon is already closed 
+		
+		# trajectories.reset_trajectories()
+		# update()
+		# if trajectories.get_trajectory_colors().size() > 0: 
+		# 	current_state = SET_START
+		
+
+
 
 ##################### TRAJECTORIES #################################################################
 func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
@@ -214,8 +236,6 @@ func iterate_batch():
 #		phase_space.add_points_to_trajectory(i, coordsPhasespace)
 
 
-
-
 func set_initial_values(index: int, start: Vector2, dir: Vector2):
 	trajectories.set_initial_values(index, invert_y(start), invert_y(dir))
 	var pscoord = R2ToPS(start, dir)
@@ -225,10 +245,20 @@ func set_initial_values(index: int, start: Vector2, dir: Vector2):
 
 
 ####################### USER INPUT #################################################################
+# used to know if mouse is inside the clickable area or not
+func _set_inside():
+	mouse_inside = true
+
+func _set_outside():
+	mouse_inside = false
+
+
 func _input(event):
 	if mouse_inside:
 		if event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT and event.pressed:
+				# necessary for the case that trajectories from phasespace are currently shown
+				# hides this trajectory and shows the normal trajectories again
 				trajectories.show()
 				trajectory_to_show.hide()
 				mouse_input()
@@ -249,9 +279,11 @@ func mouse_input():
 			trajectory_instr.text = ""
 			
 
-# iterate Button pressed
+# iterate Button pressed, iterates trajectory if the system is in the correct state
 func _on_Button_pressed():
 	if current_state == STATES.ITERATE:
+		# necessary for the case that trajectories from phasespace are currently shown
+		# hides this trajectory and shows the normal trajectories again
 		trajectories.show()
 		trajectory_to_show.hide()
 		update()	# used to get rid of the line indicating the direction
@@ -269,11 +301,15 @@ func _on_ButtonPolygon_pressed():
 func _on_ButtonClosePolygon_pressed():
 	if current_state == STATES.SET_POLYGON:
 		close_polygon()
-		current_state = STATES.SET_START
 		polygon_instr.text = " "
+		if trajectories.get_trajectory_colors().size() > 0: 
+			current_state = STATES.SET_START
+		else:
+			current_state = STATES.ITERATE
+		
 		
 
-	# user wants to input new start position
+# user wants to input new start position
 func _on_NewStartPos_pressed(id):
 	current_state = STATES.SET_START
 	var node = instance_from_id(id)  
@@ -286,21 +322,21 @@ func _on_NewStartPos_pressed(id):
 # radius is set
 func _on_TextEdit_text_changed(): 
 	if radius_edit.text.is_valid_float():
-		#phase_space.reset_image()
 		var newradius = radius_edit.text.to_float()
-		#trajectories.set_radius(newradius)
-		#flow_map.set_radius(newradius)
 		if newradius <= radius_slider.max_value: 
+			# change slider position to value in text edit field if possible
 			radius_slider.value = newradius
 		else: 
 			# this allows to set the radius larger than 20 via the text field
+			# sets slider value to largest value possible
 			radius_slider.value = radius_slider.max_value
 			phase_space.reset_image()
 			trajectories.set_radius(newradius)
+			trajectory_to_show.set_radius(newradius)
 			flow_map.set_radius(newradius)
-		
-		
 
+
+# radius is changed via the slider
 func _on_RadiusSlider_value_changed(newradius):
 	# slider receives update even when it is updated via script
 	# slider can be used up to 19.99, for larger values the text field is needed
@@ -310,19 +346,24 @@ func _on_RadiusSlider_value_changed(newradius):
 		# making entering twodigit numbers a pain
 		if radius_edit.text != String(newradius): 
 			radius_edit.text = String(newradius) 
+		
 		phase_space.reset_image()
 		trajectories.set_radius(newradius)
+		trajectory_to_show.set_radius(newradius)
 		flow_map.set_radius(newradius)
 	else: 
+		# means a value larger than the max value might have been entered into the text field
+		# resetting image is done in the TextEdit_text_changed function
 		pass
-	
 
-# used to know if mouse is inside the clickable area or not
-func _set_inside():
-	mouse_inside = true
+# change number of iterations that are computed and drawn when clicking on iterate
+func _on_EditBatchSize_text_changed():
+	if batch_edit.text.is_valid_integer():
+		var newbatch = int(batch_edit.text)
+		batch = newbatch
 
-func _set_outside():
-	mouse_inside = false
+
+####################### ADDING TRAJECTORIES ########################################################
 
 # spawns and connects single trajectory control 
 func _new_trajectory_added(colour):
@@ -350,6 +391,7 @@ func _new_trajectory_added(colour):
 	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
 
 
+# adds a new trajectory via the normal control 
 func _on_NewTrajectoriesButton_pressed():
 	current_state = STATES.SET_START
 	
@@ -360,30 +402,8 @@ func _on_NewTrajectoriesButton_pressed():
 	
 	_new_trajectory_added(random_colour)
 	
-	
 
-func _on_delete_trajectory_pressed(id):
-	var node = instance_from_id(id)  
-	trajectory_to_edit = node.get_index() - 4
-	node.queue_free()
-	trajectories.remove_trajectory(trajectory_to_edit)
-
-	
-func _on_color_changed(id):
-	var node = instance_from_id(id)  
-	trajectory_to_edit = node.get_index() - 4
-	
-	var colourPicker = node.get_child(1).get_child(1)
-	var c = colourPicker.get_pick_color()
-	trajectories.set_color(trajectory_to_edit, c) 
-	
-	
-func _on_EditBatchSize_text_changed():
-	if batch_edit.text.is_valid_integer():
-		var newbatch = int(batch_edit.text)
-		batch = newbatch
-
-
+# spawns trajectory in normal and phasespace based on entered phasespace coordinates 
 func _on_SpawnPSTrajOnCoords_pressed():
 	var coord1 = single_ps_traj.get_child(4).get_child(0).text
 	var coord2 = single_ps_traj.get_child(4).get_child(1).text
@@ -399,7 +419,7 @@ func _on_SpawnPSTrajOnCoords_pressed():
 			phase_space.add_initial_coords_to_image([ps_pos], [colour])
 			_new_trajectory_added(colour)
 
-
+# spawns trajectory in normal and phasespace according to the click position int phasespace
 func _spawn_ps_traj_on_click(ps_coord):
 	var colour = single_ps_traj.get_child(0).get_child(1).get_pick_color()
 	add_trajectorie_ps(ps_coord, colour)
@@ -407,12 +427,14 @@ func _spawn_ps_traj_on_click(ps_coord):
 	_new_trajectory_added(colour)
 	
 
+# spawns a batch of trajectories in a rectangle between two clicks in phasespace
 func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int):
 	var xmin
 	var xmax
 	var ymin
 	var ymax
 	
+	# determine min and max in x and y direction
 	if bc1[0] > bc2[0]:
 		xmin = bc2[0]
 		xmax = bc1[0]
@@ -429,8 +451,10 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int):
 	
 	var w = xmax - xmin
 	var h = ymax - ymin
+	# min in x and y direction is needed as an offset to spawn the trajectories
 	var xymin = Vector2(xmin, ymin)
 	
+	# calculate the positions and colours of the trajectories in the batch
 	var res = traj_batch_pos(n, w, h, xymin)
 	
 	var pos = res[0]
@@ -441,6 +465,7 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int):
 	#for i in range(colours.size()):
 	#	colours[i] = Color(pos[i].x, pos[i].y, 0, 1)
 	
+	# add start positions to phase space
 	phase_space.add_initial_coords_to_image(pos, colours)
 	
 	for i in range(pos.size()):
@@ -448,33 +473,10 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int):
 		
 		_new_trajectory_added(colours[i])
 	
-	
-func _spawn_fm_traj_on_click(ps_coord):
-	var coord = PSToR2(ps_coord)
-	var colour = Color(randf(), randf(), randf())
-	# var colour = single_ps_traj.get_child(0).get_child(1).get_pick_color()
-	add_trajectorie(coord[0], coord[1], colour)
-	phase_space.add_initial_coords_to_image([ps_coord], [colour])
-	_new_trajectory_added(colour)
 
-
-func _show_fm_traj_on_click(ps_coord):
-	if polygon_closed:
-		update()
-		trajectory_to_show.clear_trajectories()
-		trajectories.hide()
-		trajectory_to_show.show()
-		# last_state = current_state
-		#current_state = STATES.SHOW
-		var color = Color.deeppink
-		
-		trajectory_to_show.add_trajectory_phasespace(ps_coord, color)
-		var output = trajectory_to_show.iterate_batch(batch_to_show)
-		trajectory_to_show.update()
-
-
-
-
+# used when spawning trajectory batches from phasespace
+# uses height, width and minimal coordinates to calculate the positions of the trajectories
+# Note: this function does not spawn n trajectories but x ** 2 trajectories where x is floor(sqrt(n))
 func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 	var x = int(sqrt(n))
 	var y = x
@@ -500,7 +502,48 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 	
 	return [positions, colors]
 
+# spawns trajectory on click in flowmap at the corresponding phasespace coordinates
+func _spawn_fm_traj_on_click(ps_coord):
+	var coord = PSToR2(ps_coord)
+	var colour = Color(randf(), randf(), randf())
+	add_trajectorie(coord[0], coord[1], colour)
+	phase_space.add_initial_coords_to_image([ps_coord], [colour])
+	_new_trajectory_added(colour)
 
+# shows trajectory in normal space that corresponds to the mouse position in the flowmap
+# uses a second trajectory node that contains the shown trajectory, this node always has only one 
+# trajectory active, which gets removed before the next one is added
+# clicking the iterate button or left clicking into the normal space hides the shown trajectories 
+# and shows the normal trajectories again
+func _show_fm_traj_on_click(ps_coord):
+	if polygon_closed:
+		update()
+		trajectory_to_show.clear_trajectories()
+		# hide normal trajectories
+		trajectories.hide()
+		trajectory_to_show.show()
+		var color = Color.deeppink
+		
+		# trajectory does not get added to the phasespace, only phasespace coordinates are used to
+		# add the trajectory to the node
+		trajectory_to_show.add_trajectory_phasespace(ps_coord, color)
+		var output = trajectory_to_show.iterate_batch(batch_to_show)
+		# removes the indication of start position and direction of the normal trajectories that 
+		# have not been iterated yet
+		trajectory_to_show.update()
+
+
+####################### DELETE TRAJECTORIES ########################################################
+
+
+# deletes the trajectory from normal space, currently does not delete trajectory from phasespace image! 
+func _on_delete_trajectory_pressed(id):
+	var node = instance_from_id(id)  
+	trajectory_to_edit = node.get_index() - 4
+	node.queue_free()
+	trajectories.remove_trajectory(trajectory_to_edit)
+
+# deletes all trajectories in normal space, also resets phasespace image 
 func _on_DeleteAllTrajectories_pressed():
 	var trajcount = trajectories.get_trajectory_colors().size()
 	for i in range(trajcount): 
@@ -514,6 +557,9 @@ func _on_DeleteAllTrajectories_pressed():
 	# relation to the other children of the parent!
 
 
+####################### OTHER FUNCTIONS ############################################################
+
+# button that resets all trajectories to their start position and direction (at least in theory) 
 func _on_ResetAllTrajectories_pressed():
 	trajectories.reset_trajectories()
 	# BUG: Maintaines start position but changes directions continuously when resetting to bigger angles 
@@ -522,13 +568,23 @@ func _on_ResetAllTrajectories_pressed():
 	# Where does this come from???
 
 
+# changes colour of a trajectory, change only affects normal space, not phasespace (at the moment) 
+func _on_color_changed(id):
+	var node = instance_from_id(id)  
+	trajectory_to_edit = node.get_index() - 4
+	
+	var colourPicker = node.get_child(1).get_child(1)
+	var c = colourPicker.get_pick_color()
+	trajectories.set_color(trajectory_to_edit, c) 
+
+# calculates length of the polygon up to index n, used PSToR2
 func calcPolygonLength(n: int) -> float:
 	var length = 0.0
 	for i in range(n):
 		length += (polygon[i] - polygon[i + 1]).length()
 	return length
 
-
+# converts normal coordinates to phase space coordinates
 func R2ToPS(start: Vector2, dir: Vector2) -> Vector2: 
 	var index: int = 0
 	var min_distance: float = INF
@@ -553,7 +609,7 @@ func R2ToPS(start: Vector2, dir: Vector2) -> Vector2:
 	var pscoords = Vector2(pos / polylength, angle / PI)
 	return pscoords
 
-	
+# converts phasespace coordinates to normal coordinates 
 func PSToR2(psc: Vector2) -> Array:
 	var distance_left = psc[0] * calcPolygonLength(polygon.size() - 1)
 	var currentIndexOnPolygon = 0
@@ -578,3 +634,5 @@ func PSToR2(psc: Vector2) -> Array:
 	
 	return [currentPosition, currentDirection]
 	
+
+

@@ -1,3 +1,7 @@
+--------------------------------------------------------------------------------------------------------------------
+TODO:
+--------------------------------------------------------------------------------------------------------------------
+
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
 Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
@@ -7,18 +11,23 @@ Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
 
 Bei show trajectory aus der flowmap sollte vorwärts/rückwärts beachtet und unterstützt werden
 
-Bei show trajectory wird der radius aktuell nicht berücksichtigt, das muss korrigiert werden!
-
 Überprüfen, dass Flowmap und Phasespace gleich orientiert sind
+
 Delete trajectories sollte Trajektorien auch aus dem phasespace entfernen (ich weiß nicht ob das geht)
 
 Clear phasespace entfernt Trajektorien aus dem normal space nicht, soll das so bleiben??
 
-Reset all trajectories button,in normal control, löscht alles aus trajektorien außer startpunkt und startrichtung, 
+Reset all trajectories button, in normal control, löscht alles aus trajektorien außer startpunkt und startrichtung, 
 sollte phasespace ebenfalls entsprechend zurücksetzen
 BUG: Behält Startpunkte aber nicht Richtungen bei! Problem ist, dass die direction anders berechnet werden muss! 
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
+Beispielbugs: 
+- Wenn es keine Trajektorien gibt und man ein neues Polygon erstellt stürzt das Programm nach dem schließen des 
+Polygons ab  X
+- Löschen von trajektorien im set start state und set direction state führt zum absturz des Programms
+- Dürfen Trajektorien hinzugefügt werden, bevor das Polygon geschlossen wurde? Sorgt aktuell für offene Polygone
+
 
 Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
 Notizen: Wenn ich es richtig sehe, müssen wir dafür Objekte für die Eckpunkte erzeugen die mit den Clicks gespawnt 
@@ -39,6 +48,21 @@ Bilder)
 
 ÜBERPRÜFEN, DASS SHADER RICHTIG SIND!!!!!!!!!!!!!!!!!!
 
+Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar sein
+
+Knöpfe und Verbindung für regelmäßiges n-eckiges Polygon einfügen
+
+Button in Flowmap control der aktuell angezeigt trajectorie als normale Trajektorie spawnt
+
+Inwieweit soll die Orientierung des Polygons für den Phasespace und die Flowmap beachtet werden?
+
+Trajectory drawn in normal space hat aktuell keine Funktion, soll das noch angebunden oder eher entfernt werden?
+
+Sollen wir uns optisch noch mehr Mühe machen? Oder lassen wir es so? Soll ich die Font wieder entfernen oder 
+überall hinzufügen? 
+
+Füge nützliche tooltips zu buttons und textfeldern hinzu um die Bedienung zu erleichtern, damit könnten dann auch
+die Instruction labels entfernt werden, denke ich
 
 
 --------------------------------------------------------------------------------------------------------------------
@@ -84,3 +108,5 @@ Flowmap bei(während) click zeigt Trajectorie in normalem Polygon an  X
 
 Aus Flowmap trajectorien spawnen und nur anzeigen (Button entscheidet was davon passiert bei linker Maustaste 
 klick/press)  X
+
+Bei show trajectory wird der radius aktuell nicht berücksichtigt, das muss korrigiert werden!  X

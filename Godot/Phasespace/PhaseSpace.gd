@@ -61,6 +61,7 @@ func _input(event):
 
 
 func mouse_input():
+	# check that the given coordinates are valid, that means are between 0 and 1 before matching states
 	var ps_coord = local_to_ps()
 	var valid_coord = ps_coord[0] >= 0 and ps_coord[0] <=1 and ps_coord[1] >= 0 and ps_coord[1] <= 1
 	if valid_coord:
@@ -70,11 +71,10 @@ func mouse_input():
 				traj_script._spawn_ps_traj_on_click(ps_coord)
 				current_state = STATES.REST
 			STATES.BATCH1:
+				# belongs together with state batch2, both are needed to spawn a trajectory batch
 				batch_coord1 = ps_coord
 				current_state = STATES.BATCH2
 			STATES.BATCH2:
-				# var batch_coord2 = local_to_ps()
-			
 				current_state = STATES.REST
 				instr_label.text = " "
 				var n = int(num_traj_in_batch.text)

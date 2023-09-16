@@ -11,6 +11,7 @@ enum STATES{
 }
 
 var fmstate = STATES.SHOW
+var forwards = true
 
 var traj_script 
 
@@ -40,11 +41,13 @@ var hold_mouse = false # used to check whether the left mouse button is held,
 #	store_polygon_as_image(test, length)
 
 func _ready():
+	# initialise parameters for flowmap shader
 	material.set_shader_param("iterations", 1)
 	material.set_shader_param("forwards", true)
 	material.set_shader_param("radius", 1.0)
 	material.set_shader_param("showAngle", true)
 	material.set_shader_param("showPosition", true)
+	# initialise parameters for FTLE shader
 	$"../FTLE".material.set_shader_param("iterations", 1)
 	$"../FTLE".material.set_shader_param("forwards", true)
 	$"../FTLE".material.set_shader_param("radius", 1.0)
@@ -54,7 +57,7 @@ func _ready():
 	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
 
 
-
+# checks if mouse is inside or outside flowmap
 func _set_inside():
 	# print("inside")
 	mouse_inside = true
@@ -67,30 +70,41 @@ func _input(event):
 	if mouse_inside:
 		match fmstate: 
 			STATES.SPAWN:
+				# spawn is triggered by left mouse click
 				if event is InputEventMouseButton:
 					if event.button_index == BUTTON_LEFT and event.pressed:
+						# rest of spawn trajectory is in mouse_input 
 						mouse_input()
 			STATES.SHOW:
+				# show is continually executed as long as the left mouse button is pressed
+				# this state is saved in the hold_mouse button, the actual show part is in _process
 				if event.is_action_pressed("MouseLeftButton"):
 					hold_mouse = true
 				if event.is_action_released("MouseLeftButton"):
 					hold_mouse = false
 
-
+# called for spawning a trajectory from the flowmap
 func mouse_input():
-	# check whether local coords are between 0 and 1 before matching states
+	# check whether local coords are between 0 and 1
 	var pos = local_to_ps()
 	var valid_coord = pos[0] >= 0 and pos[0] <=1 and pos[1] >= 0 and pos[1] <= 1
 	if valid_coord:
+		# adding trajectories is handled in trajectories
 		traj_script._spawn_fm_traj_on_click(pos)
 			
 
+# currently only used for showing (but not adding) trajectories from the flowmap
+# shown trajectory is updated as long as the left mouse button is held
 func _process(delta):
 	if hold_mouse:
+		# check whether local coords are between 0 and 1
 		var pos = local_to_ps()
 		var valid_coord = pos[0] >= 0 and pos[0] <=1 and pos[1] >= 0 and pos[1] <= 1
 		if valid_coord:
-			traj_script._show_fm_traj_on_click(pos)
+			if forwards: 
+				traj_script._show_fm_traj_on_click(pos)
+			else:
+				pass # add show for backwards iteration here once the c++ code for that part is done
 
 
 func _on_ShowSpawnButton_toggled(button_pressed):
@@ -100,7 +114,7 @@ func _on_ShowSpawnButton_toggled(button_pressed):
 		fmstate = STATES.SHOW
 
 
-
+# ääähhhhhh
 func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	# pass the size to 
 	#print(polygon)
@@ -132,6 +146,7 @@ func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	$"../FTLE".material.set_shader_param("polygon", texture)
 	$"../FTLE".material.set_shader_param("polygonLength", lengthTexture)
 
+
 func _on_Trajectories_close_polygon(p):
 	var l_array: Array = [0.0]
 	for i in range(p.size()-1):
@@ -143,6 +158,8 @@ func set_radius(r):
 	$"../FTLE".material.set_shader_param("radius", r)
 
 func set_iterations(iter: int):
+	# sets number of iterations also for the trajectories copy that is needed to show trajectories
+	# from the flowmap
 	traj_script.batch_to_show = iter
 	material.set_shader_param("iterations", iter)
 	$"../FTLE".material.set_shader_param("iterations", iter)
@@ -150,6 +167,9 @@ func set_iterations(iter: int):
 func set_direction(b: bool): # forwards is true
 	material.set_shader_param("forwards", b)
 	$"../FTLE".material.set_shader_param("forwards", b)
+	# needed for show trajectory to determine whether a forwards or backwards iteration is supposed 
+	# to be shown
+	forwards = b
 
 func invert_y(p: Vector2) -> Vector2:
 	return Vector2(p.x, -p.y)
@@ -160,24 +180,22 @@ func invert_y_array(a: Array) -> Array:
 		inverted.append(invert_y(p))
 	return inverted
 
-
+# changes visiblity of flowmap and FTLE map
 func _on_FTLEButton_toggled(button_pressed):
 	self.visible = !button_pressed
 	$"../FTLE".visible = button_pressed
 
-
+# If toggled on the position in phasespace is colour coded in the flowmap
 func _on_FMPositionCheck_toggled(button_pressed):
 	material.set_shader_param("showPosition", button_pressed)
 
-
+# If toggled on the anngle in phasespace is colour coded in the flowmap
 func _on_FMAngleCheck_toggled(button_pressed):
 	material.set_shader_param("showAngle", button_pressed)
 	
 	
 
 func local_to_ps() -> Vector2:
-	# TODO
-	# in the phasespace function, the x and y size of the texture was used, how do I do this with shaders?
 	var locpos = get_local_mouse_position() 
 	locpos = locpos + Vector2(sizex/2, sizey/2)
 	#print(locpos)
