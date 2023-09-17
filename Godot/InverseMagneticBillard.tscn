@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://addons/dockable_container/layout_split.gd" type="Script" id=8]
 [ext_resource path="res://ControlPanel/ScrollContainer.gd" type="Script" id=9]
 [ext_resource path="res://Viewport/ViewportContainerScript.gd" type="Script" id=10]
+[ext_resource path="res://PolygonVertex.tscn" type="PackedScene" id=11]
 [ext_resource path="res://ImportedDesignElements/CustomFont/TitilliumText-Regular.otf" type="DynamicFontData" id=12]
 [ext_resource path="res://Flowmap/FlowMap.gd" type="Script" id=13]
 [ext_resource path="res://ControlPanel/OneTrajectoryControlContainer.tscn" type="PackedScene" id=14]
@@ -168,6 +169,8 @@ __meta__ = {
 [node name="Trajectory" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" instance=ExtResource( 4 )]
 
 [node name="TrajectoryToShow" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" instance=ExtResource( 4 )]
+
+[node name="ControlPolygonVertex" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" instance=ExtResource( 11 )]
 
 [node name="ControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
 margin_left = 4.0
@@ -398,6 +401,7 @@ margin_top = 18.0
 margin_right = 217.0
 margin_bottom = 38.0
 text = "Delete all trajectories"
+clip_text = true
 
 [node name="ResetAllTrajectories" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
 margin_top = 42.0
@@ -411,6 +415,7 @@ margin_top = 66.0
 margin_right = 217.0
 margin_bottom = 86.0
 text = "Add new trajectory"
+clip_text = true
 
 [node name="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" instance=ExtResource( 14 )]
 margin_top = 90.0

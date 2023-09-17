@@ -96,8 +96,25 @@ func _ready():
 	polygon = []
 	polygon_color = Color(1, 1, 1)
 	add_polygon_vertex(Vector2(0,0))
+	
+	# Code for the 2nd polygon vertex
 	add_polygon_vertex(Vector2(10,0))
+	var scene1 = load("res://PolygonVertex.tscn")
+	var Vertex1 = scene1.instance()
+	Vertex1.pos = Vector2(10,0)
+	# pos of the child node does not have to be initialised
+	add_child(Vertex1)
+	move_child(Vertex1, 3)
+	
+	# Code for the 3rd polygon vertex 
 	add_polygon_vertex(Vector2(0,-10))
+	var scene2 = load("res://PolygonVertex.tscn")
+	var Vertex2 = scene2.instance()
+	Vertex2.pos = Vector2(0,-10)
+	add_child(Vertex2)
+	move_child(Vertex1, 4)
+	
+	
 	#close_polygon()
 	current_state = STATES.SET_POLYGON
 	add_trajectorie(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
@@ -153,6 +170,18 @@ func add_polygon_vertex(vertex: Vector2):
 		polygon.append(vertex)
 		trajectories.add_polygon_vertex(invert_y(vertex))
 		trajectory_to_show.add_polygon_vertex(invert_y(vertex))
+		
+		var scene = load("res://PolygonVertex.tscn")
+		var Vertex = scene.instance()
+		Vertex.pos = vertex
+		# Vertex.get_child(0).pos = Vector2(0,0)
+		# pos of the child node has to be initialised here for some reason
+		# does not need to be set after all, the psoition of the drawn circle is in the wrong 
+		# position though
+		add_child(Vertex)
+		move_child(Vertex, 3)
+		
+		
 	update()
 
 func close_polygon():
