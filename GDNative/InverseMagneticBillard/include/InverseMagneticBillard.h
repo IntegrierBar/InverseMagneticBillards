@@ -52,6 +52,7 @@ namespace godot {
         void clear_polygon();
         void add_polygon_vertex(Vector2 vertex);
         void close_polygon();
+        void set_polygon_vertex(int index, Vector2 vertex); // set polygon[index] = vertex
         //void make_regular_ngon(int n, double radius=1);
 
         void add_trajectory(Vector2 start, Vector2 dir, Color color);

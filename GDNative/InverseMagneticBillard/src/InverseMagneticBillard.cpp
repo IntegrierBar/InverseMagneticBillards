@@ -17,6 +17,7 @@ namespace godot {
         register_method((char*)"clear_polygon", &InverseMagneticBillard::clear_polygon);
         register_method((char*)"add_polygon_vertex", &InverseMagneticBillard::add_polygon_vertex);
         register_method((char*)"close_polygon", &InverseMagneticBillard::close_polygon);
+        register_method((char*)"set_polygon_vertex", &InverseMagneticBillard::set_polygon_vertex);
         register_method((char*)"set_radius", &InverseMagneticBillard::set_radius);
         register_method((char*)"set_initial_values", &InverseMagneticBillard::set_initial_values);
         register_method((char*)"add_trajectory", &InverseMagneticBillard::add_trajectory);
@@ -151,6 +152,22 @@ namespace godot {
         }
 
         update();
+    }
+
+    void InverseMagneticBillard::set_polygon_vertex(int index, Vector2 vertex)
+    {
+        if (index >= polygon.size())
+        {
+            return;
+        }
+        std::vector<vec2_d> oldPolygon = polygon;
+        oldPolygon[index] = vertex;
+        oldPolygon.pop_back();
+        clear_polygon();
+        for (auto& v : oldPolygon) {
+            add_polygon_vertex(v.to_godot());
+        }
+        close_polygon();
     }
 
     //void InverseMagneticBillard::make_regular_ngon(int n, double radius)
