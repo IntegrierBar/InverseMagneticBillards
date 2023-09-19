@@ -667,4 +667,9 @@ func PSToR2(psc: Vector2) -> Array:
 	return [currentPosition, currentDirection]
 	
 
+func is_in_iterate_state() -> bool:
+	if current_state == STATES.ITERATE:
+		return true
+	else:
+		return false
 

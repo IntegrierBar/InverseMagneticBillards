@@ -35,8 +35,9 @@ func _input(event):
 		# spawn is triggered by left mouse click
 		if event is InputEventMouseMotion:
 			if event.button_mask == BUTTON_MASK_LEFT:
-				position = get_parent().get_local_mouse_position()
-				traj_script.change_polygon_vertex(position, get_index())
+				if traj_script.is_in_iterate_state():
+					position = get_parent().get_local_mouse_position()
+					traj_script.change_polygon_vertex(position, get_index())
 #			if event.is_action_pressed("MouseLeftButton"):
 #				hold_mouse = true
 #			if event.is_action_released("MouseLeftButton"):
