@@ -17,6 +17,7 @@ namespace godot {
         register_method((char*)"clear_polygon", &InverseMagneticBillard::clear_polygon);
         register_method((char*)"add_polygon_vertex", &InverseMagneticBillard::add_polygon_vertex);
         register_method((char*)"close_polygon", &InverseMagneticBillard::close_polygon);
+        register_method((char*)"set_polygon_vertex", &InverseMagneticBillard::set_polygon_vertex);
         register_method((char*)"set_radius", &InverseMagneticBillard::set_radius);
         register_method((char*)"set_initial_values", &InverseMagneticBillard::set_initial_values);
         register_method((char*)"add_trajectory", &InverseMagneticBillard::add_trajectory);
@@ -29,6 +30,12 @@ namespace godot {
         register_method((char*)"set_max_count", &InverseMagneticBillard::set_max_count);
         register_method((char*)"reset_trajectories", &InverseMagneticBillard::reset_trajectories);
         register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch);
+        
+        // for inverse Trajectories
+        register_method((char*)"add_inverse_trajectory", &InverseMagneticBillard::add_inverse_trajectory);
+        register_method((char*)"add_inverse_trajectory_phasespace", &InverseMagneticBillard::add_inverse_trajectory_phasespace);
+        register_method((char*)"iterate_inverse_batch", &InverseMagneticBillard::iterate_inverse_batch);
+
         register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
         register_property((char*)"maxCount", &InverseMagneticBillard::maxCount, 1000);
         register_property((char*)"polygonClosed", &InverseMagneticBillard::polygonClosed, false);
@@ -48,6 +55,12 @@ namespace godot {
                 draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
             }
             
+        }
+
+        for (auto& t : inverseTrajectories) {
+            if (t.trajectoryToDraw.size() > 1) {
+                draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
+            }
         }
 
 
@@ -134,18 +147,37 @@ namespace godot {
         for (auto& t : trajectories) {
             t.set_polygon(polygon, polygonLength);
         }
+        for (auto& t : inverseTrajectories) {
+            t.set_polygon(polygon, polygonLength);
+        }
 
         update();
     }
 
-    void InverseMagneticBillard::make_regular_ngon(int n, double radius)
+    void InverseMagneticBillard::set_polygon_vertex(int index, Vector2 vertex)
     {
-        for (size_t i = 0; i < n; i++)
+        if (index >= polygon.size())
         {
-            add_polygon_vertex(Vector2(radius * std::cos(2 * M_PI * i / n), radius * std::sin(2 * M_PI * i / n)));
+            return;
+        }
+        std::vector<vec2_d> oldPolygon = polygon;
+        oldPolygon[index] = vertex;
+        oldPolygon.pop_back();
+        clear_polygon();
+        for (auto& v : oldPolygon) {
+            add_polygon_vertex(v.to_godot());
         }
         close_polygon();
     }
+
+    //void InverseMagneticBillard::make_regular_ngon(int n, double radius)
+    //{
+    //    for (size_t i = 0; i < n; i++)
+    //    {
+    //        add_polygon_vertex(Vector2(radius * std::cos(2 * M_PI * i / n), radius * std::sin(2 * M_PI * i / n)));
+    //    }
+    //    close_polygon();
+    //}
 
     void InverseMagneticBillard::add_trajectory(Vector2 start, Vector2 dir, Color color)
     {
@@ -159,6 +191,20 @@ namespace godot {
 
         t.set_initial_values(vec2_d(start), vec2_d(dir));
         trajectories.push_back(t);
+    }
+
+    void InverseMagneticBillard::add_inverse_trajectory(Vector2 start, Vector2 dir, Color color)
+    {
+        InverseTrajectory t = InverseTrajectory();
+        t.radius = radius;
+        t.maxCount = maxCount;
+        t.trajectoryColor = color;
+
+        t.polygon = polygon;
+        t.polygonLength = polygonLength;
+
+        t.set_initial_values(vec2_d(start), vec2_d(dir));
+        inverseTrajectories.push_back(t);
     }
 
     void InverseMagneticBillard::add_trajectory_phasespace(Vector2 pos, Color color)
@@ -175,6 +221,20 @@ namespace godot {
         trajectories.push_back(t);
     }
 
+    void InverseMagneticBillard::add_inverse_trajectory_phasespace(Vector2 pos, Color color)
+    {
+        InverseTrajectory t = InverseTrajectory();
+        t.radius = radius;
+        t.maxCount = maxCount;
+        t.trajectoryColor = color;
+
+        t.polygon = polygon;
+        t.polygonLength = polygonLength;
+
+        t.set_initial_values(vec2_d(pos));
+        inverseTrajectories.push_back(t);
+    }
+
     void InverseMagneticBillard::remove_trajectory(int index)
     {
         trajectories.erase(trajectories.begin() + index);
@@ -184,6 +244,7 @@ namespace godot {
     void InverseMagneticBillard::clear_trajectories()
     {
         trajectories.clear();
+        inverseTrajectories.clear();
     }
 
     Array InverseMagneticBillard::get_trajectories()
@@ -212,7 +273,18 @@ namespace godot {
             coordinatesPhasespace.set(i, iterate());
         }
         update();
-        return coordinatesPhasespace;*/
+        return coordinatesPhasespace;*/        
+        update();
+        return phaseSpace;
+    }
+
+    Array InverseMagneticBillard::iterate_inverse_batch(int batch)
+    {
+        Array phaseSpace;
+        for (auto& t : inverseTrajectories)
+        {
+            phaseSpace.push_back(t.iterate_batch(batch));
+        }
         update();
         return phaseSpace;
     }
@@ -251,12 +323,21 @@ namespace godot {
             t.radius = r;
             t.reset_trajectory();
         }
+        for (auto& t : inverseTrajectories)
+        {
+            t.radius = r;
+            t.reset_trajectory();
+        }
         update();
     }
 
     void InverseMagneticBillard::reset_trajectories()
     {
         for (auto& t : trajectories)
+        {
+            t.reset_trajectory();
+        }
+        for (auto& t : inverseTrajectories)
         {
             t.reset_trajectory();
         }

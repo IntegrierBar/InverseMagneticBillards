@@ -43,7 +43,7 @@ namespace godot {
         std::vector<double> polygonLength;  // polygonLength[i] is the length from start to vertex i, not including edge i (will always have size = polygon.size )
 
         std::vector<Trajectory> trajectories;
-
+        std::vector<InverseTrajectory> inverseTrajectories;
         
         
 
@@ -52,11 +52,15 @@ namespace godot {
         void clear_polygon();
         void add_polygon_vertex(Vector2 vertex);
         void close_polygon();
-        void make_regular_ngon(int n, double radius=1);
+        void set_polygon_vertex(int index, Vector2 vertex); // set polygon[index] = vertex
+        //void make_regular_ngon(int n, double radius=1);
 
         void add_trajectory(Vector2 start, Vector2 dir, Color color);
+        void add_inverse_trajectory(Vector2 start, Vector2 dir, Color color);
         void add_trajectory_phasespace(Vector2 pos, Color color);
+        void add_inverse_trajectory_phasespace(Vector2 pos, Color color);
         void remove_trajectory(int index);
+        //void remove_inverse_trajectory(int index);
         void clear_trajectories();  // remove all trajectories
         
         void reset_trajectories();
@@ -68,6 +72,7 @@ namespace godot {
 
         Array get_trajectories();
         Array iterate_batch(int batch); // returns array of PoolVector2Arrays of the phasespace coords of all trajectories
+        Array iterate_inverse_batch(int batch);
     };
 }
 
