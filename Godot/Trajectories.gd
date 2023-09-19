@@ -208,6 +208,18 @@ func clear_polygon():
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
 	#phase_space.reset_trajectories()
 
+
+func change_polygon_vertex(pos: Vector2, n: int):
+	if n != 0:
+		polygon[n] = pos
+	else:
+		polygon[0] = pos
+		polygon[-1] = pos
+	trajectories.set_polygon_vertex(n, invert_y(pos))
+	emit_signal("close_polygon", polygon)
+	update()
+
+
 # prejects the point onto all sides of the polygon and returns the closest
 func snap_to_polygon(point: Vector2) -> Vector2:
 	var best_point_projected: Vector2 = Vector2(0,0)

@@ -8,3 +8,13 @@ func _ready():
 	var size = Vector2(0.7,0.7)
 	self.rect_position = - 0.5 * size
 	self.rect_size = size
+
+
+func _draw():
+	pass
+	#draw_circle(Vector2.ZERO, 0.2, Color(1, 0, 0))
+	
+
+func _process(delta):
+	pass
+	# update()
