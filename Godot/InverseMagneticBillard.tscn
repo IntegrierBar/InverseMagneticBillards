@@ -10,7 +10,7 @@
 [ext_resource path="res://addons/dockable_container/layout_split.gd" type="Script" id=8]
 [ext_resource path="res://ControlPanel/ScrollContainer.gd" type="Script" id=9]
 [ext_resource path="res://Viewport/ViewportContainerScript.gd" type="Script" id=10]
-[ext_resource path="res://PolygonVertex.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Polygon/PolygonVertexHandler.gd" type="Script" id=11]
 [ext_resource path="res://ImportedDesignElements/CustomFont/TitilliumText-Regular.otf" type="DynamicFontData" id=12]
 [ext_resource path="res://Flowmap/FlowMap.gd" type="Script" id=13]
 [ext_resource path="res://ControlPanel/OneTrajectoryControlContainer.tscn" type="PackedScene" id=14]
@@ -170,7 +170,8 @@ __meta__ = {
 
 [node name="TrajectoryToShow" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" instance=ExtResource( 4 )]
 
-[node name="ControlPolygonVertex" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" instance=ExtResource( 11 )]
+[node name="PolygonVertexHandler" type="Node2D" parent="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories"]
+script = ExtResource( 11 )
 
 [node name="ControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
 margin_left = 4.0

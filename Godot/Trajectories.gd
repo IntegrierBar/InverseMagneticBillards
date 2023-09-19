@@ -99,20 +99,9 @@ func _ready():
 	
 	# Code for the 2nd polygon vertex
 	add_polygon_vertex(Vector2(10,0))
-	var scene1 = load("res://PolygonVertex.tscn")
-	var Vertex1 = scene1.instance()
-	Vertex1.pos = Vector2(10,0)
-	# pos of the child node does not have to be initialised
-	add_child(Vertex1)
-	move_child(Vertex1, 3)
 	
 	# Code for the 3rd polygon vertex 
 	add_polygon_vertex(Vector2(0,-10))
-	var scene2 = load("res://PolygonVertex.tscn")
-	var Vertex2 = scene2.instance()
-	Vertex2.pos = Vector2(0,-10)
-	add_child(Vertex2)
-	move_child(Vertex1, 4)
 	
 	
 	#close_polygon()
@@ -171,15 +160,16 @@ func add_polygon_vertex(vertex: Vector2):
 		trajectories.add_polygon_vertex(invert_y(vertex))
 		trajectory_to_show.add_polygon_vertex(invert_y(vertex))
 		
-		var scene = load("res://PolygonVertex.tscn")
-		var Vertex = scene.instance()
-		Vertex.pos = vertex
+		$PolygonVertexHandler.add_polygon_vertex(vertex)
+		#var scene = load("res://PolygonVertex.tscn")
+		#var Vertex = scene.instance()
+		#Vertex. = vertex
 		# Vertex.get_child(0).pos = Vector2(0,0)
 		# pos of the child node has to be initialised here for some reason
 		# does not need to be set after all, the psoition of the drawn circle is in the wrong 
 		# position though
-		add_child(Vertex)
-		move_child(Vertex, 3)
+		#add_child(Vertex)
+		#move_child(Vertex, 3)
 		
 		
 	update()
@@ -214,6 +204,7 @@ func clear_polygon():
 	
 	trajectories.clear_polygon()
 	trajectory_to_show.clear_polygon()
+	$PolygonVertexHandler.clear()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
 	#phase_space.reset_trajectories()
 
