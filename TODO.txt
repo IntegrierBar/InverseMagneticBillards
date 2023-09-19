@@ -51,6 +51,7 @@ Bilder)
 Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar sein
 
 Knöpfe und Verbindung für regelmäßiges n-eckiges Polygon einfügen
+-> Code zur Erstellung des n-Ecks nach Godot kopieren
 
 Button in Flowmap control der aktuell angezeigt trajectorie als normale Trajektorie spawnt
 
