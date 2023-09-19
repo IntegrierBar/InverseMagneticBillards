@@ -60,7 +60,7 @@ namespace godot {
         void add_trajectory_phasespace(Vector2 pos, Color color);
         void add_inverse_trajectory_phasespace(Vector2 pos, Color color);
         void remove_trajectory(int index);
-        //void remove_inverse_trajectory(int index);
+        void remove_inverse_trajectory(int index);
         void clear_trajectories();  // remove all trajectories
         
         void reset_trajectories();

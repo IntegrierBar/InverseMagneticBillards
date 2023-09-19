@@ -85,7 +85,7 @@ func _ready():
 	corner_count = get_tree().get_nodes_in_group("SetCornerCount")[0]
 	
 	batch = 1
-	trajectories.maxCount = 100
+	#trajectories.maxCount = 100
 	radius = 1
 	trajectories.set_radius(radius)
 	trajectory_to_show.set_radius(radius)

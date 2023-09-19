@@ -36,9 +36,9 @@ namespace godot {
         register_method((char*)"add_inverse_trajectory_phasespace", &InverseMagneticBillard::add_inverse_trajectory_phasespace);
         register_method((char*)"iterate_inverse_batch", &InverseMagneticBillard::iterate_inverse_batch);
 
-        register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
-        register_property((char*)"maxCount", &InverseMagneticBillard::maxCount, 1000);
-        register_property((char*)"polygonClosed", &InverseMagneticBillard::polygonClosed, false);
+        //register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
+        //register_property((char*)"maxCount", &InverseMagneticBillard::maxCount, 1000);
+        //register_property((char*)"polygonClosed", &InverseMagneticBillard::polygonClosed, false);
     }
 
     void InverseMagneticBillard::_process()
@@ -56,6 +56,7 @@ namespace godot {
             }
             
         }
+
 
         for (auto& t : inverseTrajectories) {
             if (t.trajectoryToDraw.size() > 1) {
@@ -323,10 +324,11 @@ namespace godot {
             t.radius = r;
             t.reset_trajectory();
         }
-        for (auto& t : inverseTrajectories)
+
+        for (auto& i : inverseTrajectories)
         {
-            t.radius = r;
-            t.reset_trajectory();
+            i.radius = r;
+            i.reset_trajectory();
         }
         update();
     }

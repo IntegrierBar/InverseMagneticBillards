@@ -6,12 +6,10 @@
 #include <Trajectory.h>
 #include <PoolArrays.hpp>
 #include <Array.hpp>
-
 // Trajectory reversed
 
 namespace godot {
-
-    struct InverseTrajectory :  Trajectory{
+    struct InverseTrajectory : public Trajectory {
     public:
         //double eps = 1e-8;  // TODO maybe make global eps or something?
         //double radius = 1;
