@@ -2,157 +2,128 @@
 
 namespace godot {
 
-	void InverseTrajectory::set_initial_values(vec2_d start, vec2_d dir)
-	{
-        // projection onto poylgon
-        double min_distance = INFINITY;
-        vec2_d pointProjected;
-        for (int i = 0; i < polygon.size() - 1; i++)
-        {
-            double t = (length_squared(start) - dot(start, polygon[i])) / dot(start, polygon[i + 1] - polygon[i]);
-            // snap to corners of edge
-            if (t < 0) {
-                t = 0;
-            }
-            else if (t > 1) {
-                t = 1;
-            }
-            pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
-            double distance = length_squared(vec2_d(start) - pointProjected);
-            if (distance < min_distance) {
-                min_distance = distance;
-                currentPosition = pointProjected;
-                currentIndexOnPolygon = i;
-            }
-        }
+	//void InverseTrajectory::set_initial_values(vec2_d start, vec2_d dir)
+	//{
+ //       // projection onto poylgon
+ //       double min_distance = INFINITY;
+ //       vec2_d pointProjected;
+ //       for (int i = 0; i < polygon.size() - 1; i++)
+ //       {
+ //           double t = (length_squared(start) - dot(start, polygon[i])) / dot(start, polygon[i + 1] - polygon[i]);
+ //           // snap to corners of edge
+ //           if (t < 0) {
+ //               t = 0;
+ //           }
+ //           else if (t > 1) {
+ //               t = 1;
+ //           }
+ //           pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
+ //           double distance = length_squared(vec2_d(start) - pointProjected);
+ //           if (distance < min_distance) {
+ //               min_distance = distance;
+ //               currentPosition = pointProjected;
+ //               currentIndexOnPolygon = i;
+ //           }
+ //       }
 
-        currentDirection = normalize(dir);  // normalize just in case
+ //       currentDirection = normalize(dir);  // normalize just in case
 
-        double angle = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
-        // TODO need to check if angle positive or negative right now
-        phaseSpaceTrajectory = { vec2_d((polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - pointProjected)) / polygonLength.back(), abs(angle) / M_PI) };
+ //       double angle = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
+ //       // TODO need to check if angle positive or negative right now
+ //       phaseSpaceTrajectory = { vec2_d((polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - pointProjected)) / polygonLength.back(), abs(angle) / M_PI) };
 
-        count = 0;
-        trajectory = { currentPosition };
+ //       count = 0;
+ //       trajectory = { currentPosition };
 
-        trajectoryToDraw = {};
-        trajectoryToDraw.push_back(currentPosition.to_draw());
-	}
+ //       trajectoryToDraw = {};
+ //       trajectoryToDraw.push_back(currentPosition.to_draw());
+	//}
 
-	void InverseTrajectory::set_initial_values(vec2_d pos)
-	{
-        if (polygonLength.size() < 3)
-        {
-            Godot::print("tried adding phasespace point, but there is no poly");
-            return;
-        }
-        if (pos.x > 1 || pos.y > 1)
-        {
-            Godot::print("coords to big");
-            return;
-        }
+	//void InverseTrajectory::set_initial_values(vec2_d pos)
+	//{
+ //       if (polygonLength.size() < 3)
+ //       {
+ //           Godot::print("tried adding phasespace point, but there is no poly");
+ //           return;
+ //       }
+ //       if (pos.x > 1 || pos.y > 1)
+ //       {
+ //           Godot::print("coords to big");
+ //           return;
+ //       }
 
-        double distance_left = pos.x * polygonLength.back();
-        currentIndexOnPolygon = 0;
-        while (distance_left - polygonLength[currentIndexOnPolygon + 1] > 0)
-        {
-            //Godot::print(Vector2(currentIndexOnPolygon, 0));
-            currentIndexOnPolygon++;
-            if (currentIndexOnPolygon + 1 >= polygonLength.size())
-            {
-                Godot::print("how defuq did I get here?");
-                return;
-            }
-        }
+ //       double distance_left = pos.x * polygonLength.back();
+ //       currentIndexOnPolygon = 0;
+ //       while (distance_left - polygonLength[currentIndexOnPolygon + 1] > 0)
+ //       {
+ //           //Godot::print(Vector2(currentIndexOnPolygon, 0));
+ //           currentIndexOnPolygon++;
+ //           if (currentIndexOnPolygon + 1 >= polygonLength.size())
+ //           {
+ //               Godot::print("how defuq did I get here?");
+ //               return;
+ //           }
+ //       }
 
-        currentPosition = polygon[currentIndexOnPolygon] + (distance_left - polygonLength[currentIndexOnPolygon]) * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
+ //       currentPosition = polygon[currentIndexOnPolygon] + (distance_left - polygonLength[currentIndexOnPolygon]) * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
 
-        // need to find out which direction we need to rotate to rotate inside the polygon
-        mat2_d rotator = mat2_d(std::cos(M_PI * pos.y), -std::sin(M_PI * pos.y), std::sin(M_PI * pos.y), std::cos(M_PI * pos.y));
-        currentDirection = rotator * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
-        // Use intersection test for this
-        vec2_d dir = currentDirection;
-        vec2_d start = currentPosition + eps * currentDirection;
-        int intersections = 0;
-        for (size_t i = 0; i < polygon.size() - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
-        {
-            // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
-            double denominator = (polygon[i + 1].x - polygon[i].x) * dir.y - (polygon[i + 1].y - polygon[i].y) * dir.x;
-            if (abs(denominator) < eps)
-            {
-                continue; // no intersection possible, since lines near parallel
-            }
-            double t = ((polygon[i].y - start.y) * dir.x - (polygon[i].x - start.x) * dir.y) / denominator;
-            if (0 <= t && t < 1) // allow t = 0 but not t = 1 to avoid double counting
-            {
-                double u = ((polygon[i].x - start.x) * (polygon[i].y - polygon[i + 1].y) - (polygon[i].y - start.y) * (polygon[i].x - polygon[i + 1].x)) / denominator;
-                if (i != currentIndexOnPolygon && u > 0)
-                {
-                    intersections++;
-                }
-            }
-        }
-        // if even amount of intersections, the we went the wrong direction
-        if (intersections % 2 == 0)
-        {
-            // TODO BIG ERRROR HERE; DO NOT USE mat2_d rotator but just rotator, SONST SHADOWING!!!!!!!!!
-            mat2_d rotator = mat2_d(std::cos(-M_PI * pos.y), -std::sin(-M_PI * pos.y), std::sin(-M_PI * pos.y), std::cos(-M_PI * pos.y));
-            currentDirection = rotator * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
-        }
+ //       // need to find out which direction we need to rotate to rotate inside the polygon
+ //       mat2_d rotator = mat2_d(std::cos(M_PI * pos.y), -std::sin(M_PI * pos.y), std::sin(M_PI * pos.y), std::cos(M_PI * pos.y));
+ //       currentDirection = rotator * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
+ //       // Use intersection test for this
+ //       vec2_d dir = currentDirection;
+ //       vec2_d start = currentPosition + eps * currentDirection;
+ //       int intersections = 0;
+ //       for (size_t i = 0; i < polygon.size() - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
+ //       {
+ //           // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
+ //           double denominator = (polygon[i + 1].x - polygon[i].x) * dir.y - (polygon[i + 1].y - polygon[i].y) * dir.x;
+ //           if (abs(denominator) < eps)
+ //           {
+ //               continue; // no intersection possible, since lines near parallel
+ //           }
+ //           double t = ((polygon[i].y - start.y) * dir.x - (polygon[i].x - start.x) * dir.y) / denominator;
+ //           if (0 <= t && t < 1) // allow t = 0 but not t = 1 to avoid double counting
+ //           {
+ //               double u = ((polygon[i].x - start.x) * (polygon[i].y - polygon[i + 1].y) - (polygon[i].y - start.y) * (polygon[i].x - polygon[i + 1].x)) / denominator;
+ //               if (i != currentIndexOnPolygon && u > 0)
+ //               {
+ //                   intersections++;
+ //               }
+ //           }
+ //       }
+ //       // if even amount of intersections, the we went the wrong direction
+ //       if (intersections % 2 == 0)
+ //       {
+ //           // TODO BIG ERRROR HERE; DO NOT USE mat2_d rotator but just rotator, SONST SHADOWING!!!!!!!!!
+ //           mat2_d rotator = mat2_d(std::cos(-M_PI * pos.y), -std::sin(-M_PI * pos.y), std::sin(-M_PI * pos.y), std::cos(-M_PI * pos.y));
+ //           currentDirection = rotator * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
+ //       }
 
-        count = 0;
-        phaseSpaceTrajectory = { pos };
-        trajectory = { currentPosition };
-        trajectoryToDraw = {};
-        trajectoryToDraw.push_back(currentPosition.to_draw());
-	}
+ //       count = 0;
+ //       phaseSpaceTrajectory = { pos };
+ //       trajectory = { currentPosition };
+ //       trajectoryToDraw = {};
+ //       trajectoryToDraw.push_back(currentPosition.to_draw());
+	//}
 
-	void InverseTrajectory::reset_trajectory()
-	{
-        if (trajectory.size() > 0)
-        {
-            currentPosition = trajectory[0];
-        }
+	//void InverseTrajectory::reset_trajectory()
+	//{
+ //       if (phaseSpaceTrajectory.size() > 0)
+ //       {
+ //           set_initial_values(phaseSpaceTrajectory[0]);
+ //       }
+	//}
 
-        if (trajectory.size() > 1) {
-            currentDirection = normalize(trajectory[1] - currentPosition);
-        }
-        double min_distance = INFINITY;
-        vec2_d pointProjected;
-        currentIndexOnPolygon = 0; // does not fix the problem. can delete or keep whatever, I hate this. Rust is better
-        for (int i = 0; i < polygon.size() - 1; i++)
-        {
-            //Godot::print("should not reach");
-            double t = (length_squared(currentPosition) - dot(currentPosition, polygon[i])) / dot(currentPosition, polygon[i + 1] - polygon[i]);
-            // snap to corners of edge
-            if (t < 0) {
-                t = 0;
-            }
-            else if (t > 1) {
-                t = 1;
-            }
-            pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
-            double distance = length_squared(vec2_d(currentPosition) - pointProjected);
-            if (distance < min_distance) {
-                min_distance = distance;
-                currentIndexOnPolygon = i;
-            }
-        }
-        count = 0;
-        trajectory.resize(1);
-        phaseSpaceTrajectory.resize(1);
-        trajectoryToDraw.resize(1);
-	}
-
-    void InverseTrajectory::set_polygon(std::vector<vec2_d> p, std::vector<double> l)
-    {
-        polygon = p;
-        polygonLength = l;
-        if (phaseSpaceTrajectory.size() > 0)
-        {
-            set_initial_values(phaseSpaceTrajectory[0]);
-        }
-    }
+ //   void InverseTrajectory::set_polygon(std::vector<vec2_d> p, std::vector<double> l)
+ //   {
+ //       polygon = p;
+ //       polygonLength = l;
+ //       if (phaseSpaceTrajectory.size() > 0)
+ //       {
+ //           set_initial_values(phaseSpaceTrajectory[0]);
+ //       }
+ //   }
 
     Vector2 InverseTrajectory::iterate()
     {

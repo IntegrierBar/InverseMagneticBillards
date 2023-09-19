@@ -119,39 +119,40 @@ namespace godot {
 
     void Trajectory::reset_trajectory()
     {
-        if (trajectory.size() > 0)
+        if (phaseSpaceTrajectory.size() > 0)
         {
-            currentPosition = trajectory[0];
+            //currentPosition = trajectory[0];
+            set_initial_values(phaseSpaceTrajectory[0]);
         }
 
-        if (trajectory.size() > 1) {
-            currentDirection = normalize(trajectory[1] - currentPosition);
-        }
-        double min_distance = INFINITY;
-        vec2_d pointProjected;
-        currentIndexOnPolygon = 0; // does not fix the problem. can delete or keep whatever, I hate this. Rust is better
-        for (int i = 0; i < polygon.size() - 1; i++)
-        {
-            //Godot::print("should not reach");
-            double t = (length_squared(currentPosition) - dot(currentPosition, polygon[i])) / dot(currentPosition, polygon[i + 1] - polygon[i]);
-            // snap to corners of edge
-            if (t < 0) {
-                t = 0;
-            }
-            else if (t > 1) {
-                t = 1;
-            }
-            pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
-            double distance = length_squared(vec2_d(currentPosition) - pointProjected);
-            if (distance < min_distance) {
-                min_distance = distance;
-                currentIndexOnPolygon = i;
-            }
-        }
-        count = 0;
-        trajectory.resize(1);
-        trajectoryToDraw.resize(1);
-        phaseSpaceTrajectory.resize(1);
+        //if (trajectory.size() > 1) {
+        //    currentDirection = normalize(trajectory[1] - currentPosition);
+        //}
+        //double min_distance = INFINITY;
+        //vec2_d pointProjected;
+        //currentIndexOnPolygon = 0; // does not fix the problem. can delete or keep whatever, I hate this. Rust is better
+        //for (int i = 0; i < polygon.size() - 1; i++)
+        //{
+        //    //Godot::print("should not reach");
+        //    double t = (length_squared(currentPosition) - dot(currentPosition, polygon[i])) / dot(currentPosition, polygon[i + 1] - polygon[i]);
+        //    // snap to corners of edge
+        //    if (t < 0) {
+        //        t = 0;
+        //    }
+        //    else if (t > 1) {
+        //        t = 1;
+        //    }
+        //    pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
+        //    double distance = length_squared(vec2_d(currentPosition) - pointProjected);
+        //    if (distance < min_distance) {
+        //        min_distance = distance;
+        //        currentIndexOnPolygon = i;
+        //    }
+        //}
+        //count = 0;
+        //trajectory.resize(1);
+        //trajectoryToDraw.resize(1);
+        //phaseSpaceTrajectory.resize(1);
     }
 
 
