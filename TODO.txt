@@ -1,6 +1,9 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
+Auf Github zum laufen bekommen (scheint zu tun, bitte testen)
+
+Project resizeable machen (bekomme Größe zum Beispiel über Browser mitgeteilt) (scheint zu tun, bitte testen)
 
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
@@ -39,10 +42,6 @@ Abstand der trajectorien mit zoom faktor ändern
 
 Anleitung schreiben
 
-Auf Github zum laufen bekommen
-
-Project resizeable machen (bekomme Größe zum Beispiel über Browser mitgeteilt)
-
 (FlowMap und Phasespace kamera bekommen limits für rechts und links bewegung, damit man nicht mehr sieht als die 
 Bilder)
 
@@ -65,6 +64,7 @@ Sollen wir uns optisch noch mehr Mühe machen? Oder lassen wir es so? Soll ich d
 Füge nützliche tooltips zu buttons und textfeldern hinzu um die Bedienung zu erleichtern, damit könnten dann auch
 die Instruction labels entfernt werden, denke ich
 
+Phasespace nochmal überdenken, ob das nicht besser geht (mit kleinen kreisen oder so zum Beispiel statt resterisierung)
 
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
