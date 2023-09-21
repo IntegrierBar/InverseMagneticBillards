@@ -46,6 +46,7 @@ namespace godot {
         // TODO could do stuff here
     }
 
+    // For each trajectory use polyline to draw it in normal space
     void InverseMagneticBillard::_draw()
     {
         // TODO consider using antialiasing and width
@@ -63,28 +64,7 @@ namespace godot {
                 draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
             }
         }
-
-
-        /* draw the polygon TODO maybe add width and antialiasing
-        // TODO consider not drawing the polygon here, but with gd script in the manager node!
-        if (polygonToDraw.size() > 1) {
-            draw_polyline(polygonToDraw, polygonColor);
-        }
         
-
-        // draw trajectory
-        //for (const auto& line : trajectoryLines) {
-        //    draw_line(line[0], line[1], trajectoryColor);
-        //}
-        //for (const auto& circle : trajectoryCircles) {
-        //    draw_arc(std::get<0>(circle).to_godot(), radius, std::get<1>(circle), std::get<2>(circle), 20, trajectoryColor);
-        //}
-
-        // DEGUB
-        //for (const auto& point : trajectoryDraw) {
-            //draw_circle(point, 20, Color(1, 0, 0));
-        //}
-        */
     }
 
     void InverseMagneticBillard::clear_polygon()
@@ -96,42 +76,29 @@ namespace godot {
         update();
     }
 
-    // CURRENTLY BETTER NOT USED. // DAFUC U TALKING?
     void InverseMagneticBillard::add_polygon_vertex(Vector2 vertex)
     {
-        //Godot::print("add vertex to polygon");
-        //Godot::print(vertex);
-        if (polygonClosed) {    // if the polygon es closed, remember, that last element of vector is first element.
-            //polygonClosed = false;
-            //polygon.pop_back();
-            ////polygonToDraw.remove(polygonToDraw.size() - 1);
-            //polygon.push_back(vec2_d(vertex));
-            ////polygonToDraw.push_back(vertex);
-            //close_polygon();
-
-            // DONT DO ANYTHING IF POLYGON IS CLOSED
-            // THIS IS IMPORTANT FOR LENGTH CALCULATIONS. MAYBE CHANGE LATER
+        if (polygonClosed) {    // if the polygon es closed do nothing
+            return;
         }
-        else {
-            if (polygon.size() > 0)
-            {
-                if (polygonLength.size() < 1) { // TODO should be unneccessary now
-                    polygonLength.push_back(length(polygon.back() - vec2_d(vertex)));
-                }
-                else {
-                    polygonLength.push_back(polygonLength.back() + length(polygon.back() - vec2_d(vertex)));
+        
+        if (polygon.size() > 0)
+        {
+            if (polygonLength.size() < 1) { // TODO should be unneccessary now
+                polygonLength.push_back(length(polygon.back() - vec2_d(vertex)));
+            }
+            else {
+                polygonLength.push_back(polygonLength.back() + length(polygon.back() - vec2_d(vertex)));
 
-                }
+            }
                 
-            }
-            else
-            {
-                polygonLength.push_back(0); // first entry needs to by a zero
-            }
-            
-            polygon.push_back(vec2_d(vertex));
         }
-        //update();
+        else
+        {
+            polygonLength.push_back(0); // first entry needs to by a zero
+        }
+            
+        polygon.push_back(vec2_d(vertex));
     }
 
     void InverseMagneticBillard::close_polygon()
@@ -155,6 +122,7 @@ namespace godot {
         update();
     }
 
+    // in order to change one vertex, we rebuild the entire polygon
     void InverseMagneticBillard::set_polygon_vertex(int index, Vector2 vertex)
     {
         if (index >= polygon.size())
@@ -170,15 +138,6 @@ namespace godot {
         }
         close_polygon();
     }
-
-    //void InverseMagneticBillard::make_regular_ngon(int n, double radius)
-    //{
-    //    for (size_t i = 0; i < n; i++)
-    //    {
-    //        add_polygon_vertex(Vector2(radius * std::cos(2 * M_PI * i / n), radius * std::sin(2 * M_PI * i / n)));
-    //    }
-    //    close_polygon();
-    //}
 
     void InverseMagneticBillard::add_trajectory(Vector2 start, Vector2 dir, Color color)
     {
@@ -261,20 +220,11 @@ namespace godot {
     Array InverseMagneticBillard::iterate_batch(int batch)
     {
         Array phaseSpace;
-        //phaseSpace.resize(trajectories.size());
         for (auto& t : trajectories)
         {
             phaseSpace.push_back(t.iterate_batch(batch));
         }
-        /*PoolVector2Array coordinatesPhasespace = PoolVector2Array();
-        if (count + batch > maxCount) { return coordinatesPhasespace; }
-        coordinatesPhasespace.resize(batch);
-        for (size_t i = 0; i < batch; i++)
-        {
-            coordinatesPhasespace.set(i, iterate());
-        }
-        update();
-        return coordinatesPhasespace;*/        
+    
         update();
         return phaseSpace;
     }

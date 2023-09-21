@@ -44,8 +44,8 @@ namespace godot {
 
         void set_polygon(std::vector<vec2_d> p, std::vector<double> l); // set the polygon. Keeps the inital phasespace coordinates
 
-        Vector2 iterate();                                  // one iteration of the system
-        PoolVector2Array iterate_batch(int batch);          // "batch" iterations of the system
+        Vector2 iterate();                                  // one iteration of the system. Returns the phase space coordinates of the new point
+        PoolVector2Array iterate_batch(int batch);          // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
 
 	private:
         /* Functions used to calculate the iterations of the trajectory */
