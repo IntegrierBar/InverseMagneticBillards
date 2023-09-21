@@ -1,32 +1,10 @@
-# TODOs
-# Camera movable with right mouse button or arrow keys/wasd
-# good initial camera zoom
-# UI:
-#	dragable
-#	look pretty
-#	dynamicly adding trajectories
-#	more functionalyity (batch, color, add_trajectory ...)
-# Disable some buttons when polygon not closed
-# SHADERS
-# BUG WITH initial point. might think it is outside and couse interseciton with side we are on!!!
-# 	would be fixed by transitioning to a paramtetrization
-
-
-
-# Fix Bugs:
-# - Add update to delete trajectory and set_color in C++ code!
-# - Under some circumstances, the local coordinates in the normal coordinate space with the polygon are shifted,
-#   meaning that the position of the mouse is further left than the indicated position of the mouse when drawing 
-#   a new polygon or choosing a direction, it seems to appear if the left part is made bigger
-
-
 
 extends Node2D
 
 var mouse_inside = false
 
 #onready var trajectory_scene = preload("res://Trajectory.tscn")
-var phase_space# = $"../../../../Phasespace/ViewportContainer/Viewport/MarginContainer/PhaseSpace"
+var phase_space
 var flow_map
 var polygon_instr
 var trajectory_instr
@@ -44,11 +22,14 @@ var newpos # currently needed to change direction
 
 # var lines_to_draw # will be handled in gdnative
 
-var polygon: Array
+# for polygon with n vertices has n+1 entries, the first and last one are the same
+# makes drawing all sides of the polygon easier
+var polygon: Array 
 var polygon_color: Color
 var polygon_closed: bool
 
 onready var trajectories = $Trajectory
+# handles trajectories that can be shown via the flowmap
 onready var trajectory_to_show = $TrajectoryToShow
 
 signal close_polygon(p)
@@ -58,16 +39,17 @@ var batch_to_show: int = 1
 var max_count: int
 var radius: float
 
+# use a state machine to hand changes of the polygon and the trajectory
 enum STATES {
-	ITERATE,
-	SET_START,
-	SET_DIRECTION,
-	SET_POLYGON,
-	ADD_TRAJECTORY, 
+	ITERATE,  # base state, iterate trajectories can be called here
+	SET_START,  # allows setting the starting position of one trajectory through click in normal space
+	SET_DIRECTION,  # allows setting starting direction of this trajectory though click in normal space
+	SET_POLYGON,  # state that allows to place vertices for a new polygon, they are connected in the 
+					# order they are placed in
 }
 var current_state = STATES.ITERATE
-var last_state
 
+# index of trajectory that is to be edited
 var trajectory_to_edit: int
 
 # Called when the node enters the scene tree for the first time.
@@ -86,30 +68,30 @@ func _ready():
 	corner_count = get_tree().get_nodes_in_group("SetCornerCount")[0]
 	ngon_radius = get_tree().get_nodes_in_group("SetNGonRadius")[0]
 	
-	batch = 1
+	# set radius and batch size
+	batch = 1  # number of iterations made on one "iterate" click
 	#trajectories.maxCount = 100
 	radius = 1
 	trajectories.set_radius(radius)
 	trajectory_to_show.set_radius(radius)
 	radius_slider.value = radius
+	
 	trajectories.reset_trajectories()
 	trajectory_to_show.reset_trajectories()
+	# set initial polygon
 	polygon_closed = false
 	polygon = []
 	polygon_color = Color(1, 1, 1)
 	add_polygon_vertex(Vector2(0,0))
-	
-	# Code for the 2nd polygon vertex
 	add_polygon_vertex(Vector2(10,0))
-	
-	# Code for the 3rd polygon vertex 
 	add_polygon_vertex(Vector2(0,-10))
 	
-	
+	# polygon cannot be closed when starting the application because that leads to errors
 	#close_polygon()
-	current_state = STATES.SET_POLYGON
-	add_trajectorie(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
-	trajectory_to_edit = 0 # TODO needs button to change
+	current_state = STATES.SET_POLYGON 
+	# set add trajetory with some initial position and direction
+	add_trajectory(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
+	trajectory_to_edit = 0 
 	
 	# connect buttons of already existing trajectory 
 	var inst = traj_control.find_node("VBoxContainer")
@@ -120,11 +102,10 @@ func _ready():
 	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
 	var colourPicker = inst.get_child(1).get_child(1)
 	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
-	
-	#trajectory_to_show.add_trajectory
-	# inst.connect("change_start_position", self, "_on_NewStartPos_pressed")
+
 
 func _process(_delta):
+	# in the following states, the normal space has to be redrawn every frame
 	match current_state:
 		STATES.SET_DIRECTION:
 			update()
@@ -134,24 +115,27 @@ func _process(_delta):
 		STATES.SET_START:
 			update()
 
-			
+
 
 func _draw():
+	# Polygon gets drawn here
 	if polygon.size() > 1:
 		draw_polyline(polygon, polygon_color)
 	match current_state:
 		STATES.SET_DIRECTION:
+			# draw line between starting position and mouse position to indicate the direction
 			draw_line(newpos, get_local_mouse_position(), trajectories.get_trajectory_colors()[trajectory_to_edit])
-			# It does what I want it to do but is this really the correct way or is there a more elegant solution?
 		STATES.SET_POLYGON:
+			# draw line between last placed polygon vertex and mouse position
 			draw_line(polygon.back(), get_local_mouse_position(), polygon_color)
 		STATES.SET_START:
+			# draw circle on the trajectory closest to current mouse position
 			draw_circle(snap_to_polygon(get_local_mouse_position()), 1.0, trajectories.get_trajectory_colors()[trajectory_to_edit])
 
 
 
 ####################### POLYGON ####################################################################
-# Godot uses negative y-axis. Nedd to invert y to get correct coords
+# Godot uses negative y-axis. Need to invert y to get correct coords
 func invert_y(p: Vector2) -> Vector2:
 	return Vector2(p.x, -p.y)
 
@@ -162,23 +146,16 @@ func add_polygon_vertex(vertex: Vector2):
 		trajectories.add_polygon_vertex(invert_y(vertex))
 		trajectory_to_show.add_polygon_vertex(invert_y(vertex))
 		
-		$PolygonVertexHandler.add_polygon_vertex(vertex)
-		#var scene = load("res://PolygonVertex.tscn")
-		#var Vertex = scene.instance()
-		#Vertex. = vertex
-		# Vertex.get_child(0).pos = Vector2(0,0)
-		# pos of the child node has to be initialised here for some reason
-		# does not need to be set after all, the psoition of the drawn circle is in the wrong 
-		# position though
-		#add_child(Vertex)
-		#move_child(Vertex, 3)
-		
+		# handles the nodes necessary to make vertices moveable
+		$PolygonVertexHandler.add_polygon_vertex(vertex)		
 		
 	update()
 
 func close_polygon():
+	# polygon cannot be closed if it is already closed or contains less than three vertices
 	if polygon_closed || polygon.size() < 3:
 		return
+	# append first vertex as last vertex 
 	polygon.append(polygon[0])
 	emit_signal("close_polygon", polygon)	# signal flow map, that polygon is closed
 	trajectories.close_polygon()
@@ -219,6 +196,7 @@ func change_polygon_vertex(pos: Vector2, n: int):
 		polygon[-1] = pos
 	trajectories.set_polygon_vertex(n, invert_y(pos))
 	trajectory_to_show.set_polygon_vertex(n, invert_y(pos))
+	phase_space.reset_image()
 	emit_signal("close_polygon", polygon)
 	update()
 
@@ -236,7 +214,6 @@ func snap_to_polygon(point: Vector2) -> Vector2:
 	return best_point_projected
 
 
-# TODO: things have to happen here, the function from the c++ code is currently not connected
 func _on_RegularNGonButton_pressed():
 	var n = corner_count.text
 	var r = ngon_radius.text
@@ -268,11 +245,11 @@ func _on_RegularNGonButton_pressed():
 
 
 ##################### TRAJECTORIES #################################################################
-func add_trajectorie(start: Vector2, dir: Vector2, color: Color):
+func add_trajectory(start: Vector2, dir: Vector2, color: Color):
 	trajectories.add_trajectory(invert_y(start), invert_y(dir), color)
 	#phase_space.add_trajectory(color)
 
-func add_trajectorie_ps(pos: Vector2, color: Color):
+func add_trajectory_ps(pos: Vector2, color: Color):
 	trajectories.add_trajectory_phasespace(pos, color)
 
 func iterate_batch():
@@ -445,7 +422,7 @@ func _on_NewTrajectoriesButton_pressed():
 	
 	var random_colour = Color(randf(), randf(), randf())
 	
-	add_trajectorie(Vector2(2,0), Vector2(1,-1), random_colour)
+	add_trajectory(Vector2(2,0), Vector2(1,-1), random_colour)
 	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
 	
 	_new_trajectory_added(random_colour)
@@ -463,20 +440,23 @@ func _on_SpawnPSTrajOnCoords_pressed():
 		var c2 = coord2.to_float()
 		if c1 > 0 and c1 < 1 and c2 > 0 and c2 < 1:
 			var ps_pos = Vector2(c1, c2)
-			add_trajectorie_ps(ps_pos, colour)
+			add_trajectory_ps(ps_pos, colour)
 			phase_space.add_initial_coords_to_image([ps_pos], [colour])
 			_new_trajectory_added(colour)
 
 # spawns trajectory in normal and phasespace according to the click position int phasespace
-func _spawn_ps_traj_on_click(ps_coord):
+func _spawn_ps_traj_on_click(ps_coord, draw):
 	var colour = single_ps_traj.get_child(0).get_child(1).get_pick_color()
-	add_trajectorie_ps(ps_coord, colour)
+	add_trajectory_ps(ps_coord, colour)
+	if !draw:
+		pass # does not work yet, also does not draw in phasespace
+		# trajectories.set_max_count(-1, 0)
 	phase_space.add_initial_coords_to_image([ps_coord], [colour])
 	_new_trajectory_added(colour)
 	
 
 # spawns a batch of trajectories in a rectangle between two clicks in phasespace
-func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int):
+func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int, draw: bool):
 	var xmin
 	var xmax
 	var ymin
@@ -517,8 +497,10 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int):
 	phase_space.add_initial_coords_to_image(pos, colours)
 	
 	for i in range(pos.size()):
-		add_trajectorie_ps(pos[i], colours[i])
-		
+		add_trajectory_ps(pos[i], colours[i])
+		if !draw:
+			pass
+			# trajectories.set_max_count(-1, 0)
 		_new_trajectory_added(colours[i])
 	
 
@@ -554,7 +536,7 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 func _spawn_fm_traj_on_click(ps_coord):
 	var coord = PSToR2(ps_coord)
 	var colour = Color(randf(), randf(), randf())
-	add_trajectorie(coord[0], coord[1], colour)
+	add_trajectory(coord[0], coord[1], colour)
 	phase_space.add_initial_coords_to_image([ps_coord], [colour])
 	_new_trajectory_added(colour)
 

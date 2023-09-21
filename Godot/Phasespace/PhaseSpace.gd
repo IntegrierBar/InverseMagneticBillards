@@ -1,7 +1,6 @@
 extends Sprite#TextureRect
 
 
-
 #var bounding_box_color = Color.red
 
 var trajectories_to_draw: Array = []
@@ -14,19 +13,22 @@ onready var sizex = 400#rect_size.x
 onready var sizey = 400#rect_size.y
 
 var traj_script 
-var mouse_inside = false
 var instr_label
 var num_traj_in_batch
 
+var mouse_inside = false
+var drawInNormalSpace = true
+
+# use state machine to handle spawning single trajectories and trajectory batches 
 enum STATES {
-	REST,
-	SINGLE,
-	BATCH1, 
-	BATCH2
+	REST, # base state, nothing happens here
+	SINGLE,  # spawns a single trajectory on click in phasespace
+	BATCH1,  # first click for spawning a batch of trajectories from phase space
+	BATCH2  # second click for spawning a batch of trajectories from phase space
 }
 
 var current_state = STATES.REST
-var batch_coord1
+var batch_coord1 # saves the first click for spawning a batch of trajectories
 
 
 func _ready():
@@ -68,7 +70,7 @@ func mouse_input():
 		match current_state:
 			STATES.SINGLE:
 				# var ps_coord = local_to_ps()
-				traj_script._spawn_ps_traj_on_click(ps_coord)
+				traj_script._spawn_ps_traj_on_click(ps_coord, drawInNormalSpace)
 				current_state = STATES.REST
 			STATES.BATCH1:
 				# belongs together with state batch2, both are needed to spawn a trajectory batch
@@ -78,7 +80,7 @@ func mouse_input():
 				current_state = STATES.REST
 				instr_label.text = " "
 				var n = int(num_traj_in_batch.text)
-				traj_script._spawn_ps_traj_batch(batch_coord1, ps_coord, n)
+				traj_script._spawn_ps_traj_batch(batch_coord1, ps_coord, n, drawInNormalSpace)
 			STATES.REST:
 				pass
 
@@ -155,12 +157,15 @@ func _on_SpawnTrajBatch_pressed():
 	else: 
 		instr_label.text = "Number of trajectories in the batch needed"
 	
-	
 
 
 func _on_ClearPSTrajectories_pressed():
 	reset_image()
 
+
+
+func _on_DrawnInNormalSpace_toggled(button_pressed):
+	drawInNormalSpace = button_pressed
 
 #func _draw():
 	# draw bounding box of image FOR NOW SKIP THIS
@@ -200,3 +205,6 @@ func _on_ClearPSTrajectories_pressed():
 #	for i in range(trajectory_count):
 #		trajectories_to_draw.append([])
 #	update()
+
+
+
