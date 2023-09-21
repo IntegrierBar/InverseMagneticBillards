@@ -1,9 +1,7 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
-Auf Github zum laufen bekommen (scheint zu tun, bitte testen)
 
-Project resizeable machen (bekomme Größe zum Beispiel über Browser mitgeteilt) (scheint zu tun, bitte testen)
 
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
@@ -11,8 +9,6 @@ Man kann außerdem überlegen ob man eine bessere startposition verteilung versu
 nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist 
 
 Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
-
-Bei show trajectory aus der flowmap sollte vorwärts/rückwärts beachtet und unterstützt werden
 
 Überprüfen, dass Flowmap und Phasespace gleich orientiert sind
 
@@ -22,7 +18,7 @@ Clear phasespace entfernt Trajektorien aus dem normal space nicht, soll das so b
 
 Reset all trajectories button, in normal control, löscht alles aus trajektorien außer startpunkt und startrichtung, 
 sollte phasespace ebenfalls entsprechend zurücksetzen
-BUG: Behält Startpunkte aber nicht Richtungen bei! Problem ist, dass die direction anders berechnet werden muss! 
+BUG: Behält Startpunkte aber nicht Richtungen bei! Problem ist, dass die direction anders berechnet werden muss! X
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 Beispielbugs: 
@@ -30,11 +26,6 @@ Beispielbugs:
 Polygons ab  X
 - Löschen von trajektorien im set start state und set direction state führt zum absturz des Programms
 - Dürfen Trajektorien hinzugefügt werden, bevor das Polygon geschlossen wurde? Sorgt aktuell für offene Polygone
-
-
-Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
-Notizen: Wenn ich es richtig sehe, müssen wir dafür Objekte für die Eckpunkte erzeugen die mit den Clicks gespawnt 
-werden und dann draggable sind
 
 FTLE: 
 4 trajectorien starten, Jacobimatrix damit berechnen, spektralnorm nehmen und als Helligkeit verwenden
@@ -49,12 +40,7 @@ Bilder)
 
 Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar sein
 
-Knöpfe und Verbindung für regelmäßiges n-eckiges Polygon einfügen
--> Code zur Erstellung des n-Ecks nach Godot kopieren
-
 Button in Flowmap control der aktuell angezeigt trajectorie als normale Trajektorie spawnt
-
-Inwieweit soll die Orientierung des Polygons für den Phasespace und die Flowmap beachtet werden?
 
 Trajectory drawn in normal space hat aktuell keine Funktion, soll das noch angebunden oder eher entfernt werden?
 
@@ -69,6 +55,21 @@ Phasespace nochmal überdenken, ob das nicht besser geht (mit kleinen kreisen od
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+Knöpfe und Verbindung für regelmäßiges n-eckiges Polygon einfügen
+-> Code zur Erstellung des n-Ecks nach Godot kopieren
+
+Auf Github zum laufen bekommen (scheint zu tun, bitte testen)
+
+Project resizeable machen (bekomme Größe zum Beispiel über Browser mitgeteilt) (scheint zu tun, bitte testen)
+
+Bei show trajectory aus der flowmap sollte vorwärts/rückwärts beachtet und unterstützt werden X
+
+Inwieweit soll die Orientierung des Polygons für den Phasespace und die Flowmap beachtet werden? X (Gar nicht extra behandeln)
+
+Polygon Vertices können verschoben werden, flowmap soll interaktiv berechnet werden dabei
+Notizen: Wenn ich es richtig sehe, müssen wir dafür Objekte für die Eckpunkte erzeugen die mit den Clicks gespawnt 
+werden und dann draggable sind X
 
 was noch connected werden muss:
 reset_image in Phasespace mit eigenem button, new polygon, change radius  X
