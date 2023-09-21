@@ -1,3 +1,8 @@
+/*
+Simple structs for double preccision 2d vectors and matricies
+*/
+
+
 #ifndef VECTOR_D_H
 #define VECTOR_D_H
 

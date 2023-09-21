@@ -1,3 +1,8 @@
+/*
+Manager class that is exposed to Godot
+Manages trajectories and inverse trajectories and the drawing
+*/
+
 #ifndef GDNATIVEEXPLORATION_IMB_H
 #define GDNATIVEEXPLORATION_IMB_H
 
@@ -26,7 +31,7 @@ namespace godot {
         GODOT_CLASS(InverseMagneticBillard, Node2D)
     public:
         static void _register_methods();
-        void _init();
+        void _init();       // currently not used
         void _process();    // currently not used
         void _draw();
         
@@ -34,12 +39,11 @@ namespace godot {
         ~InverseMagneticBillard() {}
         
         // Member fields
-        double radius = 1;
+        double radius = 1;                  // default radius of the system. Equal to ~ 1/magnetic strength
+        int maxCount = 100;                 // default "maxCount" for the trajectories
 
-        int maxCount = 100;
-
-        bool polygonClosed = false;
-        std::vector<vec2_d> polygon;    // keep one structure for calculations
+        bool polygonClosed = false;         // variable to track whether the polygon is closed, i.e. polygon[0] == polygon[-1] 
+        std::vector<vec2_d> polygon;        // polygon that defines the table
         std::vector<double> polygonLength;  // polygonLength[i] is the length from start to vertex i, not including edge i (will always have size = polygon.size )
 
         std::vector<Trajectory> trajectories;
