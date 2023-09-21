@@ -104,7 +104,7 @@ func _process(delta):
 			if forwards: 
 				traj_script._show_fm_traj_on_click(pos)
 			else:
-				pass # add show for backwards iteration here once the c++ code for that part is done
+				traj_script._show_backwards_fm_traj_on_click(pos)
 
 
 func _on_ShowSpawnButton_toggled(button_pressed):

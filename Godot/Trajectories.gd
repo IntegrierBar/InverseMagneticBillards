@@ -36,6 +36,7 @@ var traj_control
 var batch_edit
 var single_ps_traj
 var corner_count
+var ngon_radius
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -83,6 +84,7 @@ func _ready():
 	batch_edit = get_tree().get_nodes_in_group("BatchSizeEdit")[0]
 	single_ps_traj = get_tree().get_nodes_in_group("SinglePSTraj")[0]
 	corner_count = get_tree().get_nodes_in_group("SetCornerCount")[0]
+	ngon_radius = get_tree().get_nodes_in_group("SetNGonRadius")[0]
 	
 	batch = 1
 	#trajectories.maxCount = 100
@@ -216,6 +218,7 @@ func change_polygon_vertex(pos: Vector2, n: int):
 		polygon[0] = pos
 		polygon[-1] = pos
 	trajectories.set_polygon_vertex(n, invert_y(pos))
+	trajectory_to_show.set_polygon_vertex(n, invert_y(pos))
 	emit_signal("close_polygon", polygon)
 	update()
 
@@ -236,17 +239,30 @@ func snap_to_polygon(point: Vector2) -> Vector2:
 # TODO: things have to happen here, the function from the c++ code is currently not connected
 func _on_RegularNGonButton_pressed():
 	var n = corner_count.text
-	if n.is_valid_integer():
-		pass
-		# trajectories.make_regular_ngon(n)
-		# trajectory_to_show.make_regular_ngon(n)
-		# corners have to be added to polygon somehow as well
-		# polygon is already closed 
+	var r = ngon_radius.text
+	if n.is_valid_integer() and r.is_valid_float():
+		var radius = float(r)
+		var count = int(n)
 		
-		# trajectories.reset_trajectories()
-		# update()
-		# if trajectories.get_trajectory_colors().size() > 0: 
-		# 	current_state = SET_START
+		clear_polygon()
+		
+		for i in range(count):
+			var vertex = Vector2(radius * cos(2 * PI * i / count), radius * sin(2 * PI * i / count))
+			polygon.append(vertex)
+			trajectories.add_polygon_vertex(vertex)
+			trajectory_to_show.add_polygon_vertex(vertex)
+			
+		# close polygon
+		polygon.append(polygon[0])
+		emit_signal("close_polygon", polygon)	# signal flow map, that polygon is closed
+		trajectories.close_polygon()
+		trajectory_to_show.close_polygon()
+		polygon_closed = true
+		
+		trajectories.reset_trajectories()
+		update()
+		if trajectories.get_trajectory_colors().size() > 0: 
+			current_state = STATES.SET_START
 		
 
 
@@ -542,6 +558,10 @@ func _spawn_fm_traj_on_click(ps_coord):
 	phase_space.add_initial_coords_to_image([ps_coord], [colour])
 	_new_trajectory_added(colour)
 
+
+####################### SHOW TRAJECTORIES ##########################################################
+
+
 # shows trajectory in normal space that corresponds to the mouse position in the flowmap
 # uses a second trajectory node that contains the shown trajectory, this node always has only one 
 # trajectory active, which gets removed before the next one is added
@@ -562,6 +582,19 @@ func _show_fm_traj_on_click(ps_coord):
 		var output = trajectory_to_show.iterate_batch(batch_to_show)
 		# removes the indication of start position and direction of the normal trajectories that 
 		# have not been iterated yet
+		trajectory_to_show.update()
+		
+
+func _show_backwards_fm_traj_on_click(ps_coord):
+	if polygon_closed:
+		update()
+		trajectory_to_show.clear_trajectories()
+		trajectories.hide()
+		trajectory_to_show.show()
+		var color = Color.aqua
+		
+		trajectory_to_show.add_inverse_trajectory_phasespace(ps_coord, color)
+		trajectory_to_show.iterate_inverse_batch(batch_to_show)
 		trajectory_to_show.update()
 
 

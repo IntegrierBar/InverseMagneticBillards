@@ -186,7 +186,7 @@ script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 217.901
-margin_bottom = 457.0
+margin_bottom = 479.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -314,7 +314,7 @@ scrollable = false
 [node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 151.0
 margin_right = 217.0
-margin_bottom = 277.0
+margin_bottom = 299.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -360,23 +360,43 @@ margin_bottom = 18.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
-[node name="RegularNGonButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
+[node name="N-GonRadiusControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 88.0
 margin_right = 217.0
-margin_bottom = 108.0
+margin_bottom = 106.0
+rect_min_size = Vector2( 0, 18 )
+
+[node name="SetNGonRadius2" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonRadiusControl"]
+margin_top = 2.0
+margin_right = 106.0
+margin_bottom = 16.0
+size_flags_horizontal = 3
+text = "Set n-gon radius:"
+clip_text = true
+
+[node name="SetNGonRadius" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonRadiusControl" groups=["SetNGonRadius"]]
+margin_left = 110.0
+margin_right = 217.0
+margin_bottom = 18.0
+size_flags_horizontal = 3
+
+[node name="RegularNGonButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
+margin_top = 110.0
+margin_right = 217.0
+margin_bottom = 130.0
 text = "Draw regular n-gon"
 clip_text = true
 
 [node name="LabelInstructions" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon" groups=["PolygonInstructions"]]
-margin_top = 112.0
+margin_top = 134.0
 margin_right = 217.0
-margin_bottom = 126.0
+margin_bottom = 148.0
 clip_text = true
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 281.0
+margin_top = 303.0
 margin_right = 217.0
-margin_bottom = 301.0
+margin_bottom = 323.0
 size_flags_horizontal = 3
 
 [node name="FlowmapControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
@@ -386,9 +406,9 @@ text = "Open Flowmap Control"
 clip_text = true
 
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
-margin_top = 305.0
+margin_top = 327.0
 margin_right = 217.0
-margin_bottom = 457.0
+margin_bottom = 479.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -526,7 +546,7 @@ margin_bottom = 20.0
 rect_min_size = Vector2( 25, 0 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
-color = Color( 0, 1, 0, 1 )
+color = Color( 1, 0.913725, 0, 1 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
 margin_top = 24.0
@@ -545,6 +565,7 @@ clip_text = true
 margin_left = 253.0
 margin_right = 277.0
 margin_bottom = 24.0
+pressed = true
 
 [node name="SpawnTrajOnClickButton" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
 margin_top = 52.0
