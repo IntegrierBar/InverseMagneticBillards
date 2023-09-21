@@ -40,8 +40,8 @@ namespace godot {
 
         currentDirection = normalize(dir);  // normalize just in case
 
+        // calculate the phase space coordinates
         double angle = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
-        // TODO need to check if angle positive or negative right now
         phaseSpaceTrajectory = { vec2_d((polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back(), abs(angle) / M_PI) };
 
         count = 0;
@@ -63,11 +63,11 @@ namespace godot {
             return;
         }
 
+        // calculate "currentIndexOnPolygon"
         double distance_left = pos.x * polygonLength.back();
         currentIndexOnPolygon = 0;
         while (distance_left - polygonLength[currentIndexOnPolygon + 1] > 0)
         {
-            //Godot::print(Vector2(currentIndexOnPolygon, 0));
             currentIndexOnPolygon++; 
             if (currentIndexOnPolygon + 1 >= polygonLength.size())
             {
@@ -78,6 +78,7 @@ namespace godot {
 
         currentPosition = polygon[currentIndexOnPolygon] + (distance_left - polygonLength[currentIndexOnPolygon]) * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
 
+        // get direction by rotating the vector "polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]" by an angle
         // need to find out which direction we need to rotate to rotate inside the polygon
         mat2_d rotator = mat2_d(std::cos(M_PI * pos.y), -std::sin(M_PI * pos.y), std::sin(M_PI * pos.y), std::cos(M_PI * pos.y));
         currentDirection = rotator * normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
@@ -119,40 +120,11 @@ namespace godot {
 
     void Trajectory::reset_trajectory()
     {
-        if (phaseSpaceTrajectory.size() > 0)
+        if (phaseSpaceTrajectory.size() > 0)    // should always be true
         {
             //currentPosition = trajectory[0];
             set_initial_values(phaseSpaceTrajectory[0]);
         }
-
-        //if (trajectory.size() > 1) {
-        //    currentDirection = normalize(trajectory[1] - currentPosition);
-        //}
-        //double min_distance = INFINITY;
-        //vec2_d pointProjected;
-        //currentIndexOnPolygon = 0; // does not fix the problem. can delete or keep whatever, I hate this. Rust is better
-        //for (int i = 0; i < polygon.size() - 1; i++)
-        //{
-        //    //Godot::print("should not reach");
-        //    double t = (length_squared(currentPosition) - dot(currentPosition, polygon[i])) / dot(currentPosition, polygon[i + 1] - polygon[i]);
-        //    // snap to corners of edge
-        //    if (t < 0) {
-        //        t = 0;
-        //    }
-        //    else if (t > 1) {
-        //        t = 1;
-        //    }
-        //    pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
-        //    double distance = length_squared(vec2_d(currentPosition) - pointProjected);
-        //    if (distance < min_distance) {
-        //        min_distance = distance;
-        //        currentIndexOnPolygon = i;
-        //    }
-        //}
-        //count = 0;
-        //trajectory.resize(1);
-        //trajectoryToDraw.resize(1);
-        //phaseSpaceTrajectory.resize(1);
     }
 
 
@@ -160,7 +132,7 @@ namespace godot {
     {
         
 
-        // the line inside the polygon
+        // First part: intersect polygon with line
         auto intersection = intersect_polygon_line(currentPosition, currentDirection);
         vec2_d nextIterate = intersection.first;
         currentIndexOnPolygon = intersection.second;
@@ -169,16 +141,15 @@ namespace godot {
             Godot::print("currentIndexOnPolygon is to large on second occasion");
             return Vector2(0, 0);
         }
-        // trajectory.push_back(nextIterate);
-        if (count < maxCount)
+        if (count < maxCount)   //draw in normal space if desired
         {
-            trajectoryToDraw.push_back(nextIterate.to_draw());   // is done together with the circle
+            trajectoryToDraw.push_back(nextIterate.to_draw());
         }
         
         currentPosition = nextIterate;  // direction stays the same
 
         
-        // the cirlce outide the polygon
+        // Second part: intersect polygon with circle
         vec2_d center = currentPosition + radius * vec2_d(-currentDirection.y, currentDirection.x); // center of the circle
         auto next = intersect_polygon_circle(currentPosition, currentDirection, center);
         nextIterate = next.first;
@@ -188,16 +159,18 @@ namespace godot {
             Godot::print("currentIndexOnPolygon is to large on second occasion");
             return Vector2(0, 0);
         }
-        //double angle = std::atan2(det((currentPosition - center), (nextIterate - center)), dot((currentPosition - center), (nextIterate - center))); // dont touch it magically works
-        if (count < maxCount)
+
+        if (count < maxCount)   //draw in normal space if desired
         {
+            // To draw a circle we take the current position and rotate it n times by a small step around the center
+
             double angle = angle_between((currentPosition - center), (nextIterate - center));
             if (angle < 0)
             {
-                angle += 2 * M_PI;
+                angle += 2 * M_PI;      // need angle counter clockwise, i.e. no negative angles
             }
 
-            int n = int(radius * 20);   // to draw a circle, we draw a regular n-gon. Use radius to dynamically upscale
+            int n = int(radius * 20); 
 
             // divide angle for step size
             double step = angle / double(n);
@@ -207,35 +180,20 @@ namespace godot {
             {
                 currentAngle = rotation * currentAngle;
                 trajectoryToDraw.push_back((currentAngle + center).to_draw());
-
-                // IDEA: rotate start point around circle n times, until done
-                /*vec2_d vertex = vec2_d(radius * cos(-2 * M_PI * i / n), radius * sin(-2 * M_PI * i / n)) + center;
-                if ((vertex - center).angle() < (currentPosition-center).angle() && (vertex - center).angle() > (nextIterate - center).angle())
-                {
-                    trajectoryToDraw.push_back(vertex.to_godot());
-                }*/
             }
             trajectoryToDraw.push_back(nextIterate.to_draw());
         }
-        
-        //if (angle < 0)
-        //{
-        //    trajectoryCircles.push_back({ center, (currentPosition - center).angle(), (currentPosition - center).angle() + angle });
-        //}
-        //else
-        //{
-        //    trajectoryCircles.push_back({ center, (currentPosition - center).angle() + angle, (currentPosition - center).angle() + 2 * M_PI });
-        //}
+
         trajectory.push_back(nextIterate);
         
         currentPosition = nextIterate;
         currentDirection = normalize(vec2_d((center - nextIterate).y, -(center - nextIterate).x));
 
+        // calculate phase space coordinates
         double anglePhasespace = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
         double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
         phaseSpaceTrajectory.push_back(vec2_d(pos, abs(anglePhasespace) / M_PI) );
         count++;
-        // Godot::print(Vector2(currentIndexOnPolygon, 0));
         return Vector2(pos, abs(anglePhasespace) / M_PI);
     }
 
@@ -284,6 +242,8 @@ namespace godot {
     }
 
     // return both the point and the index of the intersection edge
+    // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
+    // iterates through the polygon and does line line intersection for every edge to find closest intersection
     std::pair<vec2_d, int> Trajectory::intersect_polygon_line(vec2_d start, vec2_d dir)
     {
         int index = 0;
@@ -291,7 +251,6 @@ namespace godot {
         double min_distance = INFINITY;
         for (size_t i = 0; i < polygon.size() - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
         {
-            // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
             double denominator = (polygon[i + 1].x - polygon[i].x) * dir.y - (polygon[i + 1].y - polygon[i].y) * dir.x;
             if (abs(denominator) < eps)
             {
@@ -301,7 +260,7 @@ namespace godot {
             if (0 <= t && t <= 1) // consider adding eps here as well
             {
                 double u = ((polygon[i].x - start.x) * (polygon[i].y - polygon[i + 1].y) - (polygon[i].y - start.y) * (polygon[i].x - polygon[i + 1].x)) / denominator;
-                if (i != currentIndexOnPolygon && u < min_distance && u > 0) // TODO might need bigger coefficient, since u = 0 is also a solution. Could potentially use additional index to prevent this
+                if (i != currentIndexOnPolygon && u < min_distance && u > 0)
                 {
                     min_distance = u;
                     intersection = start + u * dir;
@@ -315,24 +274,20 @@ namespace godot {
             Godot::print("could not intersect polygon with line");
             return std::make_pair(currentPosition, currentIndexOnPolygon);
         }
-        //if (intersections.size() == 0) return std::make_pair(vec2_d(0,0), 0); // if this happens, we got an upsi
-        //auto u = std::min_element(intersections.begin(), intersections.end());   // calculate the smallest u, since that will be the one with the first intersection (only relevant if polygon not convex)
+
         return std::make_pair(intersection, index);
     }
 
     // use formula https://math.stackexchange.com/questions/311921/get-location-of-vector-circle-intersection
     // to return new intersection point and index of edge
-    // TODO consider optimizing!!!!!!
+    // iterates through the polygon and does line circle intersection for every edge to find the first intersection
     std::pair<vec2_d, int> Trajectory::intersect_polygon_circle(vec2_d start, vec2_d dir, vec2_d center)
     {
-
-        //Godot::print("circle intersection GODOT:");
-
         int index = 0;
         vec2_d intersectionPoint = vec2_d(0, 0);
         double smallestAngle = INFINITY;
         double angleStart = (start - center).angle();
-        // iterate through the kanten of the polygon to calculate also maybe here use index of which kante we are on polygon
+        // consider using knowledge of currentIndexOnPolygon
         for (size_t i = 0; i < polygon.size() - 1; i++)
         {
             vec2_d d = polygon[i + 1] - polygon[i];
@@ -345,12 +300,12 @@ namespace godot {
                 continue;
             }
             discriminant = std::sqrt(discriminant);
-            double t = (-b - discriminant) / (2 * a);  // TODO consider optimising here as well with regards to error cancelations
+            double t = (-b - discriminant) / (2 * a); 
             if (0 <= t && t <= 1) { // consider using eps here
                 vec2_d intersection = polygon[i] + t * d;
-                if (length_squared(intersection - start) > eps) // check if intersection point is different from starting point TODO Maybe something smarter with angle might be possible here
+                if (length_squared(intersection - start) > eps) // check if intersection point is different from starting point
                 {
-                    double angle = (intersection - center).angle() - angleStart; // need to do some cursed shit since y is inverted NOT ANYMORE
+                    double angle = (intersection - center).angle() - angleStart;
                     if (angle < 0) angle += 2 * M_PI; // we need to make sure that we always have positive angles!
                     if (angle < smallestAngle) {
                         smallestAngle = angle;
@@ -364,7 +319,7 @@ namespace godot {
                 vec2_d intersection = polygon[i] + t * d;
                 if (length_squared(intersection - start) > eps)
                 {
-                    double angle = (intersection - center).angle() - angleStart; // need to do some cursed shit since y is inverted NOT ANYMORE
+                    double angle = (intersection - center).angle() - angleStart;
                     if (angle < 0) angle += 2 * M_PI; // we need to make sure that we always have positive angles!
                     if (angle < smallestAngle) {
                         smallestAngle = angle;
@@ -374,21 +329,8 @@ namespace godot {
                 }
             }
         }
-        // TODO for optimization consider moving this inside the other loop THERE MIGHT BE ERROR HERE NO ERROR HERE I THINK
-        //double smallestAngle = 400;
-        //double angleStart = (start- center).angle();
-        //vec2_d intersectionPoint = vec2_d(0, 0);
-        //for (size_t i = 0; i < intersections.size(); i++)
-        //{
-        //    double angle = angleStart - (intersections[i] - center).angle() ; // need to do some cursed shit since y is inverted
-        //    if (angle < 0) angle += 2*M_PI; // we need to make sure that we always have positive angles!
-        //    if (angle < smallestAngle) {
-        //        smallestAngle = angle;
-        //        intersectionPoint = intersections[i];
-        //    }
-        //}
 
-        // we dont find any intersections if the circle intersection directly at a polygon vertex. In this case just return next polygon vertex as intersectionPoint
+        // sanity check
         if (smallestAngle == INFINITY)
         {
             Godot::print("could not intersect polygon and circle");
