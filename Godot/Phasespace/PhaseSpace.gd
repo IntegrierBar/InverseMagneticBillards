@@ -1,16 +1,11 @@
 extends Sprite#TextureRect
 
-
-#var bounding_box_color = Color.red
-
-var trajectories_to_draw: Array = []
-var trajectories_colors: Array = []
-var trajectory_count = 0
+const multimesh_scene = preload("res://Phasespace/MultiMesh.tscn")
 
 var phase_space: Image
 var background : ImageTexture = null
-onready var sizex = 400#rect_size.x
-onready var sizey = 400#rect_size.y
+var sizex = 400#rect_size.x
+var sizey = 400#rect_size.y
 
 var traj_script 
 var instr_label
@@ -46,7 +41,6 @@ func _ready():
 	
 	#connect("mouse_entered", self, "_set_inside")
 	#connect("mouse_exited", self, "_set_outside")
-	
 
 func _set_inside():
 	mouse_inside = true
@@ -84,57 +78,48 @@ func mouse_input():
 			STATES.REST:
 				pass
 
+func add_points_to_phasespace(points: Array):
+	if points.size() != get_child_count():
+		print("houston we got a problem")
+		return
+	var meshes = get_children()
+	for i in range(points.size()):
+		meshes[i].add_trajectory_points(rescale(points[i]))
 
-func reset_image():
-	phase_space.fill(Color.black)
-	background.set_data(phase_space)
-	self.texture = background
-	update()
-
-func rescale_image(size):
-	#print(size)
-	sizex = size.x
-	sizey = size.y
-	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
-	phase_space.fill(Color.black)	
-	background = ImageTexture.new()
-	background.create_from_image(phase_space)
-	self.texture = background
-	update()
 
 func rescale(points: Array) -> Array:
 	var rescaled_points = []
 	for p in points:
-		rescaled_points.append(Vector2(sizex*p.x, sizey*p.y))
+		print(p)
+		rescaled_points.append(Vector2(sizex*p.x, sizey*p.y) - Vector2(sizex/2, sizey/2))
 		#print(rescaled_points)
 	return rescaled_points
 
-# Array is an array of arrays, each inner array corresponds to a color
-func add_points_to_image(points: Array, colors: PoolColorArray):
-	#print("adding points")
-	phase_space.lock()
-	for i in range(colors.size()):
-		for point in rescale(points[i]):
-			#print(point)
-			phase_space.set_pixelv(point, colors[i])
-	phase_space.unlock()
-	# set image
-	background.set_data(phase_space)
-	self.texture = background
-	update()
-	
-func add_initial_coords_to_image(points: Array, colors: PoolColorArray):
-	phase_space.lock()
-	points = rescale(points)
-	for i in range(points.size()):
-		#print(points[i])
-		phase_space.set_pixelv(points[i], colors[i])
-	phase_space.unlock()
-	# set image
-	background.set_data(phase_space)
-	self.texture = background
-	update()
 
+
+func add_trajectory(pos: Vector2, color: Color):
+	var trajectory = multimesh_scene.instance()
+	trajectory.color = color
+	trajectory.add_trajectory_points(rescale([pos]))
+	add_child(trajectory)
+
+func remove_trajectory(index: int):
+	get_child(index).queue_free()
+
+func remove_all_trajecotries():
+	for child in get_children():
+		child.queue_free()
+
+func reset_all_trajectories():
+	for mesh in get_children():
+		mesh.reset()
+
+func set_initial_values(index: int, pos: Vector2):
+	if index >= get_child_count():
+		print("trying to acces child that does not exist")
+	var mesh = get_child(index)
+	mesh.clear()
+	mesh.add_trajectory_points([pos])
 
 func local_to_ps() -> Vector2:
 	var locpos = get_local_mouse_position()
@@ -147,8 +132,7 @@ func local_to_ps() -> Vector2:
 
 func _on_SpawnTrajOnClickButton_pressed():
 	current_state = STATES.SINGLE
-	
-	
+
 
 func _on_SpawnTrajBatch_pressed():
 	if num_traj_in_batch.text.is_valid_integer():
@@ -160,12 +144,58 @@ func _on_SpawnTrajBatch_pressed():
 
 
 func _on_ClearPSTrajectories_pressed():
-	reset_image()
+	for mesh in get_children():
+		mesh.clear()
 
 
 
 func _on_DrawnInNormalSpace_toggled(button_pressed):
 	drawInNormalSpace = button_pressed
+
+# Array is an array of arrays, each inner array corresponds to a color
+#func add_points_to_image(points: Array, colors: PoolColorArray):
+#	#print("adding points")
+#	#phase_space.lock()
+#	for i in range(colors.size()):
+##		for point in rescale(points[i]):
+##			#print(point)
+##		#	phase_space.set_pixelv(point, colors[i])
+##			pass
+#		$"../MultiMeshInstance2D".add_trajectory_points(rescale(points[i]))
+#	#phase_space.unlock()
+#	# set image
+#	#background.set_data(phase_space)
+#	#self.texture = background
+#	#update()
+
+#func reset_image():
+#	phase_space.fill(Color.white)
+#	background.set_data(phase_space)
+#	self.texture = background
+#	update()
+
+#func rescale_image(size):
+#	#print(size)
+#	sizex = size.x
+#	sizey = size.y
+#	phase_space.create(sizex, sizey, false, Image.FORMAT_RGB8)
+#	phase_space.fill(Color.white)	
+#	background = ImageTexture.new()
+#	background.create_from_image(phase_space)
+#	self.texture = background
+#	update()
+
+#func add_initial_coords_to_image(points: Array, colors: PoolColorArray):
+#	phase_space.lock()
+#	points = rescale(points)
+#	for i in range(points.size()):
+#		#print(points[i])
+#		phase_space.set_pixelv(points[i], colors[i])
+#	phase_space.unlock()
+#	# set image
+#	background.set_data(phase_space)
+#	self.texture = background
+#	update()
 
 #func _draw():
 	# draw bounding box of image FOR NOW SKIP THIS

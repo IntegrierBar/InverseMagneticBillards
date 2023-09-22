@@ -90,7 +90,9 @@ func _ready():
 	#close_polygon()
 	current_state = STATES.SET_POLYGON 
 	# set add trajetory with some initial position and direction
-	add_trajectory(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
+	#add_trajectory(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
+	trajectories.add_trajectory(invert_y(Vector2(1, 0)), invert_y(Vector2(0, -1)), Color.green)
+	phase_space.add_trajectory(Vector2(0.5, 0.5), Color.green)
 	trajectory_to_edit = 0 
 	
 	# connect buttons of already existing trajectory 
@@ -185,7 +187,9 @@ func clear_polygon():
 	trajectory_to_show.clear_polygon()
 	$PolygonVertexHandler.clear()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
-	#phase_space.reset_trajectories()
+	phase_space.remove_all_trajecotries()
+	if trajcount == 1:
+		phase_space.add_trajectory(Vector2.ZERO, trajectories.get_trajectory_colors()[0])
 
 
 func change_polygon_vertex(pos: Vector2, n: int):
@@ -196,7 +200,7 @@ func change_polygon_vertex(pos: Vector2, n: int):
 		polygon[-1] = pos
 	trajectories.set_polygon_vertex(n, invert_y(pos))
 	trajectory_to_show.set_polygon_vertex(n, invert_y(pos))
-	phase_space.reset_image()
+	phase_space.reset_all_trajectories()
 	emit_signal("close_polygon", polygon)
 	update()
 
@@ -247,14 +251,15 @@ func _on_RegularNGonButton_pressed():
 ##################### TRAJECTORIES #################################################################
 func add_trajectory(start: Vector2, dir: Vector2, color: Color):
 	trajectories.add_trajectory(invert_y(start), invert_y(dir), color)
-	#phase_space.add_trajectory(color)
+	phase_space.add_trajectory(R2ToPS(start, dir), color)
 
 func add_trajectory_ps(pos: Vector2, color: Color):
 	trajectories.add_trajectory_phasespace(pos, color)
+	phase_space.add_trajectory(pos, color)
 
 func iterate_batch():
 	var phase_space_points = trajectories.iterate_batch(batch)
-	phase_space.add_points_to_image(phase_space_points, trajectories.get_trajectory_colors())
+	phase_space.add_points_to_phasespace(phase_space_points)
 #	for i in range(trajectories.size()):
 #		var coordsPhasespace = trajectories[i].iterate_batch(batch)
 #		#print(coordsPhasespace)
@@ -264,7 +269,7 @@ func iterate_batch():
 func set_initial_values(index: int, start: Vector2, dir: Vector2):
 	trajectories.set_initial_values(index, invert_y(start), invert_y(dir))
 	var pscoord = R2ToPS(start, dir)
-	phase_space.add_initial_coords_to_image([pscoord], [trajectories.get_trajectory_colors()[index]])
+	phase_space.set_initial_values(index, pscoord)
 
 
 
@@ -318,7 +323,6 @@ func _on_Button_pressed():
 func _on_ButtonPolygon_pressed():
 	current_state = STATES.SET_POLYGON
 	clear_polygon()
-	phase_space.reset_image()
 	polygon_instr.text = "Click to position at least 3 points to create an new polygon"
 	
 
@@ -340,7 +344,7 @@ func _on_NewStartPos_pressed(id):
 	var node = instance_from_id(id)  
 	trajectory_to_edit = node.get_index() - 4
 	# print(trajectory_to_edit)  
-	phase_space.reset_image() # TODO THIS IS UGLY
+	#phase_space.reset_trajectory() # TODO THIS IS UGLY
 	trajectory_instr.text = "Click to choose a new start position"
 	
 
@@ -355,7 +359,7 @@ func _on_TextEdit_text_changed():
 			# this allows to set the radius larger than 20 via the text field
 			# sets slider value to largest value possible
 			radius_slider.value = radius_slider.max_value
-			phase_space.reset_image()
+			phase_space.reset_all_trajectories()
 			trajectories.set_radius(newradius)
 			trajectory_to_show.set_radius(newradius)
 			flow_map.set_radius(newradius)
@@ -372,7 +376,7 @@ func _on_RadiusSlider_value_changed(newradius):
 		if radius_edit.text != String(newradius): 
 			radius_edit.text = String(newradius) 
 		
-		phase_space.reset_image()
+		phase_space.reset_all_trajectories()
 		trajectories.set_radius(newradius)
 		trajectory_to_show.set_radius(newradius)
 		flow_map.set_radius(newradius)
@@ -441,7 +445,6 @@ func _on_SpawnPSTrajOnCoords_pressed():
 		if c1 > 0 and c1 < 1 and c2 > 0 and c2 < 1:
 			var ps_pos = Vector2(c1, c2)
 			add_trajectory_ps(ps_pos, colour)
-			phase_space.add_initial_coords_to_image([ps_pos], [colour])
 			_new_trajectory_added(colour)
 
 # spawns trajectory in normal and phasespace according to the click position int phasespace
@@ -451,7 +454,6 @@ func _spawn_ps_traj_on_click(ps_coord, draw):
 	if !draw:
 		pass # does not work yet, also does not draw in phasespace
 		# trajectories.set_max_count(-1, 0)
-	phase_space.add_initial_coords_to_image([ps_coord], [colour])
 	_new_trajectory_added(colour)
 	
 
@@ -492,9 +494,6 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int, draw: bool):
 	#colours.fill(Color.aqua)
 	#for i in range(colours.size()):
 	#	colours[i] = Color(pos[i].x, pos[i].y, 0, 1)
-	
-	# add start positions to phase space
-	phase_space.add_initial_coords_to_image(pos, colours)
 	
 	for i in range(pos.size()):
 		add_trajectory_ps(pos[i], colours[i])
@@ -537,7 +536,6 @@ func _spawn_fm_traj_on_click(ps_coord):
 	var coord = PSToR2(ps_coord)
 	var colour = Color(randf(), randf(), randf())
 	add_trajectory(coord[0], coord[1], colour)
-	phase_space.add_initial_coords_to_image([ps_coord], [colour])
 	_new_trajectory_added(colour)
 
 
@@ -598,7 +596,7 @@ func _on_DeleteAllTrajectories_pressed():
 		container.queue_free()
 		trajectories.remove_trajectory(0)
 	
-	phase_space.reset_image()
+	phase_space.remove_all_trajecotries()
 	# Note: moving the position of the delete button means that the code for adding new trajectories
 	# has to be changed as well! The new trajectories are currentlly moved to a fixed position in 
 	# relation to the other children of the parent!
