@@ -104,8 +104,8 @@ func add_preliminary_trajectory(color: Color):
 func add_trajectory(pos: Vector2, color: Color):
 	var trajectory = multimesh_scene.instance()
 	trajectory.color = color
-	trajectory.add_trajectory_points(rescale([pos]))
 	add_child(trajectory)
+	trajectory.add_trajectory_points(rescale([pos]))
 
 func remove_trajectory(index: int):
 	get_child(index).queue_free()

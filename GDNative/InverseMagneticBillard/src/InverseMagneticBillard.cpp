@@ -254,6 +254,11 @@ namespace godot {
 
     void InverseMagneticBillard::set_max_count(int index, int newMaxCount)
     {
+
+        if (index >= trajectories.size() || index < 0) {
+            Godot::print("trying to set max count of not existing trajecotry");
+            return;
+        }
         trajectories[index].maxCount = newMaxCount;
     }
 

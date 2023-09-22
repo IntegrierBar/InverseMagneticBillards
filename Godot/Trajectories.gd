@@ -458,8 +458,7 @@ func _spawn_ps_traj_on_click(ps_coord, draw):
 	var colour = single_ps_traj.get_child(0).get_child(1).get_pick_color()
 	add_trajectory_ps(ps_coord, colour)
 	if !draw:
-		pass # does not work yet, also does not draw in phasespace
-		# trajectories.set_max_count(-1, 0)
+		trajectories.set_max_count(traj_control.get_child_count() - 5, 0)
 	_new_trajectory_added(colour)
 	
 

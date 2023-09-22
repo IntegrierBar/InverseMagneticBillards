@@ -2,6 +2,7 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
+Farbänderung von trajecotrie in normal control sollte auhc farbe in Phasespace ändern
 
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
@@ -10,14 +11,6 @@ nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unreg
 
 Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
 
-
-Delete trajectories sollte Trajektorien auch aus dem phasespace entfernen (ich weiß nicht ob das geht)
-
-Clear phasespace entfernt Trajektorien aus dem normal space nicht, soll das so bleiben??
-
-Reset all trajectories button, in normal control, löscht alles aus trajektorien außer startpunkt und startrichtung, 
-sollte phasespace ebenfalls entsprechend zurücksetzen
-BUG: Behält Startpunkte aber nicht Richtungen bei! Problem ist, dass die direction anders berechnet werden muss! X
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 Beispielbugs: 
@@ -41,19 +34,29 @@ Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar
 
 Button in Flowmap control der aktuell angezeigt trajectorie als normale Trajektorie spawnt
 
-Trajectory drawn in normal space hat aktuell keine Funktion, soll das noch angebunden oder eher entfernt werden?
-
 Sollen wir uns optisch noch mehr Mühe machen? Oder lassen wir es so? Soll ich die Font wieder entfernen oder 
 überall hinzufügen? 
 
 Füge nützliche tooltips zu buttons und textfeldern hinzu um die Bedienung zu erleichtern, damit könnten dann auch
 die Instruction labels entfernt werden, denke ich
 
-Phasespace nochmal überdenken, ob das nicht besser geht (mit kleinen kreisen oder so zum Beispiel statt resterisierung)
+
 
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+Phasespace nochmal überdenken, ob das nicht besser geht (mit kleinen kreisen oder so zum Beispiel statt resterisierung)
+
+Trajectory drawn in normal space hat aktuell keine Funktion, soll das noch angebunden oder eher entfernt werden?
+
+Reset all trajectories button, in normal control, löscht alles aus trajektorien außer startpunkt und startrichtung, 
+sollte phasespace ebenfalls entsprechend zurücksetzen
+BUG: Behält Startpunkte aber nicht Richtungen bei! Problem ist, dass die direction anders berechnet werden muss! X
+
+Clear phasespace entfernt Trajektorien aus dem normal space nicht, soll das so bleiben??
+
+Delete trajectories sollte Trajektorien auch aus dem phasespace entfernen (ich weiß nicht ob das geht)
 
 Überprüfen, dass Flowmap und Phasespace gleich orientiert sind X
 
