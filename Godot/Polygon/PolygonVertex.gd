@@ -44,7 +44,7 @@ func _input(event):
 #				hold_mouse = false
 
 
-func _process(delta):
+func _process(_delta):
 	if hold_mouse: 
 		var mouse_pos = get_local_mouse_position()
 		traj_script.change_polygon_vertex(mouse_pos, get_index())

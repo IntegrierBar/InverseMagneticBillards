@@ -15,6 +15,6 @@ func _draw():
 	#draw_circle(Vector2.ZERO, 0.2, Color(1, 0, 0))
 	
 
-func _process(delta):
+func _process(_delta):
 	pass
 	# update()

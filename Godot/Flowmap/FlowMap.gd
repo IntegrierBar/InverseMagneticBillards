@@ -95,7 +95,7 @@ func mouse_input():
 
 # currently only used for showing (but not adding) trajectories from the flowmap
 # shown trajectory is updated as long as the left mouse button is held
-func _process(delta):
+func _process(_delta):
 	if hold_mouse:
 		# check whether local coords are between 0 and 1
 		var pos = local_to_ps()

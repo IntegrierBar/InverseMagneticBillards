@@ -90,9 +90,9 @@ func _ready():
 	#close_polygon()
 	current_state = STATES.SET_POLYGON 
 	# set add trajetory with some initial position and direction
-	#add_trajectory(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
-	trajectories.add_trajectory(invert_y(Vector2(1, 0)), invert_y(Vector2(0, -1)), Color.green)
-	phase_space.add_trajectory(Vector2(0.5, 0.5), Color.green)
+	add_trajectory(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
+	# trajectories.add_trajectory(invert_y(Vector2(1, 0)), invert_y(Vector2(0, -1)), Color.green)
+	# phase_space.add_trajectory(Vector2(0.5, 0.5), Color.green)
 	trajectory_to_edit = 0 
 	
 	# connect buttons of already existing trajectory 
@@ -187,9 +187,9 @@ func clear_polygon():
 	trajectory_to_show.clear_polygon()
 	$PolygonVertexHandler.clear()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
-	phase_space.remove_all_trajecotries()
+	phase_space.remove_all_trajectories()
 	if trajcount == 1:
-		phase_space.add_trajectory(Vector2.ZERO, trajectories.get_trajectory_colors()[0])
+		phase_space.add_preliminary_trajectory(trajectories.get_trajectory_colors()[0])
 
 
 func change_polygon_vertex(pos: Vector2, n: int):
@@ -222,13 +222,13 @@ func _on_RegularNGonButton_pressed():
 	var n = corner_count.text
 	var r = ngon_radius.text
 	if n.is_valid_integer() and r.is_valid_float():
-		var radius = float(r)
+		var rad = float(r)
 		var count = int(n)
 		
 		clear_polygon()
 		
 		for i in range(count):
-			var vertex = Vector2(radius * cos(2 * PI * i / count), radius * sin(2 * PI * i / count))
+			var vertex = Vector2(rad * cos(2 * PI * i / count), rad * sin(2 * PI * i / count))
 			polygon.append(vertex)
 			trajectories.add_polygon_vertex(vertex)
 			trajectory_to_show.add_polygon_vertex(vertex)
@@ -249,10 +249,15 @@ func _on_RegularNGonButton_pressed():
 
 
 ##################### TRAJECTORIES #################################################################
+
+# function is currently only called to add INITIAL trajectories, that means the actual starting 
+# coordinates are not known yet! 
+# after this function was called, set_initial_values will / should always be called!
 func add_trajectory(start: Vector2, dir: Vector2, color: Color):
 	trajectories.add_trajectory(invert_y(start), invert_y(dir), color)
-	phase_space.add_trajectory(R2ToPS(start, dir), color)
+	phase_space.add_preliminary_trajectory(color)
 
+# this function is only used, if the starting coordinates are already known! 
 func add_trajectory_ps(pos: Vector2, color: Color):
 	trajectories.add_trajectory_phasespace(pos, color)
 	phase_space.add_trajectory(pos, color)
@@ -269,6 +274,7 @@ func iterate_batch():
 func set_initial_values(index: int, start: Vector2, dir: Vector2):
 	trajectories.set_initial_values(index, invert_y(start), invert_y(dir))
 	var pscoord = R2ToPS(start, dir)
+	print(pscoord)
 	phase_space.set_initial_values(index, pscoord)
 
 
@@ -515,8 +521,8 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 	var positions : Array = []
 	var colors : PoolColorArray = []
 	
-	print(x)
-	print(y)
+	# print(x)
+	# print(y)
 	
 	for i in range(x):
 		for j in range(y):
@@ -525,7 +531,7 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 			positions.append(pos + xymin) 
 			var c = Color(min(1, 2 - ((i + 1)/float(x) + j/float(y))), (i + 1)/float(x), j/float(y), 1)  
 			# TODO: I should probably find out how to apply barycentric coords to this ...
-			print(c)
+			# print(c)
 			colors.append(c) 
 			# colors still not very good, different but difficult to see, not bright enough
 	
@@ -533,9 +539,9 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 
 # spawns trajectory on click in flowmap at the corresponding phasespace coordinates
 func _spawn_fm_traj_on_click(ps_coord):
-	var coord = PSToR2(ps_coord)
+	# var coord = PSToR2(ps_coord)
 	var colour = Color(randf(), randf(), randf())
-	add_trajectory(coord[0], coord[1], colour)
+	add_trajectory_ps(ps_coord, colour)
 	_new_trajectory_added(colour)
 
 
@@ -559,7 +565,7 @@ func _show_fm_traj_on_click(ps_coord):
 		# trajectory does not get added to the phasespace, only phasespace coordinates are used to
 		# add the trajectory to the node
 		trajectory_to_show.add_trajectory_phasespace(ps_coord, color)
-		var output = trajectory_to_show.iterate_batch(batch_to_show)
+		trajectory_to_show.iterate_batch(batch_to_show)
 		# removes the indication of start position and direction of the normal trajectories that 
 		# have not been iterated yet
 		trajectory_to_show.update()
@@ -596,7 +602,7 @@ func _on_DeleteAllTrajectories_pressed():
 		container.queue_free()
 		trajectories.remove_trajectory(0)
 	
-	phase_space.remove_all_trajecotries()
+	phase_space.remove_all_trajectories()
 	# Note: moving the position of the delete button means that the code for adding new trajectories
 	# has to be changed as well! The new trajectories are currentlly moved to a fixed position in 
 	# relation to the other children of the parent!
@@ -607,10 +613,8 @@ func _on_DeleteAllTrajectories_pressed():
 # button that resets all trajectories to their start position and direction (at least in theory) 
 func _on_ResetAllTrajectories_pressed():
 	trajectories.reset_trajectories()
-	# BUG: Maintaines start position but changes directions continuously when resetting to bigger angles 
-	# for a ca 10 resets the starting direction is parallel to the polygon side and an iteration is 
-	# no longer possible
-	# Where does this come from???
+	phase_space.reset_all_trajectories()
+
 
 
 # changes colour of a trajectory, change only affects normal space, not phasespace (at the moment) 
