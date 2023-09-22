@@ -274,7 +274,7 @@ func iterate_batch():
 func set_initial_values(index: int, start: Vector2, dir: Vector2):
 	trajectories.set_initial_values(index, invert_y(start), invert_y(dir))
 	var pscoord = R2ToPS(start, dir)
-	print(pscoord)
+	#print(pscoord)
 	phase_space.set_initial_values(index, pscoord)
 
 
@@ -592,6 +592,7 @@ func _on_delete_trajectory_pressed(id):
 	var node = instance_from_id(id)  
 	trajectory_to_edit = node.get_index() - 4
 	node.queue_free()
+	phase_space.remove_trajectory(trajectory_to_edit)
 	trajectories.remove_trajectory(trajectory_to_edit)
 
 # deletes all trajectories in normal space, also resets phasespace image 
@@ -601,7 +602,6 @@ func _on_DeleteAllTrajectories_pressed():
 		var container = traj_control.get_child(4 + i)
 		container.queue_free()
 		trajectories.remove_trajectory(0)
-	
 	phase_space.remove_all_trajectories()
 	# Note: moving the position of the delete button means that the code for adding new trajectories
 	# has to be changed as well! The new trajectories are currentlly moved to a fixed position in 

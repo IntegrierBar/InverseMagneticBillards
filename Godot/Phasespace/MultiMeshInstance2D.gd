@@ -5,6 +5,13 @@ extends MultiMeshInstance2D
 
 var color: Color = Color.red
 
+func _ready():
+	multimesh = MultiMesh.new()
+	multimesh.mesh = PointMesh.new()
+	multimesh.transform_format = MultiMesh.TRANSFORM_2D
+	multimesh.color_format = MultiMesh.COLOR_FLOAT
+	multimesh.instance_count = 100000	# could consider higher
+	multimesh.visible_instance_count = 0
 
 func add_trajectory_points(points: Array):
 	for i in range(points.size()):

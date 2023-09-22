@@ -90,9 +90,7 @@ func add_points_to_phasespace(points: Array):
 func rescale(points: Array) -> Array:
 	var rescaled_points = []
 	for p in points:
-		# print(p)
 		rescaled_points.append(Vector2(sizex*p.x, sizey*p.y) - Vector2(sizex/2, sizey/2))
-		#print(rescaled_points)
 	return rescaled_points
 
 
@@ -100,8 +98,7 @@ func add_preliminary_trajectory(color: Color):
 	var trajectory = multimesh_scene.instance()
 	trajectory.color = color
 	add_child(trajectory)
-	var i = trajectory.get_index()
-	print(i)
+
 
 
 func add_trajectory(pos: Vector2, color: Color):
@@ -122,14 +119,14 @@ func reset_all_trajectories():
 		mesh.reset()
 
 func set_initial_values(index: int, pos: Vector2):
-	print(index)
+	print("setting inital values of" + str(index))
 	if index >= get_child_count():
 		print("trying to acces child that does not exist")
-	var mesh = get_child(index)
-	print(mesh.get_parent().get_index())
+	var mesh = get_children()[index]
 	# this removes poiints of all trajectories from phasespace
 	mesh.clear()
 	mesh.add_trajectory_points(rescale([pos]))
+
 
 func local_to_ps() -> Vector2:
 	var locpos = get_local_mouse_position()
