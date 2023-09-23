@@ -2,7 +2,6 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
-Farbänderung von trajecotrie in normal control sollte auhc farbe in Phasespace ändern
 
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
@@ -45,6 +44,8 @@ die Instruction labels entfernt werden, denke ich
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+Farbänderung von trajecotrie in normal control sollte auhc farbe in Phasespace ändern
 
 Phasespace nochmal überdenken, ob das nicht besser geht (mit kleinen kreisen oder so zum Beispiel statt resterisierung)
 

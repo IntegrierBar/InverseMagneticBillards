@@ -119,13 +119,16 @@ func reset_all_trajectories():
 		mesh.reset()
 
 func set_initial_values(index: int, pos: Vector2):
-	print("setting inital values of" + str(index))
+	#print("setting inital values of" + str(index))
 	if index >= get_child_count():
 		print("trying to acces child that does not exist")
 	var mesh = get_children()[index]
 	# this removes poiints of all trajectories from phasespace
 	mesh.clear()
 	mesh.add_trajectory_points(rescale([pos]))
+
+func set_color(index: int, color: Color):
+	get_child(index).set_color(color)
 
 
 func local_to_ps() -> Vector2:

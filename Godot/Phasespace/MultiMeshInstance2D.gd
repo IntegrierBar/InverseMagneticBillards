@@ -24,3 +24,8 @@ func reset():
 
 func clear():
 	multimesh.visible_instance_count = 0
+
+func set_color(c: Color):
+	self.color = c
+	for i in range(multimesh.visible_instance_count):
+		multimesh.set_instance_color(i, color)

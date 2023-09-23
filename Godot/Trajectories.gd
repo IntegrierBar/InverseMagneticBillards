@@ -616,7 +616,7 @@ func _on_ResetAllTrajectories_pressed():
 
 
 
-# changes colour of a trajectory, change only affects normal space, not phasespace (at the moment) 
+# changes colour of a trajectory, ########change only affects normal space, not phasespace (at the moment) 
 func _on_color_changed(id):
 	var node = instance_from_id(id)  
 	trajectory_to_edit = node.get_index() - 4
@@ -624,6 +624,7 @@ func _on_color_changed(id):
 	var colourPicker = node.get_child(1).get_child(1)
 	var c = colourPicker.get_pick_color()
 	trajectories.set_color(trajectory_to_edit, c) 
+	phase_space.set_color(trajectory_to_edit, c)
 
 # calculates length of the polygon up to index n, used PSToR2
 func calcPolygonLength(n: int) -> float:
