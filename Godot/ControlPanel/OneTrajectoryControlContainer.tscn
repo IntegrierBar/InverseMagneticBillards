@@ -37,11 +37,19 @@ margin_bottom = 44.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TextEdit" type="TextEdit" parent="HBoxContainer2"]
-margin_right = 187.0
+[node name="StartPos" type="TextEdit" parent="HBoxContainer2"]
+margin_right = 91.0
 margin_bottom = 20.0
+hint_tooltip = "Starting position"
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="StartDir" type="TextEdit" parent="HBoxContainer2"]
+margin_left = 95.0
+margin_right = 187.0
+margin_bottom = 20.0
+hint_tooltip = "Starting direction"
+size_flags_horizontal = 3
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="HBoxContainer2"]
 margin_left = 191.0

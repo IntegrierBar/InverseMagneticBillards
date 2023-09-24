@@ -102,7 +102,7 @@ func _ready():
 	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id])
 	var deleteTraj = inst.get_child(0).get_child(1)
 	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
-	var colourPicker = inst.get_child(1).get_child(1)
+	var colourPicker = inst.get_child(1).get_child(2)
 	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
 
 
@@ -410,7 +410,7 @@ func _new_trajectory_added(colour):
 	traj_control.add_child(newTrajControl)
 	traj_control.move_child(newTrajControl, count - 1)
 	
-	var colourPicker = newTrajControl.get_child(1).get_child(1)
+	var colourPicker = newTrajControl.get_child(1).get_child(2)
 	colourPicker.set_pick_color(colour)
 	
 	# connect the change start position button
@@ -621,7 +621,7 @@ func _on_color_changed(id):
 	var node = instance_from_id(id)  
 	trajectory_to_edit = node.get_index() - 4
 	
-	var colourPicker = node.get_child(1).get_child(1)
+	var colourPicker = node.get_child(1).get_child(2)
 	var c = colourPicker.get_pick_color()
 	trajectories.set_color(trajectory_to_edit, c) 
 	phase_space.set_color(trajectory_to_edit, c)
