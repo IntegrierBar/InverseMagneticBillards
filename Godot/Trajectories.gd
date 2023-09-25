@@ -307,10 +307,13 @@ func mouse_input():
 		STATES.SET_START:
 			newpos = snap_to_polygon(get_local_mouse_position())
 			#trajectories[trajectory_to_edit].set_start(newpos)
+			write_StartPos()
 			current_state = STATES.SET_DIRECTION
 			trajectory_instr.text = "Click to choose a new direction"
 		STATES.SET_DIRECTION:
-			set_initial_values(trajectory_to_edit, newpos, get_local_mouse_position() - newpos)
+			var dir = get_local_mouse_position() - newpos
+			set_initial_values(trajectory_to_edit, newpos, dir)
+			write_StartDir(dir)
 			current_state = STATES.ITERATE
 			trajectory_instr.text = ""
 			
@@ -352,7 +355,23 @@ func _on_NewStartPos_pressed(id):
 	# print(trajectory_to_edit)  
 	#phase_space.reset_trajectory() # TODO THIS IS UGLY
 	trajectory_instr.text = "Click to choose a new start position"
-	
+
+
+func write_StartPos():
+	var traj = traj_control.get_child(trajectory_to_edit + 4)
+	var start = traj.get_child(1).get_child(0)
+	var string = String(invert_y(newpos))
+	start.text = string
+	_hide_scroll_bar(start)
+
+
+func write_StartDir(dir):
+	var traj = traj_control.get_child(trajectory_to_edit + 4)
+	var direction = traj.get_child(1).get_child(1)
+	var string = String(invert_y(dir))
+	direction.text = string	
+	_hide_scroll_bar(direction)
+
 
 # radius is set
 func _on_TextEdit_text_changed(): 
@@ -690,3 +709,24 @@ func is_in_iterate_state() -> bool:
 	else:
 		return false
 
+
+func _hide_scroll_bar(node):
+	#print("hello")
+	#var h_bar = node.get_h_scroll_bar()
+	#h_bar.visible = false
+	
+	# BUG:
+	# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	# the internet says that both these things should work
+	# and looking at the children there is both a HScrollBar and a VScrollBar
+	# but the if-statments don't detect them
+	# I don't get why
+	for child in node.get_children():
+		#print(child)
+		#print(child.get_class())
+		if child.get_class() == "VScrollBar":
+			"found one"
+			child.visible = false
+		elif child is HScrollBar:
+			"found the other one"
+			child.visible = false
