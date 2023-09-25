@@ -2,6 +2,7 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
+Soll das reguläre n-Eck auch Ecken bekommen die verschiebbar sind? Das ist aktuell nämlich nicht der Fall
 
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
