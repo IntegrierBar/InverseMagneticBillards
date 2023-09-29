@@ -10,6 +10,7 @@ Man kann außerdem überlegen ob man eine bessere startposition verteilung versu
 nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist 
 
 Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
+ -> nutze if n=0 in shader und bedenke das auch zu setzen, wenn POlygon gelöscht wird
 
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
