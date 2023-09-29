@@ -94,16 +94,19 @@ func _ready():
 	# trajectories.add_trajectory(invert_y(Vector2(1, 0)), invert_y(Vector2(0, -1)), Color.green)
 	# phase_space.add_trajectory(Vector2(0.5, 0.5), Color.green)
 	trajectory_to_edit = 0 
+	_new_trajectory_added(Color(0,1,0))
+	
+	
 	
 	# connect buttons of already existing trajectory 
-	var inst = traj_control.find_node("VBoxContainer")
-	var newStartPos = inst.get_child(0).get_child(0)
-	var id = inst.get_instance_id()
-	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id])
-	var deleteTraj = inst.get_child(0).get_child(1)
-	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
-	var colourPicker = inst.get_child(1).get_child(2)
-	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
+#	var inst = traj_control.find_node("VBoxContainer")
+#	var newStartPos = inst.get_child(0).get_child(0)
+#	var id = inst.get_instance_id()
+#	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id])
+#	var deleteTraj = inst.get_child(0).get_child(1)
+#	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
+#	var colourPicker = inst.get_child(1).get_child(2)
+#	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
 
 
 func _process(_delta):
@@ -229,9 +232,7 @@ func _on_RegularNGonButton_pressed():
 		
 		for i in range(count):
 			var vertex = Vector2(rad * cos(2 * PI * i / count), rad * sin(2 * PI * i / count))
-			polygon.append(vertex)
-			trajectories.add_polygon_vertex(vertex)
-			trajectory_to_show.add_polygon_vertex(vertex)
+			add_polygon_vertex(vertex)
 			
 		# close polygon
 		polygon.append(polygon[0])
@@ -365,12 +366,19 @@ func write_StartPos():
 	_hide_scroll_bar(start)
 
 
+func on_StartPosText_changed(index: int, text: String):
+	#if current_state == STATES.SET_START:
+	pass 
+
+
 func write_StartDir(dir):
 	var traj = traj_control.get_child(trajectory_to_edit + 4)
 	var direction = traj.get_child(1).get_child(1)
 	var string = String(invert_y(dir))
 	direction.text = string	
 	_hide_scroll_bar(direction)
+
+
 
 
 # radius is set
@@ -443,6 +451,7 @@ func _new_trajectory_added(colour):
 	# connect the delete trajectory button
 	var deleteTraj = newTrajControl.get_child(0).get_child(1)
 	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
+	
 
 
 # adds a new trajectory via the normal control 

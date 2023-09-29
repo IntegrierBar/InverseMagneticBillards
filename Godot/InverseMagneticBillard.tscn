@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -13,7 +13,6 @@
 [ext_resource path="res://Polygon/PolygonVertexHandler.gd" type="Script" id=11]
 [ext_resource path="res://ImportedDesignElements/CustomFont/TitilliumText-Regular.otf" type="DynamicFontData" id=12]
 [ext_resource path="res://Flowmap/FlowMap.gd" type="Script" id=13]
-[ext_resource path="res://ControlPanel/OneTrajectoryControlContainer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://PhasespaceControl/ScrollContainer.gd" type="Script" id=15]
 [ext_resource path="res://icon.png" type="Texture" id=16]
 [ext_resource path="res://Shaders/FlowMap.gdshader" type="Shader" id=17]
@@ -187,7 +186,7 @@ script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 217.901
-margin_bottom = 479.0
+margin_bottom = 431.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -409,7 +408,7 @@ clip_text = true
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
 margin_top = 327.0
 margin_right = 217.0
-margin_bottom = 479.0
+margin_bottom = 431.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -440,15 +439,10 @@ margin_bottom = 86.0
 text = "Add new trajectory"
 clip_text = true
 
-[node name="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" instance=ExtResource( 14 )]
+[node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" groups=["TrajectoriesInstructions"]]
 margin_top = 90.0
 margin_right = 217.0
-margin_bottom = 134.0
-
-[node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" groups=["TrajectoriesInstructions"]]
-margin_top = 138.0
-margin_right = 217.0
-margin_bottom = 152.0
+margin_bottom = 104.0
 clip_text = true
 
 [node name="Phasespace" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
