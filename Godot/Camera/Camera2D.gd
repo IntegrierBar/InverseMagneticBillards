@@ -1,5 +1,6 @@
 extends Camera2D
 
+signal zoom_changed(z)
 
 var mouse_inside: bool = false
 export(NodePath) var ViewPort
@@ -32,6 +33,7 @@ func _set_zoom_level(value: float) -> void:
 	_zoom_level = clamp(value, min_zoom, max_zoom)
 	var tween = create_tween()
 	tween.tween_property(self, "zoom", Vector2(_zoom_level, _zoom_level), zoom_duration)
+	emit_signal("zoom_changed", _zoom_level)
 
 
 func input(event):
