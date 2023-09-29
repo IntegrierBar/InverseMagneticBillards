@@ -260,7 +260,6 @@ void fragment() {
 	if (showAngle) {
 		COLOR += vec4(0., pos.y, 0., 0.);
 	}
-	//COLOR = texture(TEXTURE, next);
 }
 
 

@@ -117,6 +117,7 @@ shader_param/radius = null
 shader_param/n = null
 shader_param/iterations = null
 shader_param/forwards = null
+shader_param/zoom = null
 
 [node name="InverseMagneticBillard" type="Node2D"]
 
@@ -894,6 +895,7 @@ clip_text = true
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnPSTrajOnCoords" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SpawnPSTrajOnCoords_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SpawnTrajBatch" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajBatch_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/ClearPSTrajectories" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_ClearPSTrajectories_pressed"]
+[connection signal="zoom_changed" from="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/Camera2D" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_Camera2D_zoom_changed"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/IterationControl/SetIteration" to="CanvasLayer/DockableContainer/Flowmap/FlowmapControl" method="_on_SetIteration_text_changed"]
 [connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer2/ForwardBackwardToggle" to="CanvasLayer/DockableContainer/Flowmap/FlowmapControl" method="_on_ForwardBackwardToggle_toggled"]
 [connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/ColorPositionCOntrol/FMPositionCheck" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_FMPositionCheck_toggled"]

@@ -51,6 +51,7 @@ func _ready():
 	$"../FTLE".material.set_shader_param("iterations", 1)
 	$"../FTLE".material.set_shader_param("forwards", true)
 	$"../FTLE".material.set_shader_param("radius", 1.0)
+	$"../FTLE".material.set_shader_param("zoom", 0.1)
 	
 	sizey = texture.get_height()
 	sizex = texture.get_width()
@@ -121,6 +122,7 @@ func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	#print(polygonLength)
 	material.set_shader_param("n", polygon.size())
 	$"../FTLE".material.set_shader_param("n", polygon.size())
+	
 	#material.set_shader_param("radius", radius)
 	# convert array to imageTexture and send it to shader
 	var img = Image.new()
@@ -202,10 +204,7 @@ func local_to_ps() -> Vector2:
 	var x = locpos[0] / sizex
 	var y = locpos[1] / sizey
 	return Vector2(x, y)
-	
-	
 
-
-
-
-
+# called when the camera zooms. Sets the zoom variable in the shader
+func _on_Camera2D_zoom_changed(z):
+	$"../FTLE".material.set_shader_param("zoom", z)

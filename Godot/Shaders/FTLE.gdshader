@@ -10,6 +10,8 @@ uniform sampler2D polygonLength;
 uniform int iterations; 	// how many iterations should be done
 uniform bool forwards;		// should we iterate forwards or backwards?
 
+uniform float zoom;			// zoom factor of camera. Used to determine the pixel size
+
 
 const float M_PI = 3.14159265;
 const float eps = 1e-6;
@@ -302,10 +304,15 @@ void fragment() {
 	
 	float diff;
 	
-	vec2 pixel = SCREEN_PIXEL_SIZE; // TODO: has to be determined propperly later 
-	vec2 hor = vec2(pixel[0], 0);
-	vec2 vert = vec2(0, pixel[1]);
-	float pixelsize = length(pixel);
+//	vec2 pixel = SCREEN_PIXEL_SIZE; // TODO: has to be determined propperly later 
+//	vec2 hor = vec2(pixel[0], 0);
+//	vec2 vert = vec2(0, pixel[1]);
+//	float pixelsize = length(pixel);
+	
+	float pixelsize = zoom*0.01;	// magic formula to determine stepsize
+	vec2 hor = vec2(pixelsize, 0);
+	vec2 vert = vec2(0, pixelsize);
+	
 	// get start, dir, index
 	if (forwards) {
 		vec2 pos_right = iterateForwardsnTimes(pos + hor);

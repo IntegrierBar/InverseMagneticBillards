@@ -2,14 +2,13 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
-Soll das reguläre n-Eck auch Ecken bekommen die verschiebbar sind? Das ist aktuell nämlich nicht der Fall
 
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
 Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
 nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist 
 
-Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
+
 
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
@@ -19,9 +18,7 @@ Polygons ab  X
 - Löschen von trajektorien im set start state und set direction state führt zum absturz des Programms
 - Dürfen Trajektorien hinzugefügt werden, bevor das Polygon geschlossen wurde? Sorgt aktuell für offene Polygone
 
-FTLE: 
-4 trajectorien starten, Jacobimatrix damit berechnen, spektralnorm nehmen und als Helligkeit verwenden
-Abstand der trajectorien mit zoom faktor ändern
+
 
 Anleitung schreiben
 
@@ -45,6 +42,16 @@ die Instruction labels entfernt werden, denke ich
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+
+FTLE: 
+4 trajectorien starten, Jacobimatrix damit berechnen, spektralnorm nehmen und als Helligkeit verwenden
+Abstand der trajectorien mit zoom faktor ändern
+
+Außerdem einfügen eines kleinen Bildes mit Flowmap von 0 Iterationen
+ -> nutze if n=0 in shader und bedenke das auch zu setzen, wenn POlygon gelöscht wird
+
+Soll das reguläre n-Eck auch Ecken bekommen die verschiebbar sind? Das ist aktuell nämlich nicht der Fall X
 
 Farbänderung von trajecotrie in normal control sollte auhc farbe in Phasespace ändern
 
