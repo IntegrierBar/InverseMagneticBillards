@@ -309,7 +309,7 @@ void fragment() {
 //	vec2 vert = vec2(0, pixel[1]);
 //	float pixelsize = length(pixel);
 	
-	float pixelsize = zoom*0.01;
+	float pixelsize = zoom*0.01;	// magic formula to determine stepsize
 	vec2 hor = vec2(pixelsize, 0);
 	vec2 vert = vec2(0, pixelsize);
 	
