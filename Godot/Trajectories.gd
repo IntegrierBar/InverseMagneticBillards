@@ -18,6 +18,7 @@ var ngon_radius
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
+var newdir # now also need a variable for the direction to draw 
 
 
 # var lines_to_draw # will be handled in gdnative
@@ -136,6 +137,9 @@ func _draw():
 		STATES.SET_START:
 			# draw circle on the trajectory closest to current mouse position
 			draw_circle(snap_to_polygon(get_local_mouse_position()), 1.0, trajectories.get_trajectory_colors()[trajectory_to_edit])
+		STATES.ITERATE:
+			draw_line(newpos, newdir + newpos, trajectories.get_trajectory_colors()[trajectory_to_edit])
+			
 
 
 
@@ -280,7 +284,6 @@ func set_initial_values(index: int, start: Vector2, dir: Vector2):
 
 
 
-
 ####################### USER INPUT #################################################################
 # used to know if mouse is inside the clickable area or not
 func _set_inside():
@@ -314,6 +317,7 @@ func mouse_input():
 		STATES.SET_DIRECTION:
 			var dir = get_local_mouse_position() - newpos
 			set_initial_values(trajectory_to_edit, newpos, dir)
+			newdir = dir
 			write_StartDir(dir)
 			current_state = STATES.ITERATE
 			trajectory_instr.text = ""
@@ -366,11 +370,6 @@ func write_StartPos():
 	_hide_scroll_bar(start)
 
 
-func on_StartPosText_changed(index: int, text: String):
-	#if current_state == STATES.SET_START:
-	pass 
-
-
 func write_StartDir(dir):
 	var traj = traj_control.get_child(trajectory_to_edit + 4)
 	var direction = traj.get_child(1).get_child(1)
@@ -379,6 +378,27 @@ func write_StartDir(dir):
 	_hide_scroll_bar(direction)
 
 
+func on_InitialValues_text_changed(index: int, v_pos: Vector2, v_dir: Vector2):
+	trajectory_to_edit = index
+	var pos_on_polygon = snap_to_polygon(invert_y(v_pos))
+	#print(pos_on_polygon)
+	#print(v_pos)
+	print("\n")
+	var traj = traj_control.get_child(trajectory_to_edit + 4)
+	var start = traj.get_child(1).get_child(0)
+	var string = String(invert_y(pos_on_polygon))
+	start.text = string
+	
+	
+	trajectories.set_initial_values(index, invert_y(pos_on_polygon), v_dir)
+	var pscoord = R2ToPS(pos_on_polygon, v_dir)
+	#print(pscoord)
+	phase_space.set_initial_values(index, pscoord)
+	
+	newpos = pos_on_polygon
+	newdir = invert_y(v_dir)
+	update()
+	# have to change draw function to draw an indication of the current start position and direction
 
 
 # radius is set
