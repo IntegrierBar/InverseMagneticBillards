@@ -25,6 +25,7 @@ var newdir # now also need a variable for the direction to draw
 
 # for polygon with n vertices has n+1 entries, the first and last one are the same
 # makes drawing all sides of the polygon easier
+# IMPORTANT: all elements of polygon have inverted y-values, since that is how drawing in Godot works!!
 var polygon: Array 
 var polygon_color: Color
 var polygon_closed: bool
@@ -391,7 +392,7 @@ func on_InitialValues_text_changed(index: int, v_pos: Vector2, v_dir: Vector2):
 	
 	
 	trajectories.set_initial_values(index, invert_y(pos_on_polygon), v_dir)
-	var pscoord = R2ToPS(pos_on_polygon, v_dir)
+	var pscoord = R2ToPS(pos_on_polygon, invert_y(v_dir))
 	#print(pscoord)
 	phase_space.set_initial_values(index, pscoord)
 	
