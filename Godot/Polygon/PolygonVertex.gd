@@ -8,10 +8,12 @@ var inside = false
 var hold_mouse = false
 
 var traj_script 
+var polygon_vertex
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
+	polygon_vertex = get_tree().get_nodes_in_group("PolygonVertexControl")[0]
 	position = pos
 
 func _draw():
@@ -37,7 +39,11 @@ func _input(event):
 			if event.button_mask == BUTTON_MASK_LEFT:
 				if traj_script.is_in_iterate_state():
 					position = get_parent().get_local_mouse_position()
-					traj_script.change_polygon_vertex(position, get_index())
+					var index = get_index()
+					traj_script.change_polygon_vertex(position, index)
+					# write the new position into the text edit fields in 
+					# polygon vertex control
+					polygon_vertex.vertex_moved(position, index)
 #			if event.is_action_pressed("MouseLeftButton"):
 #				hold_mouse = true
 #			if event.is_action_released("MouseLeftButton"):
@@ -50,4 +56,5 @@ func _process(_delta):
 		traj_script.change_polygon_vertex(mouse_pos, get_index())
 		position = mouse_pos
 		update()
+
 

@@ -29,7 +29,8 @@ Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar
 - Soll Reihenfolge veränderbar sein? (eher nicht erstmal)
 - Sollen zusätzliche Vertices hinzufügbar sein? 
 - Gezeichnete initial Linie bleibt bestehen wenn Trajektorien aus der Flowmap nur geshowed werden. Das sollte nicht
-  so sein, aber wie lässt es sich fixen?
+  so sein, aber wie lässt es sich fixen? passiert auch wenn vertices verschoben werden 
+- Soll die geschriebene Startposition sich ebenfalls ändern wenn sich die Koordinaten der Polygons Vertices verändern?
 
 Koordinatensystem in den Hintergrund des normal Spaces legen, ein- und ausschaltbar
 

@@ -197,6 +197,7 @@ func clear_polygon():
 	trajectories.clear_polygon()
 	trajectory_to_show.clear_polygon()
 	$PolygonVertexHandler.clear()
+	polygon_vertex.clear_polygon()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
 	phase_space.remove_all_trajectories()
 	if trajcount == 1:
