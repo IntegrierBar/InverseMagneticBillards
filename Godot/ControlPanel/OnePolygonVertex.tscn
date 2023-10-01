@@ -1,0 +1,28 @@
+[gd_scene format=2]
+
+[node name="OnePolygonVertex" type="HBoxContainer"]
+margin_top = 36.0
+margin_right = 195.0
+margin_bottom = 54.0
+rect_min_size = Vector2( 0, 18 )
+size_flags_horizontal = 3
+
+[node name="VertexNr" type="Label" parent="."]
+margin_top = 2.0
+margin_right = 30.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 30, 0 )
+text = "1"
+align = 2
+
+[node name="x-Coord" type="TextEdit" parent="."]
+margin_left = 34.0
+margin_right = 112.0
+margin_bottom = 18.0
+size_flags_horizontal = 3
+
+[node name="y-Coord" type="TextEdit" parent="."]
+margin_left = 116.0
+margin_right = 195.0
+margin_bottom = 18.0
+size_flags_horizontal = 3

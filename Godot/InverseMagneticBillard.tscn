@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://Polygon/PolygonVertexHandler.gd" type="Script" id=11]
 [ext_resource path="res://ImportedDesignElements/CustomFont/TitilliumText-Regular.otf" type="DynamicFontData" id=12]
 [ext_resource path="res://Flowmap/FlowMap.gd" type="Script" id=13]
+[ext_resource path="res://ControlPanel/PolygonVertexControl.gd" type="Script" id=14]
 [ext_resource path="res://PhasespaceControl/ScrollContainer.gd" type="Script" id=15]
 [ext_resource path="res://icon.png" type="Texture" id=16]
 [ext_resource path="res://Shaders/FlowMap.gdshader" type="Shader" id=17]
@@ -181,13 +182,13 @@ margin_right = 233.901
 margin_bottom = 330.976
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DockableContainer/ControlPanel"]
-margin_right = 229.901
+margin_right = 12.0
 margin_bottom = 322.976
 script = ExtResource( 9 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
-margin_right = 217.901
-margin_bottom = 431.0
+margin_right = 60.0
+margin_bottom = 455.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -195,7 +196,7 @@ size_flags_horizontal = 11
 size_flags_vertical = 9
 
 [node name="ControlsTitle" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 19.0
 rect_clip_content = true
 size_flags_horizontal = 11
@@ -207,12 +208,12 @@ clip_text = true
 
 [node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 23.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 87.0
 size_flags_horizontal = 3
 
 [node name="IterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 18.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 16 )
@@ -221,13 +222,13 @@ clip_text = true
 
 [node name="IterationControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
 margin_top = 22.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 42.0
 size_flags_horizontal = 3
 
 [node name="DrawIterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/IterationControl"]
 margin_top = 1.0
-margin_right = 106.0
+margin_right = 1.0
 margin_bottom = 19.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 17 )
@@ -235,21 +236,21 @@ text = "Draw iterations:"
 clip_text = true
 
 [node name="IterateButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/IterationControl"]
-margin_left = 110.0
-margin_right = 217.0
+margin_left = 5.0
+margin_right = 60.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Iterate"
 
 [node name="InterationCountControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
 margin_top = 46.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
 [node name="SetIterationCountLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl"]
-margin_right = 106.0
+margin_right = 28.0
 margin_bottom = 18.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -258,8 +259,8 @@ valign = 1
 clip_text = true
 
 [node name="EditBatchSize" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl" groups=["BatchSizeEdit"]]
-margin_left = 110.0
-margin_right = 217.0
+margin_left = 32.0
+margin_right = 60.0
 margin_bottom = 18.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -267,26 +268,26 @@ text = "1"
 
 [node name="Radius" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 91.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 147.0
 size_flags_horizontal = 3
 
 [node name="RadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 14.0
 text = "Radius"
 clip_text = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
 margin_top = 18.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
 [node name="SetRadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer"]
 margin_top = 2.0
-margin_right = 106.0
+margin_right = 28.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
 size_flags_vertical = 6
@@ -295,8 +296,8 @@ valign = 1
 clip_text = true
 
 [node name="SetRadiusTextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer" groups=["RadiusEdit"]]
-margin_left = 110.0
-margin_right = 217.0
+margin_left = 32.0
+margin_right = 60.0
 margin_bottom = 18.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -304,7 +305,7 @@ text = "1"
 
 [node name="RadiusSlider" type="HSlider" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius" groups=["RadiusSlider"]]
 margin_top = 40.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 56.0
 min_value = 0.01
 max_value = 20.0
@@ -314,137 +315,215 @@ scrollable = false
 
 [node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 151.0
-margin_right = 217.0
-margin_bottom = 299.0
+margin_right = 60.0
+margin_bottom = 323.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PolygonLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 14.0
 text = "Polygon"
 clip_text = true
 
 [node name="ButtonPolygon" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 18.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 38.0
 text = "Choose new polygon"
 clip_text = true
 
 [node name="ButtonClosePolygon" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 42.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 62.0
 text = "Close Contour"
 clip_text = true
 
 [node name="N-GonCornerControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 66.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 84.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
 [node name="SetCornerNumberLAbel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonCornerControl"]
 margin_top = 2.0
-margin_right = 106.0
+margin_right = 28.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
 text = "Set #corners:"
 clip_text = true
 
 [node name="SetCornerNumberEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonCornerControl" groups=["SetCornerCount"]]
-margin_left = 110.0
-margin_right = 217.0
+margin_left = 32.0
+margin_right = 60.0
 margin_bottom = 18.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
 [node name="N-GonRadiusControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 88.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 106.0
 rect_min_size = Vector2( 0, 18 )
 
 [node name="SetNGonRadius2" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonRadiusControl"]
 margin_top = 2.0
-margin_right = 106.0
+margin_right = 28.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
 text = "Set n-gon radius:"
 clip_text = true
 
 [node name="SetNGonRadius" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonRadiusControl" groups=["SetNGonRadius"]]
-margin_left = 110.0
-margin_right = 217.0
+margin_left = 32.0
+margin_right = 60.0
 margin_bottom = 18.0
 size_flags_horizontal = 3
 
 [node name="RegularNGonButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 110.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 130.0
 text = "Draw regular n-gon"
 clip_text = true
 
 [node name="LabelInstructions" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon" groups=["PolygonInstructions"]]
 margin_top = 134.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 148.0
 clip_text = true
 
+[node name="VertexControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
+margin_top = 152.0
+margin_right = 60.0
+margin_bottom = 172.0
+size_flags_horizontal = 3
+text = "Open Vertex Control"
+clip_text = true
+
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 303.0
-margin_right = 217.0
-margin_bottom = 323.0
+margin_top = 327.0
+margin_right = 60.0
+margin_bottom = 347.0
 size_flags_horizontal = 3
 
 [node name="FlowmapControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 20.0
 text = "Open Flowmap Control"
 clip_text = true
 
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
-margin_top = 327.0
-margin_right = 217.0
-margin_bottom = 431.0
+margin_top = 351.0
+margin_right = 60.0
+margin_bottom = 455.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="TrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 14.0
 text = "Trajectories"
 clip_text = true
 
 [node name="DeleteAllTrajectories" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
 margin_top = 18.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 38.0
 text = "Delete all trajectories"
 clip_text = true
 
 [node name="ResetAllTrajectories" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
 margin_top = 42.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 62.0
 text = "Reset all trajectories"
 clip_text = true
 
 [node name="NewTrajectoriesButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories"]
 margin_top = 66.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 86.0
 text = "Add new trajectory"
 clip_text = true
 
 [node name="InstructionsTrajectoriesLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories" groups=["TrajectoriesInstructions"]]
 margin_top = 90.0
-margin_right = 217.0
+margin_right = 60.0
 margin_bottom = 104.0
 clip_text = true
+
+[node name="PolygonVertexControl" type="WindowDialog" parent="CanvasLayer/DockableContainer/ControlPanel" groups=["PolygonVertexControl"]]
+visible = true
+margin_left = 24.0
+margin_right = 229.901
+margin_bottom = 322.976
+rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+window_title = "Polygon Vertex Control"
+resizable = true
+script = ExtResource( 14 )
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/DockableContainer/ControlPanel/PolygonVertexControl"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DockableContainer/ControlPanel/PolygonVertexControl/MarginContainer"]
+margin_right = 195.0
+margin_bottom = 312.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/PolygonVertexControl/MarginContainer/ScrollContainer"]
+margin_right = 195.0
+margin_bottom = 312.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PolygonVertexTitle" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/PolygonVertexControl/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_right = 195.0
+margin_bottom = 14.0
+text = "List of Polygon Vertices"
+clip_text = true
+
+[node name="PolygonVertexHeader" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/PolygonVertexControl/MarginContainer/ScrollContainer/VBoxContainer"]
+margin_top = 18.0
+margin_right = 195.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+
+[node name="VertexNrTitle" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/PolygonVertexControl/MarginContainer/ScrollContainer/VBoxContainer/PolygonVertexHeader"]
+margin_right = 30.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 30, 0 )
+text = "Nr."
+align = 1
+
+[node name="x-CoordTitle" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/PolygonVertexControl/MarginContainer/ScrollContainer/VBoxContainer/PolygonVertexHeader"]
+margin_left = 34.0
+margin_right = 112.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "x"
+align = 1
+
+[node name="y-CoordTitle" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/PolygonVertexControl/MarginContainer/ScrollContainer/VBoxContainer/PolygonVertexHeader"]
+margin_left = 116.0
+margin_right = 195.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "y"
+align = 1
 
 [node name="Phasespace" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
 margin_left = 730.933
@@ -886,6 +965,7 @@ clip_text = true
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/RegularNGonButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_RegularNGonButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/VertexControlButton" to="CanvasLayer/DockableContainer/ControlPanel/PolygonVertexControl" method="_on_PolygonVertexControl_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other/FlowmapControlButton" to="CanvasLayer/DockableContainer/Flowmap/FlowmapControl" method="_on_FlowmapControlButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/DeleteAllTrajectories" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_DeleteAllTrajectories_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/ResetAllTrajectories" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ResetAllTrajectories_pressed"]

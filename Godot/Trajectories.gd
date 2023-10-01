@@ -15,6 +15,7 @@ var batch_edit
 var single_ps_traj
 var corner_count
 var ngon_radius
+var polygon_vertex
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -69,6 +70,7 @@ func _ready():
 	single_ps_traj = get_tree().get_nodes_in_group("SinglePSTraj")[0]
 	corner_count = get_tree().get_nodes_in_group("SetCornerCount")[0]
 	ngon_radius = get_tree().get_nodes_in_group("SetNGonRadius")[0]
+	polygon_vertex = get_tree().get_nodes_in_group("PolygonVertexControl")[0]
 	
 	# set radius and batch size
 	batch = 1  # number of iterations made on one "iterate" click
@@ -157,7 +159,8 @@ func add_polygon_vertex(vertex: Vector2):
 		trajectory_to_show.add_polygon_vertex(invert_y(vertex))
 		
 		# handles the nodes necessary to make vertices moveable
-		$PolygonVertexHandler.add_polygon_vertex(vertex)		
+		$PolygonVertexHandler.add_polygon_vertex(vertex)
+		polygon_vertex._on_PolygonVertex_added(vertex)
 		
 	update()
 

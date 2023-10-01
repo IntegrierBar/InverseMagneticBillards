@@ -2,14 +2,10 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
-
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
 Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
 nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist 
-
-
-
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 Beispielbugs: 
@@ -17,8 +13,6 @@ Beispielbugs:
 Polygons ab  X
 - Löschen von trajektorien im set start state und set direction state führt zum absturz des Programms
 - Dürfen Trajektorien hinzugefügt werden, bevor das Polygon geschlossen wurde? Sorgt aktuell für offene Polygone
-
-
 
 Anleitung schreiben
 
@@ -34,6 +28,8 @@ Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar
 - Koodinaten veränderbar über veränderung der Textfelder
 - Soll Reihenfolge veränderbar sein? (eher nicht erstmal)
 - Sollen zusätzliche Vertices hinzufügbar sein? 
+- Gezeichnete initial Linie bleibt bestehen wenn Trajektorien aus der Flowmap nur geshowed werden. Das sollte nicht
+  so sein, aber wie lässt es sich fixen?
 
 Koordinatensystem in den Hintergrund des normal Spaces legen, ein- und ausschaltbar
 
@@ -44,7 +40,6 @@ Sollen wir uns optisch noch mehr Mühe machen? Oder lassen wir es so? Soll ich d
 
 Füge nützliche tooltips zu buttons und textfeldern hinzu um die Bedienung zu erleichtern, damit könnten dann auch
 die Instruction labels entfernt werden, denke ich
-
 
 
 --------------------------------------------------------------------------------------------------------------------
