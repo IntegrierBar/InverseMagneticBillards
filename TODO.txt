@@ -22,10 +22,8 @@ Bilder)
 ÜBERPRÜFEN, DASS SHADER RICHTIG SIND!!!!!!!!!!!!!!!!!!
 
 Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar sein:
-- überprüfe das eingegebene Koordinaten für start und richtung zu phasespace passen 
-- Polygon vertices brauchen Text felder, vermutlich als eigenes Fenster
-- Zeige Koordinaten der Vertices an
-- Koodinaten veränderbar über veränderung der Textfelder
+- Start und Richtung von Trajektorien die über den Phasespace gespawnt werden werden nicht in die Textfelder
+  geschrieben
 - Soll Reihenfolge veränderbar sein? (eher nicht erstmal)
 - Sollen zusätzliche Vertices hinzufügbar sein? 
 - Gezeichnete initial Linie bleibt bestehen wenn Trajektorien aus der Flowmap nur geshowed werden. Das sollte nicht
@@ -131,3 +129,9 @@ klick/press)  X
 Bei show trajectory wird der radius aktuell nicht berücksichtigt, das muss korrigiert werden!  X
 
 Koordinaten von Startposition/Richtung muss über Text Feld eingebbar sein (funktioniert soweit würde ich sagen)  X
+
+Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar sein:
+- überprüfe das eingegebene Koordinaten für start und richtung zu phasespace passen  X
+- Polygon vertices brauchen Text felder, vermutlich als eigenes Fenster  X
+- Zeige Koordinaten der Vertices an   X
+- Koodinaten veränderbar über veränderung der Textfelder   X
