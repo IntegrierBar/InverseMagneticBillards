@@ -9,6 +9,8 @@ set(SOURCES
     src/Trajectory.cpp
     include/InverseTrajectory.h
     src/InverseTrajectory.cpp
+    include/SymplecticTrajectory.h
+    src/SymplecticTrajectory.cpp
     )
 
 if(EMSCRIPTEN)
@@ -18,7 +20,7 @@ if(EMSCRIPTEN)
     
     add_executable(InverseMagneticBillard ${SOURCES})
 else()
-    add_library(InverseMagneticBillard SHARED ${SOURCES})
+    add_library(InverseMagneticBillard SHARED ${SOURCES} "include/SymplecticTrajectory.h")
 endif()
 
 target_link_libraries(InverseMagneticBillard PUBLIC godot-cpp)

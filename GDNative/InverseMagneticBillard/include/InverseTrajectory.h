@@ -19,7 +19,7 @@ namespace godot {
         Vector2 iterate();                          // iterates backwards
         PoolVector2Array iterate_batch(int batch);
 
-    private:
+    protected:
         /* Functions used to calculate the iterations of the trajectory */
 
         // intersects the line defined by "start" and "dir" with the polygon. 

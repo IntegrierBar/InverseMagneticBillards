@@ -81,6 +81,8 @@ func mouse_input():
 func add_points_to_phasespace(points: Array):
 	if points.size() != get_child_count():
 		print("houston we got a problem")
+		print(points)
+		print(get_child_count())
 		return
 	var meshes = get_children()
 	for i in range(points.size()):

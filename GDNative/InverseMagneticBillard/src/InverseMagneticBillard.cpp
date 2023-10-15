@@ -18,6 +18,7 @@ namespace godot {
         register_method((char*)"add_polygon_vertex", &InverseMagneticBillard::add_polygon_vertex);
         register_method((char*)"close_polygon", &InverseMagneticBillard::close_polygon);
         register_method((char*)"set_polygon_vertex", &InverseMagneticBillard::set_polygon_vertex);
+        register_method((char*)"set_billard_type", &InverseMagneticBillard::set_billard_type);
         register_method((char*)"set_radius", &InverseMagneticBillard::set_radius);
         register_method((char*)"set_initial_values", &InverseMagneticBillard::set_initial_values);
         register_method((char*)"add_trajectory", &InverseMagneticBillard::add_trajectory);
@@ -35,6 +36,11 @@ namespace godot {
         register_method((char*)"add_inverse_trajectory", &InverseMagneticBillard::add_inverse_trajectory);
         register_method((char*)"add_inverse_trajectory_phasespace", &InverseMagneticBillard::add_inverse_trajectory_phasespace);
         register_method((char*)"iterate_inverse_batch", &InverseMagneticBillard::iterate_inverse_batch);
+
+        // for symplectic Trajectories
+        //register_method((char*)"add_symplectic_trajectory", &InverseMagneticBillard::add_symplectic_trajectory);
+        //register_method((char*)"add_symplectic_trajectory_phasespace", &InverseMagneticBillard::add_symplectic_trajectory_phasespace);
+        //register_method((char*)"iterate_symplectic_batch", &InverseMagneticBillard::iterate_symplectic_batch);
 
         //register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
         //register_property((char*)"maxCount", &InverseMagneticBillard::maxCount, 1000);
@@ -64,6 +70,12 @@ namespace godot {
                 draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
             }
         }
+
+        //for (auto& t : symplecticTrajectories) {
+        //    if (t.trajectoryToDraw.size() > 1) {
+        //        draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
+        //    }
+        //}
         
     }
 
@@ -118,6 +130,9 @@ namespace godot {
         for (auto& t : inverseTrajectories) {
             t.set_polygon(polygon, polygonLength);
         }
+        //for (auto& t : symplecticTrajectories) {
+        //    t.set_polygon(polygon, polygonLength);
+        //}
 
         update();
     }
@@ -195,6 +210,34 @@ namespace godot {
         inverseTrajectories.push_back(t);
     }
 
+    //void InverseMagneticBillard::add_symplectic_trajectory(Vector2 start, Vector2 dir, Color color)
+    //{
+    //    SymplecticTrajectory t = SymplecticTrajectory();
+    //    t.radius = radius;
+    //    t.maxCount = maxCount;
+    //    t.trajectoryColor = color;
+
+    //    t.polygon = polygon;
+    //    t.polygonLength = polygonLength;
+
+    //    t.set_initial_values(vec2_d(start), vec2_d(dir));
+    //    symplecticTrajectories.push_back(t);
+    //}
+
+    //void InverseMagneticBillard::add_symplectic_trajectory_phasespace(Vector2 pos, Color color)
+    //{
+    //    SymplecticTrajectory t = SymplecticTrajectory();
+    //    t.radius = radius;
+    //    t.maxCount = maxCount;
+    //    t.trajectoryColor = color;
+
+    //    t.polygon = polygon;
+    //    t.polygonLength = polygonLength;
+
+    //    t.set_initial_values(vec2_d(pos));
+    //    symplecticTrajectories.push_back(t);
+    //}
+
     void InverseMagneticBillard::remove_trajectory(int index)
     {
         trajectories.erase(trajectories.begin() + index);
@@ -205,6 +248,7 @@ namespace godot {
     {
         trajectories.clear();
         inverseTrajectories.clear();
+        //symplecticTrajectories.clear();
     }
 
     Array InverseMagneticBillard::get_trajectories()
@@ -219,10 +263,18 @@ namespace godot {
 
     Array InverseMagneticBillard::iterate_batch(int batch)
     {
+        //Godot::print(Vector2(billardType, 2));
         Array phaseSpace;
         for (auto& t : trajectories)
         {
-            phaseSpace.push_back(t.iterate_batch(batch));
+            if (billardType == 0)
+            {
+                phaseSpace.push_back(t.iterate_batch(batch));
+            }
+            else if (billardType == 1)
+            {
+                phaseSpace.push_back(t.iterate_symplectic_batch(batch));
+            }
         }
     
         update();
@@ -239,6 +291,18 @@ namespace godot {
         update();
         return phaseSpace;
     }
+
+    //Array InverseMagneticBillard::iterate_symplectic_batch(int batch)
+    //{
+    //    Array phaseSpace;
+    //    Godot::print(Vector2(symplecticTrajectories.size(), 1));
+    //    for (auto& t : symplecticTrajectories)
+    //    {
+    //        phaseSpace.push_back(t.iterate_batch(batch));
+    //    }
+    //    update();
+    //    return phaseSpace;
+    //}
 
     void InverseMagneticBillard::set_initial_values(int index, Vector2 start, Vector2 dir)
     {
@@ -271,6 +335,12 @@ namespace godot {
         return colors;
     }
 
+    void InverseMagneticBillard::set_billard_type(int type)
+    {
+        billardType = type;
+        reset_trajectories();
+    }
+
     void InverseMagneticBillard::set_radius(double r)
     {
         radius = r;
@@ -285,6 +355,12 @@ namespace godot {
             i.radius = r;
             i.reset_trajectory();
         }
+
+        //for (auto& i : symplecticTrajectories)
+        //{
+        //    i.radius = r;
+        //    i.reset_trajectory();
+        //}
         update();
     }
 
@@ -298,6 +374,10 @@ namespace godot {
         {
             t.reset_trajectory();
         }
+        //for (auto& t : symplecticTrajectories)
+        //{
+        //    t.reset_trajectory();
+        //}
         update();
     }
 

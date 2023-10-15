@@ -24,7 +24,7 @@ namespace godot {
         std::vector<vec2_d> polygon;                // defines the "table" for the IMB. IMPORTANT: polygon[0] = polygon[-1] is neccessary for algorithms
         std::vector<double> polygonLength;          // polygonLength[i] is the length from start to edge i, not including edge i, e.g. polylength[0] = 0 and polylength[-1] = circumference of the polygon (will always have size = polygon.size)
 
-        vec2_d currentDirection = vec2_d(1, 0);     // 2d direction used for the next iteration
+        vec2_d currentDirection = vec2_d(1, 0);     // 2d direction used for the next iteration (normalized)
         vec2_d currentPosition = vec2_d(0, 0);      // 2d position used for the next iteration
         int currentIndexOnPolygon = 0;              // index to track in which edge on the polygon current position is (this is used in intersect_polygon_line, to make sure we don't get currentPosition as the intersection)
         std::vector<vec2_d> trajectory;             // vector of all currentPositions throughout all iterations. After each iteration, this is appended by currentPosition
@@ -47,7 +47,11 @@ namespace godot {
         Vector2 iterate();                                  // one iteration of the system. Returns the phase space coordinates of the new point
         PoolVector2Array iterate_batch(int batch);          // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
 
-	private:
+        // symplectic iteration
+        Vector2 iterate_symplectic();                                  // one iteration of the system. Returns the phase space coordinates of the new point
+        PoolVector2Array iterate_symplectic_batch(int batch);          // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
+
+	protected:
         /* Functions used to calculate the iterations of the trajectory */
 
         // intersects the line defined by "start" and "dir" with the polygon. 

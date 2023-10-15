@@ -80,6 +80,8 @@ func _ready():
 	trajectory_to_show.set_radius(radius)
 	radius_slider.value = radius
 	
+	
+	
 	trajectories.reset_trajectories()
 	trajectory_to_show.reset_trajectories()
 	# set initial polygon
@@ -99,6 +101,7 @@ func _ready():
 	# phase_space.add_trajectory(Vector2(0.5, 0.5), Color.green)
 	trajectory_to_edit = 0 
 	_new_trajectory_added(Color(0,1,0))
+	trajectories.set_billard_type(1) ########## for symplectic
 	
 	
 	
@@ -142,7 +145,6 @@ func _draw():
 			draw_circle(snap_to_polygon(get_local_mouse_position()), 1.0, trajectories.get_trajectory_colors()[trajectory_to_edit])
 		STATES.ITERATE:
 			draw_line(newpos, newdir + newpos, trajectories.get_trajectory_colors()[trajectory_to_edit])
-			
 
 
 
