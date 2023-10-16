@@ -263,7 +263,6 @@ namespace godot {
 
     Array InverseMagneticBillard::iterate_batch(int batch)
     {
-        //Godot::print(Vector2(billardType, 2));
         Array phaseSpace;
         for (auto& t : trajectories)
         {
