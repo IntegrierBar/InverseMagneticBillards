@@ -49,6 +49,7 @@ enum STATES {
 	SET_DIRECTION,  # allows setting starting direction of this trajectory though click in normal space
 	SET_POLYGON,  # state that allows to place vertices for a new polygon, they are connected in the 
 					# order they are placed in
+	TEXT_EDIT, # state for when start and direction are set via text edit fields, is left once indication line is drawn
 }
 var current_state = STATES.ITERATE
 
@@ -140,8 +141,11 @@ func _draw():
 		STATES.SET_START:
 			# draw circle on the trajectory closest to current mouse position
 			draw_circle(snap_to_polygon(get_local_mouse_position()), 1.0, trajectories.get_trajectory_colors()[trajectory_to_edit])
-		#STATES.ITERATE:
-			#draw_line(newpos, newdir + newpos, trajectories.get_trajectory_colors()[trajectory_to_edit])
+		STATES.TEXT_EDIT:
+			# only needed to draw indication line if start position or direction are set via text_edit
+			draw_line(newpos, newdir + newpos, trajectories.get_trajectory_colors()[trajectory_to_edit])
+			# go back to iterate state once indication line was drawn
+			current_state = STATES.ITERATE 
 
 
 ####################### POLYGON ####################################################################
@@ -382,6 +386,7 @@ func write_StartDir(dir):
 
 
 func on_InitialValues_text_changed(index: int, v_pos: Vector2, v_dir: Vector2):
+	current_state = STATES.TEXT_EDIT
 	trajectory_to_edit = index
 	var pos_on_polygon = snap_to_polygon(invert_y(v_pos))
 	#print(pos_on_polygon)

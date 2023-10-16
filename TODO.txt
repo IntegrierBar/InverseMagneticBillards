@@ -15,6 +15,8 @@ angepasst werden
 Zusätzlicher State der sich mit einem Timer zurücksetzt für das Zeichnen der Indikationslinien wenn man Startrichtung 
 und Position über die Textfelder setzt
 
+Bug: (0,0) als Startposition führt zu Problemen
+
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
 Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
