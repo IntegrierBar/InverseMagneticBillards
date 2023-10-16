@@ -19,7 +19,7 @@ func _on_PolygonVertexControl_pressed():
 
 
 func _on_PolygonVertex_added(vertex: Vector2):
-	print(count)
+	#print(count)
 	var Vertex = scene.instance()
 	Vertex.get_child(0).text = String(count)
 	count += 1

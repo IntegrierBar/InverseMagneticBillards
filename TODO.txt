@@ -2,6 +2,11 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
+Vertizes über Textfelder eingeben passt nicht mit der y-Achse
+
+Backwards Symplectic Flowmap sollte das selbe Ergebnis liefern wie forwards, gerade wird der magnetic inverse flowmap
+angezeigt
+
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
 Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell

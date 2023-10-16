@@ -15,6 +15,9 @@ var forwards = true
 
 var traj_script 
 
+var billiard_type: int = 0   	# 0 = inverse magnetic, 1 = symplectic 
+var showFTLE: bool = false   	# tracks if FTLE or flowmap are shown 
+
 var iterationcount = 1
 var hold_mouse = false # used to check whether the left mouse button is held, 
 						# needed to show trajectories 
@@ -40,6 +43,7 @@ var hold_mouse = false # used to check whether the left mouse button is held,
 #	length.append(10.0+sqrt(200.0) + 10.0)
 #	store_polygon_as_image(test, length)
 
+
 func _ready():
 	# initialise parameters for flowmap shader
 	material.set_shader_param("iterations", 1)
@@ -52,6 +56,13 @@ func _ready():
 	$"../FTLE".material.set_shader_param("forwards", true)
 	$"../FTLE".material.set_shader_param("radius", 1.0)
 	$"../FTLE".material.set_shader_param("zoom", 0.1)
+	# initialise parameters for symplectic flowmap shader
+	$"../FMSymplectic".material.set_shader_param("iterations", 1)
+	$"../FMSymplectic".material.set_shader_param("forwards", true)
+	$"../FMSymplectic".material.set_shader_param("radius", 1.0)
+	$"../FMSymplectic".material.set_shader_param("showAngle", true)
+	$"../FMSymplectic".material.set_shader_param("showPosition", true)
+	
 	
 	sizey = texture.get_height()
 	sizex = texture.get_width()
@@ -62,7 +73,8 @@ func _ready():
 func _set_inside():
 	# print("inside")
 	mouse_inside = true
-	
+
+
 func _set_outside():
 	mouse_inside = false
 
@@ -84,6 +96,7 @@ func _input(event):
 				if event.is_action_released("MouseLeftButton"):
 					hold_mouse = false
 
+
 # called for spawning a trajectory from the flowmap
 func mouse_input():
 	# check whether local coords are between 0 and 1
@@ -93,6 +106,7 @@ func mouse_input():
 		# adding trajectories is handled in trajectories
 		traj_script._spawn_fm_traj_on_click(pos)
 			
+
 
 # currently only used for showing (but not adding) trajectories from the flowmap
 # shown trajectory is updated as long as the left mouse button is held
@@ -122,6 +136,7 @@ func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	#print(polygonLength)
 	material.set_shader_param("n", polygon.size())
 	$"../FTLE".material.set_shader_param("n", polygon.size())
+	$"../FMSymplectic".material.set_shader_param("n", polygon.size())
 	
 	#material.set_shader_param("radius", radius)
 	# convert array to imageTexture and send it to shader
@@ -147,6 +162,8 @@ func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	material.set_shader_param("polygonLength", lengthTexture)
 	$"../FTLE".material.set_shader_param("polygon", texture)
 	$"../FTLE".material.set_shader_param("polygonLength", lengthTexture)
+	$"../FMSymplectic".material.set_shader_param("polygon", texture)
+	$"../FMSymplectic".material.set_shader_param("polygonLength", lengthTexture)
 
 
 func _on_Trajectories_close_polygon(p):
@@ -155,9 +172,12 @@ func _on_Trajectories_close_polygon(p):
 		l_array.append( l_array[i] + (p[i] - p[i+1]).length())
 	store_polygon_as_image(invert_y_array(p), l_array)
 
+
 func set_radius(r):
 	material.set_shader_param("radius", r)
 	$"../FTLE".material.set_shader_param("radius", r)
+	$"../FMSymplectic".material.set_shader_param("radius", r)
+
 
 func set_iterations(iter: int):
 	# sets number of iterations also for the trajectories copy that is needed to show trajectories
@@ -165,16 +185,21 @@ func set_iterations(iter: int):
 	traj_script.batch_to_show = iter
 	material.set_shader_param("iterations", iter)
 	$"../FTLE".material.set_shader_param("iterations", iter)
+	$"../FMSymplectic".material.set_shader_param("iterations", iter)
+
 
 func set_direction(b: bool): # forwards is true
 	material.set_shader_param("forwards", b)
 	$"../FTLE".material.set_shader_param("forwards", b)
+	$"../FMSymplectic".material.set_shader_param("forwards", b)
 	# needed for show trajectory to determine whether a forwards or backwards iteration is supposed 
 	# to be shown
 	forwards = b
 
+
 func invert_y(p: Vector2) -> Vector2:
 	return Vector2(p.x, -p.y)
+
 
 func invert_y_array(a: Array) -> Array:
 	var inverted = []
@@ -182,19 +207,24 @@ func invert_y_array(a: Array) -> Array:
 		inverted.append(invert_y(p))
 	return inverted
 
+
 # changes visiblity of flowmap and FTLE map
 func _on_FTLEButton_toggled(button_pressed):
-	self.visible = !button_pressed
-	$"../FTLE".visible = button_pressed
+	showFTLE = button_pressed
+	self.visible = !button_pressed and (billiard_type == 0)
+	$"../FTLE".visible = button_pressed and (billiard_type == 0)
+	$"../FMSymplectic".visible = !button_pressed and (billiard_type == 1)
 
 # If toggled on the position in phasespace is colour coded in the flowmap
 func _on_FMPositionCheck_toggled(button_pressed):
 	material.set_shader_param("showPosition", button_pressed)
+	$"../FMSymplectic".material.set_shader_param("showPosition", button_pressed)
+
 
 # If toggled on the anngle in phasespace is colour coded in the flowmap
 func _on_FMAngleCheck_toggled(button_pressed):
 	material.set_shader_param("showAngle", button_pressed)
-	
+	$"../FMSymplectic".material.set_shader_param("showAngle", button_pressed)
 	
 
 func local_to_ps() -> Vector2:
@@ -205,6 +235,17 @@ func local_to_ps() -> Vector2:
 	var y = locpos[1] / sizey
 	return Vector2(x, y)
 
+
 # called when the camera zooms. Sets the zoom variable in the shader
 func _on_Camera2D_zoom_changed(z):
 	$"../FTLE".material.set_shader_param("zoom", z)
+
+
+func change_billiard_type(type: bool):
+	billiard_type = int(type)
+	self.visible = !type and !showFTLE
+	$"../FTLE".visible = !type and showFTLE
+	$"../FMSymplectic".visible = type and !showFTLE
+	
+
+

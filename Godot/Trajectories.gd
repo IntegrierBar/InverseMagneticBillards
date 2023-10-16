@@ -81,7 +81,6 @@ func _ready():
 	radius_slider.value = radius
 	
 	
-	
 	trajectories.reset_trajectories()
 	trajectory_to_show.reset_trajectories()
 	# set initial polygon
@@ -101,8 +100,7 @@ func _ready():
 	# phase_space.add_trajectory(Vector2(0.5, 0.5), Color.green)
 	trajectory_to_edit = 0 
 	_new_trajectory_added(Color(0,1,0))
-	trajectories.set_billard_type(1) ########## for symplectic
-	
+	trajectories.set_billard_type(0) ########## for inverse magnetic
 	
 	
 	# connect buttons of already existing trajectory 
@@ -128,7 +126,6 @@ func _process(_delta):
 			update()
 
 
-
 func _draw():
 	# Polygon gets drawn here
 	if polygon.size() > 1:
@@ -143,9 +140,8 @@ func _draw():
 		STATES.SET_START:
 			# draw circle on the trajectory closest to current mouse position
 			draw_circle(snap_to_polygon(get_local_mouse_position()), 1.0, trajectories.get_trajectory_colors()[trajectory_to_edit])
-		STATES.ITERATE:
-			draw_line(newpos, newdir + newpos, trajectories.get_trajectory_colors()[trajectory_to_edit])
-
+		#STATES.ITERATE:
+			#draw_line(newpos, newdir + newpos, trajectories.get_trajectory_colors()[trajectory_to_edit])
 
 
 ####################### POLYGON ####################################################################
@@ -390,7 +386,7 @@ func on_InitialValues_text_changed(index: int, v_pos: Vector2, v_dir: Vector2):
 	var pos_on_polygon = snap_to_polygon(invert_y(v_pos))
 	#print(pos_on_polygon)
 	#print(v_pos)
-	print("\n")
+	#print("\n")
 	var traj = traj_control.get_child(trajectory_to_edit + 4)
 	var start = traj.get_child(1).get_child(0)
 	var string = String(invert_y(pos_on_polygon))
@@ -670,7 +666,6 @@ func _on_ResetAllTrajectories_pressed():
 	phase_space.reset_all_trajectories()
 
 
-
 # changes colour of a trajectory, ########change only affects normal space, not phasespace (at the moment) 
 func _on_color_changed(id):
 	var node = instance_from_id(id)  
@@ -747,6 +742,7 @@ func is_in_iterate_state() -> bool:
 
 
 func _hide_scroll_bar(node):
+	# TODO: remove this, it does not work 
 	#print("hello")
 	#var h_bar = node.get_h_scroll_bar()
 	#h_bar.visible = false
@@ -766,3 +762,12 @@ func _hide_scroll_bar(node):
 		elif child is HScrollBar:
 			"found the other one"
 			child.visible = false
+
+
+func _on_BilliardTypeControl_toggled(button_pressed):
+	# this only works because we only have 0 and 1 now!
+	trajectories.set_billard_type(button_pressed)  
+	trajectory_to_show.set_billard_type(button_pressed)
+	phase_space.reset_all_trajectories()
+	flow_map.change_billiard_type(button_pressed)
+
