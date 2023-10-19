@@ -22,6 +22,7 @@ Manages trajectories and inverse trajectories and the drawing
 #include <Trajectory.h>
 #include <OS.hpp>
 #include <InverseTrajectory.h>
+#include <optional>
 //#include <SymplecticTrajectory.h>
 
 namespace godot {
@@ -90,8 +91,12 @@ namespace godot {
 
         Array get_trajectories();                                               // returns array of "currentPosition"s of all trajectories 
         Array iterate_batch(int batch);                                         // iterates all trajectories and returns a 2d array with all phasespace coordinates from the iteration
+        PoolVector2Array iterate_trajectory(int index, int batch);              // iterates the "index"-th trajectory
         Array iterate_inverse_batch(int batch);
         //Array iterate_symplectic_batch(int batch);
+
+        // helper functions for automatic filling of phasespace
+        std::optional<vec2_d> hole_in_phasespace();                                            // finds a large hole in the current phasespace and returns a point inside it. Used to automatically fill the phasespace
     };
 }
 

@@ -9,8 +9,6 @@ set(SOURCES
     src/Trajectory.cpp
     include/InverseTrajectory.h
     src/InverseTrajectory.cpp
-    include/SymplecticTrajectory.h
-    src/SymplecticTrajectory.cpp
     )
 
 if(EMSCRIPTEN)

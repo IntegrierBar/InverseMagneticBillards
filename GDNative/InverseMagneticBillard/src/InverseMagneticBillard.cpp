@@ -30,7 +30,8 @@ namespace godot {
         register_method((char*)"set_color", &InverseMagneticBillard::set_color);
         register_method((char*)"set_max_count", &InverseMagneticBillard::set_max_count);
         register_method((char*)"reset_trajectories", &InverseMagneticBillard::reset_trajectories);
-        register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch);
+        register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch); 
+        register_method((char*)"iterate_trajectory", &InverseMagneticBillard::iterate_trajectory);
         
         // for inverse Trajectories
         register_method((char*)"add_inverse_trajectory", &InverseMagneticBillard::add_inverse_trajectory);
@@ -275,9 +276,22 @@ namespace godot {
                 phaseSpace.push_back(t.iterate_symplectic_batch(batch));
             }
         }
-    
+
         update();
         return phaseSpace;
+    }
+
+    PoolVector2Array InverseMagneticBillard::iterate_trajectory(int index, int batch)
+    {
+        if (index < 0) {
+            Godot::print("index less then 0 not possible");
+            return PoolVector2Array();
+        }
+        if (index >= trajectories.size()) {
+            Godot::print("index to large");
+            return PoolVector2Array();
+        }
+        return trajectories[index].iterate_batch(batch);
     }
 
     Array InverseMagneticBillard::iterate_inverse_batch(int batch)
@@ -289,6 +303,40 @@ namespace godot {
         }
         update();
         return phaseSpace;
+    }
+
+    // IDEA: partition each axis into n parts, dividing the phasespace into n^2 chunks.
+    // create 2d for this partition. go through all points in phasespace and check in which chunk they are.
+    // afterwards check if there is an empty chunk.
+    // if yes -> return center of chunk
+    // if not -> n = n*2 and repeat
+    // IS STUUUUPPPIIDDDDD
+    std::optional<vec2_d> InverseMagneticBillard::hole_in_phasespace()
+    {
+        int n = 8;
+        for (size_t i = 0; i < 10; i++) {   // set a maximum resolution by bounding loop with 100
+            n *= 2;
+            std::vector<std::vector<bool>> grid(n, std::vector<bool>(n, true));
+            // fill the grid
+            for (const auto& t : trajectories) {
+                for (const auto& point : t.phaseSpaceTrajectory) {
+                    int index_x = std::floor(point.x);
+                    int index_y = std::floor(point.y);
+                    grid[index_x][index_y] = false;
+                }
+            }
+
+            // check grid for empty cells
+            for (size_t index_x = 0; index_x < n; index_x++) {
+                for (size_t index_y = 0; index_y < n; index_y++) {
+                    if (grid[index_x][index_y]) {
+                        return { vec2_d((double)index_x / (double)n + 1. / (2. * n), (double)index_y / (double)n + 1. / (2. * n)) };
+                    }
+                }
+            }
+            
+        }
+        return std::nullopt;    // in case we don't find a hole return nullopt to let the calling code know
     }
 
     //Array InverseMagneticBillard::iterate_symplectic_batch(int batch)
