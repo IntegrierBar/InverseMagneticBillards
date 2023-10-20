@@ -34,6 +34,7 @@ namespace godot {
     public:
         static void _register_methods();
         void _init();       // currently not used
+        void _ready();      // used to deacitvate _process function
         void _process();    // currently not used
         void _draw();
         
@@ -53,8 +54,11 @@ namespace godot {
         // vectors to store the trajectories and inverse trajectories
         std::vector<Trajectory> trajectories;
         std::vector<InverseTrajectory> inverseTrajectories;
-        // vector for symplectic trajectories
-        //std::vector<SymplecticTrajectory> symplecticTrajectories;
+
+        // variables to automatically fill phasespace
+        int gridSize = 64;               // grid the phasespace into resolution^2 boxes (divide each axis into resolution amount parts)
+        std::vector<std::vector<bool>> grid;// grid of the phasespace. Each cells remembers if there is no point inside (true if empty)
+        int defaultBatch = 1000;            // batch size done in every iteration
         
         
 
@@ -96,7 +100,9 @@ namespace godot {
         //Array iterate_symplectic_batch(int batch);
 
         // helper functions for automatic filling of phasespace
-        std::optional<vec2_d> hole_in_phasespace();                                            // finds a large hole in the current phasespace and returns a point inside it. Used to automatically fill the phasespace
+        void set_grid_size(int gs);
+        Vector2 hole_in_phasespace();                                           // finds a large hole in the current phasespace and returns a point inside it. Used to automatically fill the phasespace
+        void fill_grid_with_points(PoolVector2Array points);
     };
 }
 

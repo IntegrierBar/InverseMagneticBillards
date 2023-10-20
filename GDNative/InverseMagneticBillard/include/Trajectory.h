@@ -10,12 +10,14 @@ This class handles the iteration of the inverse magnetic billard
 #include <Color.hpp>
 #include <Array.hpp>
 #include <PoolArrays.hpp>
+#include <optional>
 
 namespace godot {
 	struct Trajectory {
 	public:
         double eps = 1e-8;      // used to determine if two points are the same
         double radius = 1;      // radius of the system. Equal to ~ 1/magnetic strength
+        int maxIter = 100000;   // maximum number of iterations (more then 100 000 can not be drawn)
         int maxCount = 100;     // how many iteration should be drawn. Will still compute more iterations after this but wont add to "trajectoryToDraw"
         int count = 0;          // how many interations have been calculated
 
@@ -38,30 +40,30 @@ namespace godot {
 		Trajectory();
 		~Trajectory();
 
-        void set_initial_values(vec2_d start, vec2_d dir);  // also clears "trajectory", "phaseSpaceTrajectory" and "trajectoryToDraw"
-        void set_initial_values(vec2_d pos);                // use phasespace coords to set inital values
-        void reset_trajectory();                            // reset to inital state (direction and position). Uses phasespaceTrajectory[0] to get the coordinates.
+        void set_initial_values(vec2_d start, vec2_d dir);              // also clears "trajectory", "phaseSpaceTrajectory" and "trajectoryToDraw"
+        void set_initial_values(vec2_d pos);                            // use phasespace coords to set inital values
+        void reset_trajectory();                                        // reset to inital state (direction and position). Uses phasespaceTrajectory[0] to get the coordinates.
 
         void set_polygon(std::vector<vec2_d> p, std::vector<double> l); // set the polygon. Keeps the inital phasespace coordinates
 
-        Vector2 iterate();                                  // one iteration of the system. Returns the phase space coordinates of the new point
-        PoolVector2Array iterate_batch(int batch);          // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
+        std::optional<Vector2> iterate();                               // one iteration of the system. Returns the phase space coordinates of the new point
+        PoolVector2Array iterate_batch(int batch);                      // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
 
         // symplectic iteration
-        Vector2 iterate_symplectic();                                  // one iteration of the system. Returns the phase space coordinates of the new point
-        PoolVector2Array iterate_symplectic_batch(int batch);          // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
+        std::optional<Vector2> iterate_symplectic();                    // one iteration of the system. Returns the phase space coordinates of the new point
+        PoolVector2Array iterate_symplectic_batch(int batch);           // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
 
 	protected:
         /* Functions used to calculate the iterations of the trajectory */
 
         // intersects the line defined by "start" and "dir" with the polygon. 
         // Returns the closest intersection in positive direction together with the index of the edge of the polygon
-        std::pair<vec2_d, int> intersect_polygon_line(vec2_d start, vec2_d dir);    
+        std::optional<std::pair<vec2_d, int>> intersect_polygon_line(vec2_d start, vec2_d dir);    
 
         // "center" is the center of the circle, "start" is on the circle and "dir" the tangent at "start"
         // it then calculates all intersections of the circle with the polygon
         // returns the first intersection counterclockwise starting from "start" and the index of the edge of the polygon
-        std::pair<vec2_d, int> intersect_polygon_circle(vec2_d start, vec2_d dir, vec2_d center);
+        std::optional<std::pair<vec2_d, int>> intersect_polygon_circle(vec2_d start, vec2_d dir, vec2_d center);
 	};
 
 	

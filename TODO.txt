@@ -2,6 +2,10 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
+there is some something wrong with adding points to phasespace. it gets called even if there is nothing?
+
+UI elemente für fill phasespcae
+
 Vertizes über Textfelder eingeben passt nicht mit der y-Achse
 
 Backwards Symplectic Flowmap sollte das selbe Ergebnis liefern wie forwards, gerade wird der magnetic inverse flowmap

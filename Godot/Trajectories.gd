@@ -50,6 +50,7 @@ enum STATES {
 	SET_POLYGON,  # state that allows to place vertices for a new polygon, they are connected in the 
 					# order they are placed in
 	TEXT_EDIT, # state for when start and direction are set via text edit fields, is left once indication line is drawn
+	FILL_PS		# state to automatically fill phasespace
 }
 var current_state = STATES.ITERATE
 
@@ -125,6 +126,17 @@ func _process(_delta):
 				update()
 		STATES.SET_START:
 			update()
+		STATES.FILL_PS:
+			# find hole and add new trajecotry there
+			var c = Color.from_hsv(randf(), 1.0, 1.0)
+			var next_start: Vector2 = trajectories.hole_in_phasespace()
+			if next_start.is_equal_approx(Vector2.ZERO):
+				current_state = STATES.ITERATE
+				return
+			add_trajectory_ps(next_start, c)
+			iterate_batch()
+	
+	
 
 
 func _draw():

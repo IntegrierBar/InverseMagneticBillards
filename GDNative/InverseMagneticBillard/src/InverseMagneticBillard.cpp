@@ -10,9 +10,17 @@ namespace godot {
     {
     }
 
+    void InverseMagneticBillard::_ready()
+    {
+        set_process(false);
+        Godot::print("ready is called");
+        set_grid_size(gridSize);
+    }
+
     void InverseMagneticBillard::_register_methods()
     {
-        //register_method((char*)"_process", &InverseMagneticBillard::_process);
+        register_method((char*)"_ready", &InverseMagneticBillard::_ready);
+        register_method((char*)"_process", &InverseMagneticBillard::_process);
         register_method((char*)"_draw", &InverseMagneticBillard::_draw);
         register_method((char*)"clear_polygon", &InverseMagneticBillard::clear_polygon);
         register_method((char*)"add_polygon_vertex", &InverseMagneticBillard::add_polygon_vertex);
@@ -46,11 +54,17 @@ namespace godot {
         //register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
         //register_property((char*)"maxCount", &InverseMagneticBillard::maxCount, 1000);
         //register_property((char*)"polygonClosed", &InverseMagneticBillard::polygonClosed, false);
+        register_method((char*)"set_grid_size", &InverseMagneticBillard::set_grid_size);
+        register_property((char*)"defaultBatch", &InverseMagneticBillard::defaultBatch, 1000);
+        register_method((char*)"hole_in_phasespace", &InverseMagneticBillard::hole_in_phasespace);
+
+        //register_signal<InverseMagneticBillard>((char*)"iterated", "phasespace_points", GODOT_VARIANT_TYPE_ARRAY);
     }
 
     void InverseMagneticBillard::_process()
     {
         // TODO could do stuff here
+        Godot::print("process runs");
     }
 
     // For each trajectory use polyline to draw it in normal space
@@ -267,14 +281,19 @@ namespace godot {
         Array phaseSpace;
         for (auto& t : trajectories)
         {
+            PoolVector2Array phaseSpacePoints;  // points from this trajectory
             if (billardType == 0)
             {
-                phaseSpace.push_back(t.iterate_batch(batch));
+                phaseSpacePoints = t.iterate_batch(batch);
+                //phaseSpace.push_back(t.iterate_batch(batch));
             }
             else if (billardType == 1)
             {
-                phaseSpace.push_back(t.iterate_symplectic_batch(batch));
+                phaseSpacePoints = t.iterate_symplectic_batch(batch);
+                //phaseSpace.push_back(t.iterate_symplectic_batch(batch));
             }
+            phaseSpace.push_back(phaseSpacePoints);
+            fill_grid_with_points(phaseSpacePoints);
         }
 
         update();
@@ -291,7 +310,9 @@ namespace godot {
             Godot::print("index to large");
             return PoolVector2Array();
         }
-        return trajectories[index].iterate_batch(batch);
+        auto phaseSpacePoints = trajectories[index].iterate_batch(batch);
+        fill_grid_with_points(phaseSpacePoints);
+        return phaseSpacePoints;
     }
 
     Array InverseMagneticBillard::iterate_inverse_batch(int batch)
@@ -305,38 +326,76 @@ namespace godot {
         return phaseSpace;
     }
 
-    // IDEA: partition each axis into n parts, dividing the phasespace into n^2 chunks.
-    // create 2d for this partition. go through all points in phasespace and check in which chunk they are.
-    // afterwards check if there is an empty chunk.
-    // if yes -> return center of chunk
-    // if not -> n = n*2 and repeat
-    // IS STUUUUPPPIIDDDDD
-    std::optional<vec2_d> InverseMagneticBillard::hole_in_phasespace()
+    void InverseMagneticBillard::set_grid_size(int gs)
     {
-        int n = 8;
-        for (size_t i = 0; i < 10; i++) {   // set a maximum resolution by bounding loop with 100
-            n *= 2;
-            std::vector<std::vector<bool>> grid(n, std::vector<bool>(n, true));
-            // fill the grid
-            for (const auto& t : trajectories) {
-                for (const auto& point : t.phaseSpaceTrajectory) {
-                    int index_x = std::floor(point.x);
-                    int index_y = std::floor(point.y);
-                    grid[index_x][index_y] = false;
-                }
-            }
+        gridSize = gs;
+        grid = std::vector<std::vector<bool>>(gridSize, std::vector<bool>(gridSize, true));
+        reset_trajectories();
+        // add initial points to grid
+        for (const auto& t : trajectories)
+        {
+            int xCoord = std::floor(t.phaseSpaceTrajectory[0].x * gridSize);
+            int yCoord = std::floor(t.phaseSpaceTrajectory[0].y * gridSize);
+            grid[xCoord][yCoord] = false;
+        }
+    }
 
-            // check grid for empty cells
-            for (size_t index_x = 0; index_x < n; index_x++) {
-                for (size_t index_y = 0; index_y < n; index_y++) {
-                    if (grid[index_x][index_y]) {
-                        return { vec2_d((double)index_x / (double)n + 1. / (2. * n), (double)index_y / (double)n + 1. / (2. * n)) };
+    // go through the grid trying to find the largest hole and return point inside
+    // returns (0,0) if there is no hole
+    Vector2 InverseMagneticBillard::hole_in_phasespace()
+    {
+        std::vector < std::pair<std::pair<int, int>, int> > holes;  // vector of the holes, each hole is a pair of the coordinates/indices and the size
+        std::pair<int, int> largestHoleCoords;
+        int largestHoleSize = 0;
+        for (size_t i = 0; i < gridSize; i++)
+        {
+            for (size_t j = 0; j < gridSize; j++)
+            {
+                int sizeX = 0;
+                int size = 0;
+                while (grid[i+sizeX][j])
+                {
+                    int sizeY = 0;
+                    while (grid[i+sizeX][j+sizeY])
+                    {
+                        size++;
+                        sizeY++;
+                        if (sizeY + j >= gridSize)
+                        {
+                            break;
+                        }
+                    }
+                    sizeX++;
+                    if (sizeX + i >= gridSize)
+                    {
+                        break;
                     }
                 }
+                if (size > largestHoleSize)
+                {
+                    largestHoleSize = size;
+                    largestHoleCoords = std::make_pair(i, j);
+                }
             }
-            
         }
-        return std::nullopt;    // in case we don't find a hole return nullopt to let the calling code know
+        if (largestHoleSize == 0)
+        {
+            return Vector2(0,0);
+        }
+        // calculate the coordinates of the next point by taking the center coords of the first emtpy grid cell
+        Vector2 coords = Vector2(((double)largestHoleCoords.first) / gridSize + 1. / (2 * gridSize), ((double)largestHoleCoords.second) / gridSize + 1. / (2 * gridSize));
+        return coords;
+
+    }
+
+    void InverseMagneticBillard::fill_grid_with_points(PoolVector2Array points)
+    {
+        for (size_t i = 0; i < points.size(); i++)
+        {
+            int xCoord = std::floor(points[i].x * gridSize);
+            int yCoord = std::floor(points[i].y * gridSize);
+            grid[xCoord][yCoord] = false;
+        }
     }
 
     //Array InverseMagneticBillard::iterate_symplectic_batch(int batch)

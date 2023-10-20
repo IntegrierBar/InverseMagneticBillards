@@ -128,17 +128,23 @@ namespace godot {
     }
 
 
-    Vector2 Trajectory::iterate()
+    std::optional<Vector2> Trajectory::iterate()
     {
-        
-
         // First part: intersect polygon with line
-        auto intersection = intersect_polygon_line(currentPosition, currentDirection);
+        auto intersectionOpt = intersect_polygon_line(currentPosition, currentDirection);
+        if (!intersectionOpt)
+        {
+            // if the intersection failed, stop the iteration by setting count to maxIter and return nullopt to tell the calling code
+            count = maxIter;
+            return std::nullopt;
+        }
+
+        auto& intersection = *intersectionOpt;
         vec2_d nextIterate = intersection.first;
         currentIndexOnPolygon = intersection.second;
         if (currentIndexOnPolygon >= polygon.size() - 1)
         {
-            Godot::print("currentIndexOnPolygon is to large on second occasion");
+            Godot::print("currentIndexOnPolygon is to large on first occasion");   // todo check if this acutally ever happens
             return Vector2(0, 0);
         }
         if (count < maxCount)   //draw in normal space if desired
@@ -151,7 +157,14 @@ namespace godot {
         
         // Second part: intersect polygon with circle
         vec2_d center = currentPosition + radius * vec2_d(-currentDirection.y, currentDirection.x); // center of the circle
-        auto next = intersect_polygon_circle(currentPosition, currentDirection, center);
+        auto secondIntersectionOpt = intersect_polygon_circle(currentPosition, currentDirection, center);
+        if (!secondIntersectionOpt)
+        {
+            // if the intersection failed, stop the iteration by setting count to maxIter and return nullopt to tell the calling code
+            count = maxIter;
+            return std::nullopt;
+        }
+        auto& next = *secondIntersectionOpt;
         nextIterate = next.first;
         currentIndexOnPolygon = next.second;
         if (currentIndexOnPolygon >= polygon.size() - 1)
@@ -170,7 +183,7 @@ namespace godot {
                 angle += 2 * M_PI;      // need angle counter clockwise, i.e. no negative angles
             }
 
-            int n = int(radius * 20); 
+            int n = 20; 
 
             // divide angle for step size
             double step = angle / double(n);
@@ -221,19 +234,41 @@ namespace godot {
             return coordinatesPhasespace;
         }
 
+        if (count >= maxIter)
+        {
+            return coordinatesPhasespace;
+        }
+
+        batch = std::min(batch, maxIter - count);   // make sure we don't iterate to far
         
         coordinatesPhasespace.resize(batch);
         for (size_t i = 0; i < batch; i++)
         {
-            coordinatesPhasespace.set(i, iterate());
+            if (auto point = iterate())
+            {
+                coordinatesPhasespace.set(i, *point);
+            }
+            else
+            {
+                // if we got a nullopt, we stop
+                Godot::print("got nullopt from iteration");
+                break;  
+            }
         }
         return coordinatesPhasespace;
     }
 
-    Vector2 Trajectory::iterate_symplectic()
+    std::optional<Vector2> Trajectory::iterate_symplectic()
     {
         // first intersect polygon with new line to get next position.
-        auto intersection = intersect_polygon_line(currentPosition, currentDirection);
+        auto intersectionOpt = intersect_polygon_line(currentPosition, currentDirection);
+        if (!intersectionOpt)
+        {
+            // if the intersection failed, stop the iteration by setting count to maxIter and return nullopt to tell the calling code
+            count = maxIter;
+            return std::nullopt;
+        }
+        auto& intersection = *intersectionOpt;
         auto nextIterate = intersection.first;
         // get new direction by calculating the next iterate by intersecting the polygon with line from old position with direction of the edge of the polygon of the new position
         vec2_d dir = normalize(polygon[intersection.second + 1] - polygon[intersection.second]);
@@ -263,8 +298,16 @@ namespace godot {
         {
             dir = -dir;
         }
-        auto secondIntersection = intersect_polygon_line(currentPosition, dir);
 
+        auto secondIntersectionOpt = intersect_polygon_line(currentPosition, dir);
+        if (!secondIntersectionOpt)
+        {
+            // if the intersection failed, stop the iteration by setting count to maxIter and return nullopt to tell the calling code
+            count = maxIter;
+            return std::nullopt;
+        }
+
+        auto& secondIntersection = *secondIntersectionOpt;
         currentIndexOnPolygon = intersection.second;
         currentPosition = nextIterate;
         currentDirection = normalize(secondIntersection.first - currentPosition);
@@ -280,7 +323,7 @@ namespace godot {
         double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
         phaseSpaceTrajectory.push_back(vec2_d(pos, abs(anglePhasespace) / M_PI));
         count++;
-        return Vector2(pos, abs(anglePhasespace) / M_PI);
+        return { Vector2(pos, abs(anglePhasespace) / M_PI) };
     }
 
     PoolVector2Array Trajectory::iterate_symplectic_batch(int batch)
@@ -306,11 +349,25 @@ namespace godot {
             return coordinatesPhasespace;
         }
 
+        if (count >= maxIter)
+        {
+            return coordinatesPhasespace;
+        }
+
+        batch = std::min(batch, maxIter - count);   // make sure we don't iterate to far
 
         coordinatesPhasespace.resize(batch);
         for (size_t i = 0; i < batch; i++)
         {
-            coordinatesPhasespace.set(i, iterate_symplectic());
+            if (auto point = iterate_symplectic())
+            {
+                coordinatesPhasespace.set(i, *point);
+            }
+            else
+            {
+                // if we got a nullopt, we stop
+                break;
+            }
         }
         return coordinatesPhasespace;
     }
@@ -329,7 +386,7 @@ namespace godot {
     // return both the point and the index of the intersection edge
     // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
     // iterates through the polygon and does line line intersection for every edge to find closest intersection
-    std::pair<vec2_d, int> Trajectory::intersect_polygon_line(vec2_d start, vec2_d dir)
+    std::optional<std::pair<vec2_d, int>>Trajectory::intersect_polygon_line(vec2_d start, vec2_d dir)
     {
         int index = 0;
         vec2_d intersection = vec2_d(0, 0);
@@ -357,16 +414,16 @@ namespace godot {
         if (min_distance == INFINITY)
         {
             Godot::print("could not intersect polygon with line");
-            return std::make_pair(currentPosition, currentIndexOnPolygon);
+            return std::nullopt;
         }
 
-        return std::make_pair(intersection, index);
+        return { std::make_pair(intersection, index) };
     }
 
     // use formula https://math.stackexchange.com/questions/311921/get-location-of-vector-circle-intersection
     // to return new intersection point and index of edge
     // iterates through the polygon and does line circle intersection for every edge to find the first intersection
-    std::pair<vec2_d, int> Trajectory::intersect_polygon_circle(vec2_d start, vec2_d dir, vec2_d center)
+    std::optional<std::pair<vec2_d, int>> Trajectory::intersect_polygon_circle(vec2_d start, vec2_d dir, vec2_d center)
     {
         int index = 0;
         vec2_d intersectionPoint = vec2_d(0, 0);
@@ -419,9 +476,9 @@ namespace godot {
         if (smallestAngle == INFINITY)
         {
             Godot::print("could not intersect polygon and circle");
-            return std::make_pair(polygon[currentIndexOnPolygon + 1], currentIndexOnPolygon + 1);
+            return std::nullopt;
         }
-        return std::make_pair(intersectionPoint, index);
+        return { std::make_pair(intersectionPoint, index) };
     }
     
 }
