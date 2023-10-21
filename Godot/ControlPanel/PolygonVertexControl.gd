@@ -24,7 +24,7 @@ func _on_PolygonVertex_added(vertex: Vector2):
 	Vertex.get_child(0).text = String(count)
 	count += 1
 	Vertex.get_child(1).text = String(vertex[0])
-	Vertex.get_child(2).text = String(vertex[1])
+	Vertex.get_child(2).text = String(-vertex[1])
 	
 	self.find_node("VBoxContainer").add_child(Vertex)
 
@@ -43,5 +43,5 @@ func vertex_moved(pos: Vector2, index: int):
 	var box = self.find_node("VBoxContainer")
 	var vertex = box.get_child(index + 2) 
 	vertex.get_child(1).text = String(pos[0])
-	vertex.get_child(2).text = String(pos[1])
+	vertex.get_child(2).text = String(-pos[1])
 	

@@ -269,6 +269,7 @@ clip_text = true
 margin_left = 110.0
 margin_right = 217.0
 margin_bottom = 20.0
+hint_tooltip = "Iterate all trajectories by #iterations"
 size_flags_horizontal = 3
 text = "Iterate"
 
@@ -292,6 +293,7 @@ clip_text = true
 margin_left = 110.0
 margin_right = 217.0
 margin_bottom = 18.0
+hint_tooltip = "Set the number of interations for one batch"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "1"
@@ -329,6 +331,7 @@ clip_text = true
 margin_left = 110.0
 margin_right = 217.0
 margin_bottom = 18.0
+hint_tooltip = "Set the radius"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "1"
@@ -337,11 +340,15 @@ text = "1"
 margin_top = 40.0
 margin_right = 217.0
 margin_bottom = 56.0
+hint_tooltip = "Slider to change the radius between 0.01 and 20"
 min_value = 0.01
 max_value = 20.0
 step = 0.01
 value = 1.0
 scrollable = false
+__meta__ = {
+"_editor_description_": ""
+}
 
 [node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 186.0
@@ -360,6 +367,7 @@ clip_text = true
 margin_top = 18.0
 margin_right = 217.0
 margin_bottom = 38.0
+hint_tooltip = "Delete current polygon and all but one trajectory and create a new one"
 text = "Choose new polygon"
 clip_text = true
 
@@ -367,6 +375,8 @@ clip_text = true
 margin_top = 42.0
 margin_right = 217.0
 margin_bottom = 62.0
+hint_tooltip = "Close the polygon.
+Can also be done via ESC (TODO)"
 text = "Close Contour"
 clip_text = true
 
@@ -390,6 +400,7 @@ margin_left = 110.0
 margin_right = 217.0
 margin_bottom = 18.0
 rect_min_size = Vector2( 0, 18 )
+hint_tooltip = "How many corners the regular n-gon should have"
 size_flags_horizontal = 3
 
 [node name="N-GonRadiusControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
@@ -410,6 +421,7 @@ clip_text = true
 margin_left = 110.0
 margin_right = 217.0
 margin_bottom = 18.0
+hint_tooltip = "Set the size of the regular n-gon"
 size_flags_horizontal = 3
 
 [node name="RegularNGonButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
@@ -429,6 +441,7 @@ clip_text = true
 margin_top = 152.0
 margin_right = 217.0
 margin_bottom = 172.0
+hint_tooltip = "Explicitely set the coordinates of the corners of the polygon"
 size_flags_horizontal = 3
 text = "Open Vertex Control"
 clip_text = true
@@ -442,6 +455,7 @@ size_flags_horizontal = 3
 [node name="FlowmapControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
 margin_right = 217.0
 margin_bottom = 20.0
+hint_tooltip = "Open the control panel for the flow map"
 text = "Open Flowmap Control"
 clip_text = true
 
@@ -462,6 +476,7 @@ clip_text = true
 margin_top = 18.0
 margin_right = 217.0
 margin_bottom = 38.0
+hint_tooltip = "Deletes all trajectories"
 text = "Delete all trajectories"
 clip_text = true
 
@@ -469,6 +484,7 @@ clip_text = true
 margin_top = 42.0
 margin_right = 217.0
 margin_bottom = 62.0
+hint_tooltip = "Resets all trajecotries"
 text = "Reset all trajectories"
 clip_text = true
 
@@ -476,6 +492,8 @@ clip_text = true
 margin_top = 66.0
 margin_right = 217.0
 margin_bottom = 86.0
+hint_tooltip = "Add a new trajectory
+If pressed, you have to set an initial start and direction"
 text = "Add new trajectory"
 clip_text = true
 
@@ -638,6 +656,7 @@ margin_left = 252.0
 margin_right = 277.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 25, 0 )
+hint_tooltip = "Pick a color for the new trajectory"
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color( 1, 0.913725, 0, 1 )
@@ -659,12 +678,15 @@ clip_text = true
 margin_left = 253.0
 margin_right = 277.0
 margin_bottom = 24.0
+hint_tooltip = "If checked, the trajecotries created here will be visible in the normal space.
+If unchecked, they will only draw their phase space coordinates."
 pressed = true
 
 [node name="SpawnTrajOnClickButton" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
 margin_top = 52.0
 margin_right = 277.0
 margin_bottom = 72.0
+hint_tooltip = "After pressing this button you can click in the phasespace to create one trajectory at that point"
 text = "Spawn PS trajectory on click"
 clip_text = true
 
@@ -709,6 +731,7 @@ size_flags_horizontal = 3
 margin_top = 118.0
 margin_right = 277.0
 margin_bottom = 138.0
+hint_tooltip = "Spawns a trajectory at the phase space coordinates specified above"
 text = "Spawn PS trajectory on coordinates"
 clip_text = true
 
@@ -738,6 +761,8 @@ margin_left = 140.0
 margin_right = 277.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
+hint_tooltip = "How many trajectories should fill the rectangle
+IMPORTANT: more then ~10 can lead to crashes in web version"
 size_flags_horizontal = 3
 text = "100"
 
@@ -745,6 +770,8 @@ text = "100"
 margin_top = 220.0
 margin_right = 277.0
 margin_bottom = 240.0
+hint_tooltip = "After pressing, click twice inside the phasespace to specify a rectangle 
+inside which #trajecotriesInBatch trajectories will be evenly spawned"
 text = "Spawn PS trajectory batch"
 clip_text = true
 
@@ -758,6 +785,8 @@ clip_text = true
 margin_top = 262.0
 margin_right = 277.0
 margin_bottom = 282.0
+hint_tooltip = "Remove all points from phase space
+NEITHER DELETES TRAJECToRIES NOR RESETS THEM"
 size_flags_horizontal = 3
 text = "Clear Phasespace"
 clip_text = true
@@ -864,6 +893,7 @@ margin_left = 146.0
 margin_right = 289.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
+hint_tooltip = "Set the number of iterations done for every point"
 size_flags_horizontal = 3
 text = "1"
 
@@ -885,6 +915,7 @@ clip_text = true
 margin_left = 104.0
 margin_right = 184.0
 margin_bottom = 40.0
+hint_tooltip = "Iterate forwards of backwards"
 text = "Hello"
 clip_text = true
 
@@ -922,6 +953,7 @@ clip_text = true
 margin_left = 265.0
 margin_right = 289.0
 margin_bottom = 24.0
+hint_tooltip = "Show position on polygon after the iterations as shade of red"
 pressed = true
 
 [node name="ColorAngleControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
@@ -941,6 +973,7 @@ clip_text = true
 margin_left = 265.0
 margin_right = 289.0
 margin_bottom = 24.0
+hint_tooltip = "Show angle after the iterations as shade of green"
 pressed = true
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
@@ -960,6 +993,7 @@ clip_text = true
 margin_left = 213.0
 margin_right = 289.0
 margin_bottom = 40.0
+hint_tooltip = "Switch between regular flow map and FTLE"
 
 [node name="ShowSpawnTitle" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
 margin_top = 204.0
@@ -986,6 +1020,8 @@ clip_text = true
 margin_left = 106.0
 margin_right = 182.0
 margin_bottom = 40.0
+hint_tooltip = "Toggle between just showing the trajectory at the point 
+or spawning a new trajectory at the point when pressing left mouse button"
 
 [node name="SpawnTrajectory" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/ShowSpawnBox"]
 margin_left = 186.0

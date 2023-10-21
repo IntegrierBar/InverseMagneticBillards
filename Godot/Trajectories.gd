@@ -53,6 +53,7 @@ enum STATES {
 	FILL_PS		# state to automatically fill phasespace
 }
 var current_state = STATES.ITERATE
+var fill_ps_trajectories_to_spawn: int = 0
 
 # index of trajectory that is to be edited
 var trajectory_to_edit: int
@@ -128,13 +129,17 @@ func _process(_delta):
 			update()
 		STATES.FILL_PS:
 			# find hole and add new trajecotry there
-			var c = Color.from_hsv(randf(), 1.0, 1.0)
+			if fill_ps_trajectories_to_spawn <= 0:
+				current_state = STATES.ITERATE
+				return
+			var c = Color.from_hsv(randf(), 1.0, 1.0)	# create random collor
 			var next_start: Vector2 = trajectories.hole_in_phasespace()
 			if next_start.is_equal_approx(Vector2.ZERO):
 				current_state = STATES.ITERATE
 				return
 			add_trajectory_ps(next_start, c)
 			iterate_batch()
+			fill_ps_trajectories_to_spawn -= 1
 	
 	
 
@@ -191,6 +196,7 @@ func close_polygon():
 	trajectories.reset_trajectories()
 	update()
 
+# removes all trajectories except the first
 func clear_polygon():
 	polygon = []
 	polygon_closed = false
@@ -213,8 +219,8 @@ func clear_polygon():
 	$PolygonVertexHandler.clear()
 	polygon_vertex.clear_polygon()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
-	phase_space.remove_all_trajectories()
-	if trajcount == 1:
+	phase_space.remove_all_trajectories()	############################# WHY ARE WE CALLING THIS???????????
+	if trajcount >= 1:
 		phase_space.add_preliminary_trajectory(trajectories.get_trajectory_colors()[0])
 
 
@@ -372,13 +378,15 @@ func _on_ButtonClosePolygon_pressed():
 		
 
 # user wants to input new start position
+# only works if current_state is ITERATE to prevent bugs
 func _on_NewStartPos_pressed(id):
-	current_state = STATES.SET_START
-	var node = instance_from_id(id)  
-	trajectory_to_edit = node.get_index() - 4
-	# print(trajectory_to_edit)  
-	#phase_space.reset_trajectory() # TODO THIS IS UGLY
-	trajectory_instr.text = "Click to choose a new start position"
+	if current_state == STATES.ITERATE:
+		current_state = STATES.SET_START
+		var node = instance_from_id(id)  
+		trajectory_to_edit = node.get_index() - 4
+		# print(trajectory_to_edit)  
+		#phase_space.reset_trajectory() # TODO THIS IS UGLY
+		trajectory_instr.text = "Click to choose a new start position"
 
 
 func write_StartPos():
@@ -495,15 +503,17 @@ func _new_trajectory_added(colour):
 
 
 # adds a new trajectory via the normal control 
+# only works if we are in ITERATE state to prevent bugs
 func _on_NewTrajectoriesButton_pressed():
-	current_state = STATES.SET_START
-	
-	var random_colour = Color(randf(), randf(), randf())
-	
-	add_trajectory(Vector2(2,0), Vector2(1,-1), random_colour)
-	trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
-	
-	_new_trajectory_added(random_colour)
+	if current_state == STATES.ITERATE:
+		current_state = STATES.SET_START
+		
+		var random_colour = Color(randf(), randf(), randf())
+		
+		add_trajectory(Vector2(2,0), Vector2(1,-1), random_colour)
+		trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
+		
+		_new_trajectory_added(random_colour)
 	
 
 # spawns trajectory in normal and phasespace based on entered phasespace coordinates 
@@ -654,13 +664,15 @@ func _show_backwards_fm_traj_on_click(ps_coord):
 ####################### DELETE TRAJECTORIES ########################################################
 
 
-# deletes the trajectory from normal space, currently does not delete trajectory from phasespace image! 
+# deletes the trajectory from normal space
+# only works if we are in the iterate state. Otherwise does nothing to prevent bugs
 func _on_delete_trajectory_pressed(id):
-	var node = instance_from_id(id)  
-	trajectory_to_edit = node.get_index() - 4
-	node.queue_free()
-	phase_space.remove_trajectory(trajectory_to_edit)
-	trajectories.remove_trajectory(trajectory_to_edit)
+	if current_state == STATES.ITERATE:
+		var node = instance_from_id(id)  
+		trajectory_to_edit = node.get_index() - 4
+		node.queue_free()
+		phase_space.remove_trajectory(trajectory_to_edit)
+		trajectories.remove_trajectory(trajectory_to_edit)
 
 # deletes all trajectories in normal space, also resets phasespace image 
 func _on_DeleteAllTrajectories_pressed():

@@ -2,22 +2,25 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
-there is some something wrong with adding points to phasespace. it gets called even if there is nothing?
+there is some something wrong with adding points to phasespace. it gets called even if there is nothing? HAB ICH DAS GESCHIREBEN? WENN JA; DANN HAT SICH DAS GEKLÄRT
 
-UI elemente für fill phasespcae
+UI elemente für fill phasespcae. Benötigt: 
+	- Zahlenfeld für gridSize (angebunden an set_grid_size() von C++ code)
+	- Zahlenfeld für wie viele Trajectorien gespawnt werden sollen (fill_ps_trajecotries_to_spawn)
+	- start button der System in Zustand FILL_PS setzt
 
-Vertizes über Textfelder eingeben passt nicht mit der y-Achse
+Vertizes über Textfelder eingeben passt nicht mit der y-Achse X
 
 Backwards Symplectic Flowmap sollte das selbe Ergebnis liefern wie forwards, gerade wird der magnetic inverse flowmap
 angezeigt
 
-FTLE shader für symplectic billiards schreiben
+FTLE shader für symplectic billiards schreiben X
 
 Felder zum verschieben der Polygon Vertexe und zur Positionierung der Startposition müssen variable an den Zoom
 angepasst werden 
 
 Zusätzlicher State der sich mit einem Timer zurücksetzt für das Zeichnen der Indikationslinien wenn man Startrichtung 
-und Position über die Textfelder setzt
+und Position über die Textfelder setzt X
 
 Bug: (0,0) als Startposition führt zu Problemen
 
@@ -30,15 +33,15 @@ nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unreg
 Beispielbugs: 
 - Wenn es keine Trajektorien gibt und man ein neues Polygon erstellt stürzt das Programm nach dem schließen des 
 Polygons ab  X
-- Löschen von trajektorien im set start state und set direction state führt zum absturz des Programms
-- Dürfen Trajektorien hinzugefügt werden, bevor das Polygon geschlossen wurde? Sorgt aktuell für offene Polygone
+- Löschen von trajektorien im set start state und set direction state führt zum absturz des Programms X
+- Dürfen Trajektorien hinzugefügt werden, bevor das Polygon geschlossen wurde? Sorgt aktuell für offene Polygone DISABLED X
 
 Anleitung schreiben
 
 (FlowMap und Phasespace kamera bekommen limits für rechts und links bewegung, damit man nicht mehr sieht als die 
 Bilder)
 
-ÜBERPRÜFEN, DASS SHADER RICHTIG SIND!!!!!!!!!!!!!!!!!!
+ÜBERPRÜFEN, DASS SHADER RICHTIG SIND!!!!!!!!!!!!!!!!!! X
 
 Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar sein:
 - Start und Richtung von Trajektorien die über den Phasespace gespawnt werden werden nicht in die Textfelder

@@ -8,9 +8,10 @@ func _ready():
 	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
 
 
-
+# delete trajectory button only works if we are in the iterate state. Otherwise does nothing
 func _on_DeleteTrajButton_pressed():
-	queue_free()
+	if traj_script.current_state == traj_script.STATES.ITERATE:
+		queue_free()
 
 
 func _on_StartPos_text_changed():

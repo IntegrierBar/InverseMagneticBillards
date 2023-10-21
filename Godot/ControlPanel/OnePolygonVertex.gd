@@ -25,7 +25,7 @@ func coord_changed():
 	
 	if x_text.is_valid_float() and y_text.is_valid_float():
 		var x = float(x_text)
-		var y = float(y_text)
+		var y = -float(y_text)
 		var index = get_index() - 2
 		var v = Vector2(x,y)
 		traj_script.change_polygon_vertex(v, index)
