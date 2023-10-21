@@ -1,6 +1,9 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
+button um maxCount zu setzen
+
+right click or escape to close polygon
 
 there is some something wrong with adding points to phasespace. it gets called even if there is nothing? HAB ICH DAS GESCHIREBEN? WENN JA; DANN HAT SICH DAS GEKLÄRT
 
