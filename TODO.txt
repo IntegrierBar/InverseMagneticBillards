@@ -46,8 +46,8 @@ Bilder)
 Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar sein:
 - Start und Richtung von Trajektorien die über den Phasespace gespawnt werden werden nicht in die Textfelder
   geschrieben
-- Soll Reihenfolge veränderbar sein? (eher nicht erstmal)
-- Sollen zusätzliche Vertices hinzufügbar sein? 
+- Soll Reihenfolge veränderbar sein? (eher nicht erstmal) NEIN
+- Sollen zusätzliche Vertices hinzufügbar sein? NEIN
 - Gezeichnete initial Linie bleibt bestehen wenn Trajektorien aus der Flowmap nur geshowed werden. Das sollte nicht
   so sein, aber wie lässt es sich fixen? passiert auch wenn vertices verschoben werden 
 - Soll die geschriebene Startposition sich ebenfalls ändern wenn sich die Koordinaten der Polygons Vertices verändern?
