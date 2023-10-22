@@ -140,7 +140,7 @@ func _process(_delta):
 				current_state = STATES.ITERATE
 				fill_ps_trajectories_to_spawn = int(traj_num_spawn.text)
 				return
-			var c = Color.from_hsv(randf(), 1.0, 1.0)	# create random collor to add to our hole color
+			var c = Color.from_hsv(randf(), 1.0, 1.0)	# create random color to add to our hole color
 			var hole: Array = trajectories.hole_in_phasespace() # index 0 is coords, index 1 is close color
 			var next_start: Vector2 = hole[0]
 			if next_start.is_equal_approx(Vector2.ZERO):

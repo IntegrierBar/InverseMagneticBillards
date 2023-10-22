@@ -464,6 +464,7 @@ namespace godot {
     void InverseMagneticBillard::set_initial_values(int index, Vector2 start, Vector2 dir)
     {
         trajectories[index].set_initial_values(start, dir);
+        set_grid_size(gridSize);    // recalculate the grid
         update();
     }
 
@@ -544,6 +545,8 @@ namespace godot {
         //{
         //    t.reset_trajectory();
         //}
+        // Fill grid
+        set_grid_size(gridSize);    // recalculate the grid
         update();
     }
 

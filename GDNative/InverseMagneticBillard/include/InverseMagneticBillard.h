@@ -57,9 +57,9 @@ namespace godot {
         std::vector<InverseTrajectory> inverseTrajectories;
 
         // variables to automatically fill phasespace
-        int gridSize = 64;                      // grid the phasespace into resolution^2 boxes (divide each axis into resolution amount parts)
+        int gridSize = 64;                                      // grid the phasespace into resolution^2 boxes (divide each axis into resolution amount parts)
         std::vector<std::vector<std::optional<Color>>> grid;    // grid of the phasespace. Each cells remembers one color of a trajectory inside it (nullopt if there is no trajectory)
-        int defaultBatch = 1000;                // batch size done in every iteration
+        int defaultBatch = 1000;                                // batch size done in every iteration
         
         
 
