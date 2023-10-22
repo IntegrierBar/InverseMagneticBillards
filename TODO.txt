@@ -1,29 +1,57 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
-button um maxCount zu setzen
 
-right click or escape to close polygon
+Beim Iterieren muss geprüft werden ob eine Ecke getroffen wird, falls ja sollte nicht weiter iteriert werden, 
+insbesondere wichtig für symplektisches Billard 
 
-there is some something wrong with adding points to phasespace. it gets called even if there is nothing? HAB ICH DAS GESCHIREBEN? WENN JA; DANN HAT SICH DAS GEKLÄRT
+Button um maxCount zu setzen
+Bis jetzt: Ein Knopf für alle Trajektorien
+Probleme:
+- Nur der max count von bereits existierenden Trajektorien wird verändert, neu hinzugefügte Trajektorien behalten
+  den urspünglich vordefinierten max count von 100
+- Ist die Anzahl der gemachten Iterationen größer als der max count und der max count wird anschließend hochgesetzt,
+  kommt es zu Unstetigkeiten in den gemalten Iterationen
+  Genauere Erklärung: der nächste Halbkreis wird richtig gefunden und gemalt, und der alte Halbkreis wird mit dem 
+  neuen durch eine gerade Linie verbunden, ungeachtet dessen, dass dazwischen Iterationen fehlen
+
+there is some something wrong with adding points to phasespace. it gets called even if there is nothing? 
+HAB ICH DAS GESCHIREBEN? WENN JA; DANN HAT SICH DAS GEKLÄRT
 
 UI elemente für fill phasespcae. Benötigt: 
 	- Zahlenfeld für gridSize (angebunden an set_grid_size() von C++ code)
 	- Zahlenfeld für wie viele Trajectorien gespawnt werden sollen (fill_ps_trajecotries_to_spawn)
 	- start button der System in Zustand FILL_PS setzt
+Probleme/noch zu tun:
+- es scheint als würden sich die Farben der gespawnten Trajektorien wiederholen (oder es werden nicht so viele 
+  Trajektorien gespawnt wie angefordert werden), er tendiert dazu grün zu wählen (was ungünstig ist weil das der
+  default der ersten normalen Trajektorie ist)
+- Wurde einem die angeforderte Anzahl Trajektorien gespawnt muss die Anzahl neu gesetzt werden bevor man neue 
+  Trajektorien spawnen kann weil die interne Zahl 0 ist, jedes mal nachdem Trajektorien in Löchern gespawnt wurden 
+  -> Setze die interne Variable wieder auf die Zahl des Textfeldes nachdem der state zurück zu iterate wechselt  X
+- Der Algorithmus scheint Löcher im unteren Teil des Phasespaces nicht zu finden, nimmt er immer die n ersten Löcher
+  die er findet anstelle von einer zufälligen Auswahl aus allen gefundenen Löchern?
+- Gespawnte Trajektorien müssen noch Control boxen gespawnt bekommen
+  -> führt aktuell zu Problemen weil die Trajektorien nicht mehr gelöscht werden können
+- Wenn die grid size gesetzt wird, wird der regular space zurückgesetzt, der phasespace bleibt bestehen, eigentlich 
+  soll alles so bleiben wie es ist, oder?
+- Bei magnetic inverse billiards scheint es so als würden einige phasespace Kooridnaten mahrfach von neu gespawnten 
+  Trajektorien besucht werden, dh entweder der Algorithmus findet Löcher wo keine Löcher mehr sind oder die 
+  Trajektorien beinhalten zufällig die selben Punkte im phasespace, dann sollten sie danach aber auch die selben
+  Trajektorien sein, das sollte nochmal überprüft werden
+
+Zeige Koordinaten der aktuellen Mausposition für regular space, phasespace und flowmap an, vermutlich in der oberen
+rechten Ecke der jeweiligen Felder 
+
+Beschriftungen für regular space, phasespace und flowmap hinzufügen, auch Achsenbeschriftungen
 
 Vertizes über Textfelder eingeben passt nicht mit der y-Achse X
 
 Backwards Symplectic Flowmap sollte das selbe Ergebnis liefern wie forwards, gerade wird der magnetic inverse flowmap
 angezeigt
 
-FTLE shader für symplectic billiards schreiben X
-
 Felder zum verschieben der Polygon Vertexe und zur Positionierung der Startposition müssen variable an den Zoom
 angepasst werden 
-
-Zusätzlicher State der sich mit einem Timer zurücksetzt für das Zeichnen der Indikationslinien wenn man Startrichtung 
-und Position über die Textfelder setzt X
 
 Bug: (0,0) als Startposition führt zu Problemen
 
@@ -37,14 +65,13 @@ Beispielbugs:
 - Wenn es keine Trajektorien gibt und man ein neues Polygon erstellt stürzt das Programm nach dem schließen des 
 Polygons ab  X
 - Löschen von trajektorien im set start state und set direction state führt zum absturz des Programms X
-- Dürfen Trajektorien hinzugefügt werden, bevor das Polygon geschlossen wurde? Sorgt aktuell für offene Polygone DISABLED X
+- Dürfen Trajektorien hinzugefügt werden, bevor das Polygon geschlossen wurde? Sorgt aktuell für offene Polygone 
+DISABLED X
 
 Anleitung schreiben
 
 (FlowMap und Phasespace kamera bekommen limits für rechts und links bewegung, damit man nicht mehr sieht als die 
 Bilder)
-
-ÜBERPRÜFEN, DASS SHADER RICHTIG SIND!!!!!!!!!!!!!!!!!! X
 
 Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar sein:
 - Start und Richtung von Trajektorien die über den Phasespace gespawnt werden werden nicht in die Textfelder
@@ -70,6 +97,14 @@ die Instruction labels entfernt werden, denke ich
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
 
+Zusätzlicher State der sich mit einem Timer zurücksetzt für das Zeichnen der Indikationslinien wenn man Startrichtung 
+und Position über die Textfelder setzt X -> wurde ohne timer gelöst aber tut was es soll
+
+FTLE shader für symplectic billiards schreiben X
+
+Right click or escape to close polygon  X
+
+ÜBERPRÜFEN, DASS SHADER RICHTIG SIND!!!!!!!!!!!!!!!!!! X
 
 FTLE: 
 4 trajectorien starten, Jacobimatrix damit berechnen, spektralnorm nehmen und als Helligkeit verwenden

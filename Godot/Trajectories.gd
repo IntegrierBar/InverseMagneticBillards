@@ -16,6 +16,9 @@ var single_ps_traj
 var corner_count
 var ngon_radius
 var polygon_vertex
+var maxnum_edit
+var grid_size
+var traj_num_spawn
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -39,7 +42,7 @@ signal close_polygon(p)
 
 var batch: int
 var batch_to_show: int = 1
-var max_count: int
+#var max_count: int  # I don't think this variable is currently used
 var radius: float
 
 # use a state machine to hand changes of the polygon and the trajectory
@@ -74,6 +77,9 @@ func _ready():
 	corner_count = get_tree().get_nodes_in_group("SetCornerCount")[0]
 	ngon_radius = get_tree().get_nodes_in_group("SetNGonRadius")[0]
 	polygon_vertex = get_tree().get_nodes_in_group("PolygonVertexControl")[0]
+	maxnum_edit = get_tree().get_nodes_in_group("MaxNumberIterationsDrawn")[0]
+	grid_size = get_tree().get_nodes_in_group("GridSize")[0]
+	traj_num_spawn = get_tree().get_nodes_in_group("TrajNumToSpawn")[0]
 	
 	# set radius and batch size
 	batch = 1  # number of iterations made on one "iterate" click
@@ -131,6 +137,7 @@ func _process(_delta):
 			# find hole and add new trajecotry there
 			if fill_ps_trajectories_to_spawn <= 0:
 				current_state = STATES.ITERATE
+				fill_ps_trajectories_to_spawn = int(traj_num_spawn.text)
 				return
 			var c = Color.from_hsv(randf(), 1.0, 1.0)	# create random collor
 			var next_start: Vector2 = trajectories.hole_in_phasespace()
@@ -140,8 +147,6 @@ func _process(_delta):
 			add_trajectory_ps(next_start, c)
 			iterate_batch()
 			fill_ps_trajectories_to_spawn -= 1
-	
-	
 
 
 func _draw():
@@ -327,7 +332,15 @@ func _input(event):
 				trajectories.show()
 				trajectory_to_show.hide()
 				mouse_input()
-		
+	if current_state == STATES.SET_POLYGON:
+		if Input.is_action_pressed("close_polygon"):
+			close_polygon()
+			polygon_instr.text = " "
+			if trajectories.get_trajectory_colors().size() > 0: 
+				current_state = STATES.SET_START
+			else:
+				current_state = STATES.ITERATE
+
 
 func mouse_input():
 	match current_state:
@@ -346,7 +359,7 @@ func mouse_input():
 			write_StartDir(dir)
 			current_state = STATES.ITERATE
 			trajectory_instr.text = ""
-			
+
 
 # iterate Button pressed, iterates trajectory if the system is in the correct state
 func _on_Button_pressed():
@@ -357,6 +370,17 @@ func _on_Button_pressed():
 		trajectory_to_show.hide()
 		update()	# used to get rid of the line indicating the direction
 		iterate_batch()
+
+
+# Sets maximum of how many iterations will be drawn in regular space for all trajectories
+func _on_EditMaxDrawnIterations_text_changed():
+	if maxnum_edit.text.is_valid_integer():
+		var maxnum = int(maxnum_edit.text)
+		var trajcount = trajectories.get_trajectory_colors().size()
+		
+		for i in range(trajcount):
+			trajectories.set_max_count(i, maxnum)
+
 
 # user wants to make new polygon
 func _on_ButtonPolygon_pressed():
@@ -471,6 +495,22 @@ func _on_EditBatchSize_text_changed():
 	if batch_edit.text.is_valid_integer():
 		var newbatch = int(batch_edit.text)
 		batch = newbatch
+
+
+func _on_StartFillPSButton_pressed():
+	current_state = STATES.FILL_PS
+
+
+func _on_GridSizeEdit_text_changed():
+	if grid_size.text.is_valid_float():
+		var gs = float(grid_size.text)
+		trajectories.set_grid_size(gs)
+
+
+func _on_TrajNumToSpawnEdit_text_changed():
+	if traj_num_spawn.text.is_valid_integer():
+		var tns = int(traj_num_spawn.text)
+		fill_ps_trajectories_to_spawn = tns
 
 
 ####################### ADDING TRAJECTORIES ########################################################
@@ -799,4 +839,5 @@ func _on_BilliardTypeControl_toggled(button_pressed):
 	trajectory_to_show.set_billard_type(button_pressed)
 	phase_space.reset_all_trajectories()
 	flow_map.change_billiard_type(button_pressed)
+
 
