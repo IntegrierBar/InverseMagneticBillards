@@ -63,6 +63,7 @@ var trajectory_to_edit: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	randomize()	# make sure we get different random numbers every time we start
 	# Nodes that have to be accessed, using groups allows to change the nodes position in the tree
 	# without having to change anything here
 	phase_space = get_tree().get_nodes_in_group("PhaseSpace")[0]
@@ -139,12 +140,16 @@ func _process(_delta):
 				current_state = STATES.ITERATE
 				fill_ps_trajectories_to_spawn = int(traj_num_spawn.text)
 				return
-			var c = Color.from_hsv(randf(), 1.0, 1.0)	# create random collor
-			var next_start: Vector2 = trajectories.hole_in_phasespace()
+			var c = Color.from_hsv(randf(), 1.0, 1.0)	# create random collor to add to our hole color
+			var hole: Array = trajectories.hole_in_phasespace() # index 0 is coords, index 1 is close color
+			var next_start: Vector2 = hole[0]
 			if next_start.is_equal_approx(Vector2.ZERO):
 				current_state = STATES.ITERATE
 				return
-			add_trajectory_ps(next_start, c)
+			var next_color = Color(hole[1].r - 0.3*c.r, hole[1].g - 0.3*c.g, hole[1].b - 0.3*c.g).lightened(0.3)
+			if hole[1] == Color(1,1,1):
+				next_color = c
+			add_trajectory_ps(next_start, next_color)
 			iterate_batch()
 			fill_ps_trajectories_to_spawn -= 1
 
@@ -719,7 +724,7 @@ func _on_DeleteAllTrajectories_pressed():
 	var trajcount = trajectories.get_trajectory_colors().size()
 	for i in range(trajcount): 
 		var container = traj_control.get_child(4 + i)
-		container.queue_free()
+		container.queue_free() # BUG here after running fill PS
 		trajectories.remove_trajectory(0)
 	phase_space.remove_all_trajectories()
 	# Note: moving the position of the delete button means that the code for adding new trajectories

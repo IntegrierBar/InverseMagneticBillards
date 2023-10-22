@@ -46,6 +46,7 @@ namespace godot {
 
         double radius = 1;                  // default radius of the system. Equal to ~ 1/magnetic strength
         int maxCount = 100;                 // default "maxCount" for the trajectories
+        int maxIter = 100000;               // maximum number of iterations per trajectory
 
         bool polygonClosed = false;         // variable to track whether the polygon is closed, i.e. polygon[0] == polygon[-1] 
         std::vector<vec2_d> polygon;        // polygon that defines the table
@@ -56,9 +57,9 @@ namespace godot {
         std::vector<InverseTrajectory> inverseTrajectories;
 
         // variables to automatically fill phasespace
-        int gridSize = 64;               // grid the phasespace into resolution^2 boxes (divide each axis into resolution amount parts)
-        std::vector<std::vector<bool>> grid;// grid of the phasespace. Each cells remembers if there is no point inside (true if empty)
-        int defaultBatch = 1000;            // batch size done in every iteration
+        int gridSize = 64;                      // grid the phasespace into resolution^2 boxes (divide each axis into resolution amount parts)
+        std::vector<std::vector<std::optional<Color>>> grid;    // grid of the phasespace. Each cells remembers one color of a trajectory inside it (nullopt if there is no trajectory)
+        int defaultBatch = 1000;                // batch size done in every iteration
         
         
 
@@ -90,6 +91,7 @@ namespace godot {
         void set_initial_values(int index, Vector2 start, Vector2 dir);         // set the initial values of trajectory with index "index"
         void set_color(int index, Color c);                                     // set color of trajectory 'index'
         void set_max_count(int index, int newMaxCount);                         // set maxCount of trajectory 'index'
+        void set_max_iter(int newMaxIter);
 
         PoolColorArray get_trajectory_colors();                                 // returns Godot array of all colors of the trajectories
 
@@ -101,8 +103,8 @@ namespace godot {
 
         // helper functions for automatic filling of phasespace
         void set_grid_size(int gs);
-        Vector2 hole_in_phasespace();                                           // finds a large hole in the current phasespace and returns a point inside it. Used to automatically fill the phasespace
-        void fill_grid_with_points(PoolVector2Array points);
+        Array hole_in_phasespace();                                           // finds a large square hole in the current phasespace and returns a point inside it and a Color close to it. Used to automatically fill the phasespace
+        void fill_grid_with_points(PoolVector2Array points, Color c);
     };
 }
 

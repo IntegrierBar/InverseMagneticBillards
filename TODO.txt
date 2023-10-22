@@ -3,17 +3,18 @@ TODO:
 --------------------------------------------------------------------------------------------------------------------
 
 Beim Iterieren muss geprüft werden ob eine Ecke getroffen wird, falls ja sollte nicht weiter iteriert werden, 
-insbesondere wichtig für symplektisches Billard 
+insbesondere wichtig für symplektisches Billard (SOLLTEN WIR NOCHMAL NACHFRAGEN?)
 
 Button um maxCount zu setzen
 Bis jetzt: Ein Knopf für alle Trajektorien
 Probleme:
 - Nur der max count von bereits existierenden Trajektorien wird verändert, neu hinzugefügte Trajektorien behalten
-  den urspünglich vordefinierten max count von 100
+  den urspünglich vordefinierten max count von 100 (WOLLEN RI DAS ES GLOBAL IST? DANN KANN ICH NOCH NE FUNKTION EINGABEUN; DASS ES GLOBAL IST)
 - Ist die Anzahl der gemachten Iterationen größer als der max count und der max count wird anschließend hochgesetzt,
   kommt es zu Unstetigkeiten in den gemalten Iterationen
   Genauere Erklärung: der nächste Halbkreis wird richtig gefunden und gemalt, und der alte Halbkreis wird mit dem 
   neuen durch eine gerade Linie verbunden, ungeachtet dessen, dass dazwischen Iterationen fehlen
+	( KANN GEFIXED WERDEN, INDEM SETZEN VON MAX COUNT ALLE TRAJECOTRIEN ZURÜCKSETZT, WIRD DANN IN C++ gemacht)
 
 there is some something wrong with adding points to phasespace. it gets called even if there is nothing? 
 HAB ICH DAS GESCHIREBEN? WENN JA; DANN HAT SICH DAS GEKLÄRT
@@ -25,20 +26,24 @@ UI elemente für fill phasespcae. Benötigt:
 Probleme/noch zu tun:
 - es scheint als würden sich die Farben der gespawnten Trajektorien wiederholen (oder es werden nicht so viele 
   Trajektorien gespawnt wie angefordert werden), er tendiert dazu grün zu wählen (was ungünstig ist weil das der
-  default der ersten normalen Trajektorie ist)
+  default der ersten normalen Trajektorie ist) IST HALBWEGS GEFIXED. ZEIGE DIR WAS GETAN
 - Wurde einem die angeforderte Anzahl Trajektorien gespawnt muss die Anzahl neu gesetzt werden bevor man neue 
   Trajektorien spawnen kann weil die interne Zahl 0 ist, jedes mal nachdem Trajektorien in Löchern gespawnt wurden 
   -> Setze die interne Variable wieder auf die Zahl des Textfeldes nachdem der state zurück zu iterate wechselt  X
 - Der Algorithmus scheint Löcher im unteren Teil des Phasespaces nicht zu finden, nimmt er immer die n ersten Löcher
-  die er findet anstelle von einer zufälligen Auswahl aus allen gefundenen Löchern?
+  die er findet anstelle von einer zufälligen Auswahl aus allen gefundenen Löchern? HABE ALGO GEÄNDERT. FINDET JETZT GRÖßTES SQUARE
 - Gespawnte Trajektorien müssen noch Control boxen gespawnt bekommen
   -> führt aktuell zu Problemen weil die Trajektorien nicht mehr gelöscht werden können
 - Wenn die grid size gesetzt wird, wird der regular space zurückgesetzt, der phasespace bleibt bestehen, eigentlich 
-  soll alles so bleiben wie es ist, oder?
+  soll alles so bleiben wie es ist, oder? IST GEFIXED
 - Bei magnetic inverse billiards scheint es so als würden einige phasespace Kooridnaten mahrfach von neu gespawnten 
   Trajektorien besucht werden, dh entweder der Algorithmus findet Löcher wo keine Löcher mehr sind oder die 
   Trajektorien beinhalten zufällig die selben Punkte im phasespace, dann sollten sie danach aber auch die selben
-  Trajektorien sein, das sollte nochmal überprüft werden
+  Trajektorien sein, das sollte nochmal überprüft werden FIXED. PROBLEM WAR; DASS INITALER WERT VON TRAJECOTRY NICHT IM GRID WAR
+- Fill PS does not add trajectories for UI!! wenn dann alles gelöscht werden soll, stürzt Programm ab. 
+	WARUM WIRD DAS NICHT IN DER FUNKTION "add_trajectory" automatisch gemacht???
+- bräuchte noch eine möglichkeit maximale Anzahl an Iterationen zu setzen!!! (DAS SOLLTE BEI #iterations to draw sein)
+	NUTZE "set_max_iter"
 
 Zeige Koordinaten der aktuellen Mausposition für regular space, phasespace und flowmap an, vermutlich in der oberen
 rechten Ecke der jeweiligen Felder 
