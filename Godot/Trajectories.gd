@@ -19,6 +19,8 @@ var polygon_vertex
 var maxnum_edit
 var grid_size
 var traj_num_spawn
+var maxit_edit
+var rs_coords
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -56,7 +58,7 @@ enum STATES {
 	FILL_PS		# state to automatically fill phasespace
 }
 var current_state = STATES.ITERATE
-var fill_ps_trajectories_to_spawn: int = 0
+var fill_ps_trajectories_to_spawn: int = 1
 
 # index of trajectory that is to be edited
 var trajectory_to_edit: int
@@ -81,6 +83,8 @@ func _ready():
 	maxnum_edit = get_tree().get_nodes_in_group("MaxNumberIterationsDrawn")[0]
 	grid_size = get_tree().get_nodes_in_group("GridSize")[0]
 	traj_num_spawn = get_tree().get_nodes_in_group("TrajNumToSpawn")[0]
+	maxit_edit = get_tree().get_nodes_in_group("MaxNumIterations")[0]
+	rs_coords = get_tree().get_nodes_in_group("RegularSpaceCoordinates")[0]
 	
 	# set radius and batch size
 	batch = 1  # number of iterations made on one "iterate" click
@@ -109,7 +113,6 @@ func _ready():
 	# trajectories.add_trajectory(invert_y(Vector2(1, 0)), invert_y(Vector2(0, -1)), Color.green)
 	# phase_space.add_trajectory(Vector2(0.5, 0.5), Color.green)
 	trajectory_to_edit = 0 
-	_new_trajectory_added(Color(0,1,0))
 	trajectories.set_billard_type(0) ########## for inverse magnetic
 	
 	
@@ -152,6 +155,10 @@ func _process(_delta):
 			add_trajectory_ps(next_start, next_color)
 			iterate_batch()
 			fill_ps_trajectories_to_spawn -= 1
+	
+	# Shows coordinates of current mouse position in the upper right corner of the regular space field
+	var mouse_pos = get_local_mouse_position()
+	rs_coords.text = String(invert_y(mouse_pos))
 
 
 func _draw():
@@ -296,11 +303,64 @@ func _on_RegularNGonButton_pressed():
 func add_trajectory(start: Vector2, dir: Vector2, color: Color):
 	trajectories.add_trajectory(invert_y(start), invert_y(dir), color)
 	phase_space.add_preliminary_trajectory(color)
+	_new_trajectory_added(color)
 
 # this function is only used, if the starting coordinates are already known! 
 func add_trajectory_ps(pos: Vector2, color: Color):
 	trajectories.add_trajectory_phasespace(pos, color)
 	phase_space.add_trajectory(pos, color)
+	_new_trajectory_added(color)
+	write_StartPosAndDir(pos)
+
+
+# spawns and connects single trajectory control 
+func _new_trajectory_added(colour):
+	print("adding ui for trajectory")
+	var count = traj_control.get_child_count()
+	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
+	var newTrajControl = scene.instance()
+	
+	
+	traj_control.add_child(newTrajControl)
+	traj_control.move_child(newTrajControl, count - 1)
+	
+	var colourPicker = newTrajControl.get_child(1).get_child(2)
+	colourPicker.set_pick_color(colour)
+	
+	# connect the change start position button
+	var newStartPos = newTrajControl.get_child(0).get_child(0)
+	var id = newTrajControl.get_instance_id()
+	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id]) 
+	
+	# connect color picker button
+	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
+	
+	# connect the delete trajectory button
+	var deleteTraj = newTrajControl.get_child(0).get_child(1)
+	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
+
+
+# write start position and direction into text edit fields for trajectories spawned vie phasespace 
+# coordinates
+# trajectories spawned via mouse input in regular space have there text set before set_inital_values
+# is called and therefore have to handled somwhere else, see write_StartPos and write_EndPos
+func write_StartPosAndDir(pscoords: Vector2):
+	print("writing into ui")
+	var rs = PSToR2(pscoords)
+	var startpos = rs[0]
+	var startdir = rs[1]
+	
+	var count = traj_control.get_child_count()
+	# only gets called after a new trajectory was added so always access the last trajectory
+	var traj = traj_control.get_child(count - 2) 
+	
+	var start = traj.get_child(1).get_child(0)
+	start.text = String(startpos)
+	
+	var direction = traj.get_child(1).get_child(1)
+	direction.text = String(startdir)
+	
+
 
 func iterate_batch():
 	var phase_space_points = trajectories.iterate_batch(batch)
@@ -318,14 +378,16 @@ func set_initial_values(index: int, start: Vector2, dir: Vector2):
 	phase_space.set_initial_values(index, pscoord)
 
 
-
 ####################### USER INPUT #################################################################
 # used to know if mouse is inside the clickable area or not
 func _set_inside():
 	mouse_inside = true
+	rs_coords.show()
+
 
 func _set_outside():
 	mouse_inside = false
+	rs_coords.hide()
 
 
 func _input(event):
@@ -387,6 +449,12 @@ func _on_EditMaxDrawnIterations_text_changed():
 			trajectories.set_max_count(i, maxnum)
 
 
+func _on_EditMaxIterations_text_changed():
+	if maxit_edit.text.is_valid_integer():
+		var maxiter = int(maxit_edit.text)
+		trajectories.set_max_iter()
+
+
 # user wants to make new polygon
 func _on_ButtonPolygon_pressed():
 	current_state = STATES.SET_POLYGON
@@ -418,20 +486,26 @@ func _on_NewStartPos_pressed(id):
 		trajectory_instr.text = "Click to choose a new start position"
 
 
+# writes start position into text edit field if the start position is changed in the regular space
+# via mouse input
+# was not added to add_trajectory so that the start position can be shown before the start direction
+# is chosen
 func write_StartPos():
 	var traj = traj_control.get_child(trajectory_to_edit + 4)
 	var start = traj.get_child(1).get_child(0)
 	var string = String(invert_y(newpos))
 	start.text = string
-	_hide_scroll_bar(start)
 
 
+# writes start direction into text edit field if the start direction is changed in the regular space
+# via mouse input
+# was not added to add_trajectory so that the start position can be shown before the start direction
+# is chosen
 func write_StartDir(dir):
 	var traj = traj_control.get_child(trajectory_to_edit + 4)
 	var direction = traj.get_child(1).get_child(1)
 	var string = String(invert_y(dir))
 	direction.text = string	
-	_hide_scroll_bar(direction)
 
 
 func on_InitialValues_text_changed(index: int, v_pos: Vector2, v_dir: Vector2):
@@ -502,16 +576,19 @@ func _on_EditBatchSize_text_changed():
 		batch = newbatch
 
 
+# starts to look for holes in phasespace by entering the fill phasespace state
 func _on_StartFillPSButton_pressed():
 	current_state = STATES.FILL_PS
 
 
+# sets grid size for looking for holes in phasespace
 func _on_GridSizeEdit_text_changed():
 	if grid_size.text.is_valid_float():
 		var gs = float(grid_size.text)
 		trajectories.set_grid_size(gs)
 
 
+# Sets number of trajectories that are to be spawned into holes in phasespace
 func _on_TrajNumToSpawnEdit_text_changed():
 	if traj_num_spawn.text.is_valid_integer():
 		var tns = int(traj_num_spawn.text)
@@ -519,32 +596,6 @@ func _on_TrajNumToSpawnEdit_text_changed():
 
 
 ####################### ADDING TRAJECTORIES ########################################################
-
-# spawns and connects single trajectory control 
-func _new_trajectory_added(colour):
-	var count = traj_control.get_child_count()
-	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
-	var newTrajControl = scene.instance()
-	
-	
-	traj_control.add_child(newTrajControl)
-	traj_control.move_child(newTrajControl, count - 1)
-	
-	var colourPicker = newTrajControl.get_child(1).get_child(2)
-	colourPicker.set_pick_color(colour)
-	
-	# connect the change start position button
-	var newStartPos = newTrajControl.get_child(0).get_child(0)
-	var id = newTrajControl.get_instance_id()
-	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id]) 
-	
-	# connect color picker button
-	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
-	
-	# connect the delete trajectory button
-	var deleteTraj = newTrajControl.get_child(0).get_child(1)
-	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
-	
 
 
 # adds a new trajectory via the normal control 
@@ -557,9 +608,7 @@ func _on_NewTrajectoriesButton_pressed():
 		
 		add_trajectory(Vector2(2,0), Vector2(1,-1), random_colour)
 		trajectory_to_edit = trajectories.get_trajectory_colors().size() - 1
-		
-		_new_trajectory_added(random_colour)
-	
+
 
 # spawns trajectory in normal and phasespace based on entered phasespace coordinates 
 func _on_SpawnPSTrajOnCoords_pressed():
@@ -574,16 +623,22 @@ func _on_SpawnPSTrajOnCoords_pressed():
 		if c1 > 0 and c1 < 1 and c2 > 0 and c2 < 1:
 			var ps_pos = Vector2(c1, c2)
 			add_trajectory_ps(ps_pos, colour)
-			_new_trajectory_added(colour)
+			# change colour of the colour picker so that the user does not need to change it manually
+			var random_colour = Color(randf(), randf(), randf())
+			single_ps_traj.get_child(0).get_child(1).set_pick_color(random_colour)
+
 
 # spawns trajectory in normal and phasespace according to the click position int phasespace
 func _spawn_ps_traj_on_click(ps_coord, draw):
 	var colour = single_ps_traj.get_child(0).get_child(1).get_pick_color()
 	add_trajectory_ps(ps_coord, colour)
+	# change colour of the colour picker so that the user does not need to change it manually
+	var random_colour = Color(randf(), randf(), randf())
+	single_ps_traj.get_child(0).get_child(1).set_pick_color(random_colour)
+	
 	if !draw:
 		trajectories.set_max_count(traj_control.get_child_count() - 5, 0)
-	_new_trajectory_added(colour)
-	
+
 
 # spawns a batch of trajectories in a rectangle between two clicks in phasespace
 func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int, draw: bool):
@@ -628,8 +683,7 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int, draw: bool):
 		if !draw:
 			pass
 			# trajectories.set_max_count(-1, 0)
-		_new_trajectory_added(colours[i])
-	
+
 
 # used when spawning trajectory batches from phasespace
 # uses height, width and minimal coordinates to calculate the positions of the trajectories
@@ -659,12 +713,12 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 	
 	return [positions, colors]
 
+
 # spawns trajectory on click in flowmap at the corresponding phasespace coordinates
 func _spawn_fm_traj_on_click(ps_coord):
 	# var coord = PSToR2(ps_coord)
 	var colour = Color(randf(), randf(), randf())
 	add_trajectory_ps(ps_coord, colour)
-	_new_trajectory_added(colour)
 
 
 ####################### SHOW TRAJECTORIES ##########################################################
@@ -691,7 +745,7 @@ func _show_fm_traj_on_click(ps_coord):
 		# removes the indication of start position and direction of the normal trajectories that 
 		# have not been iterated yet
 		trajectory_to_show.update()
-		
+
 
 func _show_backwards_fm_traj_on_click(ps_coord):
 	if polygon_closed:
@@ -740,7 +794,7 @@ func _on_ResetAllTrajectories_pressed():
 	phase_space.reset_all_trajectories()
 
 
-# changes colour of a trajectory, ########change only affects normal space, not phasespace (at the moment) 
+# changes colour of a trajectory
 func _on_color_changed(id):
 	var node = instance_from_id(id)  
 	trajectory_to_edit = node.get_index() - 4
@@ -803,7 +857,6 @@ func PSToR2(psc: Vector2) -> Array:
 	
 	if !is_inside:
 		currentDirection = normside.rotated(-PI * psc[1])
-		
 	
 	return [currentPosition, currentDirection]
 	
@@ -813,29 +866,6 @@ func is_in_iterate_state() -> bool:
 		return true
 	else:
 		return false
-
-
-func _hide_scroll_bar(node):
-	# TODO: remove this, it does not work 
-	#print("hello")
-	#var h_bar = node.get_h_scroll_bar()
-	#h_bar.visible = false
-	
-	# BUG:
-	# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	# the internet says that both these things should work
-	# and looking at the children there is both a HScrollBar and a VScrollBar
-	# but the if-statments don't detect them
-	# I don't get why
-	for child in node.get_children():
-		#print(child)
-		#print(child.get_class())
-		if child.get_class() == "VScrollBar":
-			"found one"
-			child.visible = false
-		elif child is HScrollBar:
-			"found the other one"
-			child.visible = false
 
 
 func _on_BilliardTypeControl_toggled(button_pressed):

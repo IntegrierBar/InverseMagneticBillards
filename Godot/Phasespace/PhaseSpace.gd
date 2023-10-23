@@ -10,6 +10,7 @@ var sizey = 400#rect_size.y
 var traj_script 
 var instr_label
 var num_traj_in_batch
+var ps_coords
 
 var mouse_inside = false
 var drawInNormalSpace = true
@@ -38,17 +39,28 @@ func _ready():
 	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
 	instr_label = get_tree().get_nodes_in_group("TrajBatchInstr")[0]
 	num_traj_in_batch = get_tree().get_nodes_in_group("NumberTrajInBatch")[0]
-	
-	#connect("mouse_entered", self, "_set_inside")
-	#connect("mouse_exited", self, "_set_outside")
+	ps_coords = get_tree().get_nodes_in_group("PhasespaceCoordinates")[0]
+
 
 func _set_inside():
 	mouse_inside = true
+	ps_coords.show()
 	
 func _set_outside():
 	mouse_inside = false
+	ps_coords.hide()
 
-	
+
+func _process(delta):
+	if mouse_inside:
+		var ps_coord = local_to_ps()
+		var valid_coord = ps_coord[0] >= 0 and ps_coord[0] <=1 and ps_coord[1] >= 0 and ps_coord[1] <= 1
+		if valid_coord:
+			ps_coords.text = String(ps_coord)
+		else:
+			ps_coords.text = ""
+
+
 func _input(event):
 	if mouse_inside:
 		if event is InputEventMouseButton:

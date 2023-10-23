@@ -14,6 +14,7 @@ var fmstate = STATES.SHOW
 var forwards = true
 
 var traj_script 
+var fm_coords
 
 var billiard_type: int = 0   	# 0 = inverse magnetic, 1 = symplectic 
 var showFTLE: bool = false   	# tracks if FTLE or flowmap are shown 
@@ -72,16 +73,19 @@ func _ready():
 	sizey = texture.get_height()
 	sizex = texture.get_width()
 	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
+	fm_coords = get_tree().get_nodes_in_group("FlowmapCoordinates")[0]
 
 
 # checks if mouse is inside or outside flowmap
 func _set_inside():
 	# print("inside")
 	mouse_inside = true
+	fm_coords.show()
 
 
 func _set_outside():
 	mouse_inside = false
+	fm_coords.hide()
 
 	
 func _input(event):
@@ -116,15 +120,23 @@ func mouse_input():
 # currently only used for showing (but not adding) trajectories from the flowmap
 # shown trajectory is updated as long as the left mouse button is held
 func _process(_delta):
-	if hold_mouse:
-		# check whether local coords are between 0 and 1
-		var pos = local_to_ps()
-		var valid_coord = pos[0] >= 0 and pos[0] <=1 and pos[1] >= 0 and pos[1] <= 1
-		if valid_coord:
+	var pos = local_to_ps()
+	
+	# check whether local coords are between 0 and 1
+	# var pos = local_to_ps()
+	var valid_coord = pos[0] >= 0 and pos[0] <=1 and pos[1] >= 0 and pos[1] <= 1
+
+	if valid_coord:
+		fm_coords.text = String(pos)
+		
+		if hold_mouse:
 			if forwards: 
 				traj_script._show_fm_traj_on_click(pos)
 			else:
 				traj_script._show_backwards_fm_traj_on_click(pos)
+	
+	else: # if the coordiantes are not valid, set label to empty
+		fm_coords.text = ""
 
 
 func _on_ShowSpawnButton_toggled(button_pressed):

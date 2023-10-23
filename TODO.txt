@@ -2,6 +2,20 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
+Backwards Symplectic Flowmap muss noch implementiert werden, auch für den FTLE, aktuell wird die magnetic inverse
+flowmap/FTLE angezeigt
+
+Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?
+
+Color picker für phasespace Trajektorie verändert sich jetzt automatisch zu einer zufälligen neuen Farbe nachdem eine 
+Trajektorie gespawnt wurde, soll man das ein und ausschalten können?
+
+Sollen beim spawnen von Trajektorien in Löchern im phasespace wirklich alle Trajektorien iteriert werden? Ich weiß 
+nicht was an dieser Stelle sinnvoll ist ...
+
+Textfelder für Startposition und Startrichtung ausfüllen für Trajektorien die im Phasespace gespawnt wurden und für
+den Fall dass das Polygon verändert wird
+
 Beim Iterieren muss geprüft werden ob eine Ecke getroffen wird, falls ja sollte nicht weiter iteriert werden, 
 insbesondere wichtig für symplektisches Billard (SOLLTEN WIR NOCHMAL NACHFRAGEN?)
 
@@ -9,7 +23,8 @@ Button um maxCount zu setzen
 Bis jetzt: Ein Knopf für alle Trajektorien
 Probleme:
 - Nur der max count von bereits existierenden Trajektorien wird verändert, neu hinzugefügte Trajektorien behalten
-  den urspünglich vordefinierten max count von 100 (WOLLEN RI DAS ES GLOBAL IST? DANN KANN ICH NOCH NE FUNKTION EINGABEUN; DASS ES GLOBAL IST)
+  den urspünglich vordefinierten max count von 100 (WOLLEN WIR DASS ES GLOBAL IST? DANN KANN ICH NOCH NE FUNKTION 
+  EINGABEUN; DASS ES GLOBAL IST) wär schon gut wenn es global wäre
 - Ist die Anzahl der gemachten Iterationen größer als der max count und der max count wird anschließend hochgesetzt,
   kommt es zu Unstetigkeiten in den gemalten Iterationen
   Genauere Erklärung: der nächste Halbkreis wird richtig gefunden und gemalt, und der alte Halbkreis wird mit dem 
@@ -19,41 +34,16 @@ Probleme:
 there is some something wrong with adding points to phasespace. it gets called even if there is nothing? 
 HAB ICH DAS GESCHIREBEN? WENN JA; DANN HAT SICH DAS GEKLÄRT
 
-UI elemente für fill phasespcae. Benötigt: 
-	- Zahlenfeld für gridSize (angebunden an set_grid_size() von C++ code)
-	- Zahlenfeld für wie viele Trajectorien gespawnt werden sollen (fill_ps_trajecotries_to_spawn)
-	- start button der System in Zustand FILL_PS setzt
-Probleme/noch zu tun:
-- es scheint als würden sich die Farben der gespawnten Trajektorien wiederholen (oder es werden nicht so viele 
-  Trajektorien gespawnt wie angefordert werden), er tendiert dazu grün zu wählen (was ungünstig ist weil das der
-  default der ersten normalen Trajektorie ist) IST HALBWEGS GEFIXED. ZEIGE DIR WAS GETAN
-- Wurde einem die angeforderte Anzahl Trajektorien gespawnt muss die Anzahl neu gesetzt werden bevor man neue 
-  Trajektorien spawnen kann weil die interne Zahl 0 ist, jedes mal nachdem Trajektorien in Löchern gespawnt wurden 
-  -> Setze die interne Variable wieder auf die Zahl des Textfeldes nachdem der state zurück zu iterate wechselt  X
-- Der Algorithmus scheint Löcher im unteren Teil des Phasespaces nicht zu finden, nimmt er immer die n ersten Löcher
-  die er findet anstelle von einer zufälligen Auswahl aus allen gefundenen Löchern? HABE ALGO GEÄNDERT. FINDET JETZT GRÖßTES SQUARE
-- Gespawnte Trajektorien müssen noch Control boxen gespawnt bekommen
-  -> führt aktuell zu Problemen weil die Trajektorien nicht mehr gelöscht werden können
-- Wenn die grid size gesetzt wird, wird der regular space zurückgesetzt, der phasespace bleibt bestehen, eigentlich 
-  soll alles so bleiben wie es ist, oder? IST GEFIXED
-- Bei magnetic inverse billiards scheint es so als würden einige phasespace Kooridnaten mahrfach von neu gespawnten 
-  Trajektorien besucht werden, dh entweder der Algorithmus findet Löcher wo keine Löcher mehr sind oder die 
-  Trajektorien beinhalten zufällig die selben Punkte im phasespace, dann sollten sie danach aber auch die selben
-  Trajektorien sein, das sollte nochmal überprüft werden FIXED. PROBLEM WAR; DASS INITALER WERT VON TRAJECOTRY NICHT IM GRID WAR
-- Fill PS does not add trajectories for UI!! wenn dann alles gelöscht werden soll, stürzt Programm ab. 
-	WARUM WIRD DAS NICHT IN DER FUNKTION "add_trajectory" automatisch gemacht???
-- bräuchte noch eine möglichkeit maximale Anzahl an Iterationen zu setzen!!! (DAS SOLLTE BEI #iterations to draw sein)
-	NUTZE "set_max_iter"
-
 Zeige Koordinaten der aktuellen Mausposition für regular space, phasespace und flowmap an, vermutlich in der oberen
-rechten Ecke der jeweiligen Felder 
-
-Beschriftungen für regular space, phasespace und flowmap hinzufügen, auch Achsenbeschriftungen
+rechten Ecke der jeweiligen Felder -> funktioniert  X
+Dazu zu klären:
+- Wie genau soll die Position angezeigt werden? Braucht es wirklich 6 Nachkommastellen oder sollen wir weniger 
+  angeben?
+- Sollen im Phasespace und in der Flowmap Koordinaten auch angegeben werden wenn sie außerhalb des zulässigen 
+  Bereichs sind? Eher nicht, oder? -> Ist jetzt mit nein implementiert  
+- Soll es einen Button geben mit dem man das Anzeigen der Koordinaten deaktivieren kann?
 
 Vertizes über Textfelder eingeben passt nicht mit der y-Achse X
-
-Backwards Symplectic Flowmap sollte das selbe Ergebnis liefern wie forwards, gerade wird der magnetic inverse flowmap
-angezeigt
 
 Felder zum verschieben der Polygon Vertexe und zur Positionierung der Startposition müssen variable an den Zoom
 angepasst werden 
@@ -101,6 +91,36 @@ die Instruction labels entfernt werden, denke ich
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+Beschriftungen für regular space, phasespace und flowmap hinzufügen  X
+
+UI elemente für fill phasespcae. Benötigt: 
+	- Zahlenfeld für gridSize (angebunden an set_grid_size() von C++ code)
+	- Zahlenfeld für wie viele Trajectorien gespawnt werden sollen (fill_ps_trajecotries_to_spawn)
+	- start button der System in Zustand FILL_PS setzt
+Probleme/noch zu tun:
+- es scheint als würden sich die Farben der gespawnten Trajektorien wiederholen (oder es werden nicht so viele 
+  Trajektorien gespawnt wie angefordert werden), er tendiert dazu grün zu wählen (was ungünstig ist weil das der
+  default der ersten normalen Trajektorie ist) IST HALBWEGS GEFIXED. ZEIGE DIR WAS GETAN  X
+- Wurde einem die angeforderte Anzahl Trajektorien gespawnt muss die Anzahl neu gesetzt werden bevor man neue 
+  Trajektorien spawnen kann weil die interne Zahl 0 ist, jedes mal nachdem Trajektorien in Löchern gespawnt wurden 
+  -> Setze die interne Variable wieder auf die Zahl des Textfeldes nachdem der state zurück zu iterate wechselt  X
+- Der Algorithmus scheint Löcher im unteren Teil des Phasespaces nicht zu finden, nimmt er immer die n ersten Löcher
+  die er findet anstelle von einer zufälligen Auswahl aus allen gefundenen Löchern? HABE ALGO GEÄNDERT. FINDET JETZT 
+  GRÖßTES SQUARE  X
+- Gespawnte Trajektorien müssen noch Control boxen gespawnt bekommen
+  -> führt aktuell zu Problemen weil die Trajektorien nicht mehr gelöscht werden können  X
+- Wenn die grid size gesetzt wird, wird der regular space zurückgesetzt, der phasespace bleibt bestehen, eigentlich 
+  soll alles so bleiben wie es ist, oder? IST GEFIXED  X
+- Bei magnetic inverse billiards scheint es so als würden einige phasespace Kooridnaten mahrfach von neu gespawnten 
+  Trajektorien besucht werden, dh entweder der Algorithmus findet Löcher wo keine Löcher mehr sind oder die 
+  Trajektorien beinhalten zufällig die selben Punkte im phasespace, dann sollten sie danach aber auch die selben
+  Trajektorien sein, das sollte nochmal überprüft werden FIXED. PROBLEM WAR; DASS INITALER WERT VON TRAJECOTRY NICHT 
+  IM GRID WAR  X
+- Fill PS does not add trajectories for UI!! wenn dann alles gelöscht werden soll, stürzt Programm ab. 
+	WARUM WIRD DAS NICHT IN DER FUNKTION "add_trajectory" automatisch gemacht???  X
+- bräuchte noch eine möglichkeit maximale Anzahl an Iterationen zu setzen!!! (DAS SOLLTE BEI #iterations to draw sein)
+	NUTZE "set_max_iter"  -> ist eingefügt, scheint auch zu funktionieren  X
 
 Zusätzlicher State der sich mit einem Timer zurücksetzt für das Zeichnen der Indikationslinien wenn man Startrichtung 
 und Position über die Textfelder setzt X -> wurde ohne timer gelöst aber tut was es soll
