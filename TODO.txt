@@ -7,12 +7,6 @@ flowmap/FTLE angezeigt
 
 Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?
 
-Color picker für phasespace Trajektorie verändert sich jetzt automatisch zu einer zufälligen neuen Farbe nachdem eine 
-Trajektorie gespawnt wurde, soll man das ein und ausschalten können?
-
-Sollen beim spawnen von Trajektorien in Löchern im phasespace wirklich alle Trajektorien iteriert werden? Ich weiß 
-nicht was an dieser Stelle sinnvoll ist ...
-
 Textfelder für Startposition und Startrichtung ausfüllen für Trajektorien die im Phasespace gespawnt wurden und für
 den Fall dass das Polygon verändert wird
 
@@ -24,26 +18,22 @@ Bis jetzt: Ein Knopf für alle Trajektorien
 Probleme:
 - Nur der max count von bereits existierenden Trajektorien wird verändert, neu hinzugefügte Trajektorien behalten
   den urspünglich vordefinierten max count von 100 (WOLLEN WIR DASS ES GLOBAL IST? DANN KANN ICH NOCH NE FUNKTION 
-  EINGABEUN; DASS ES GLOBAL IST) wär schon gut wenn es global wäre
+  EINGABEUN; DASS ES GLOBAL IST) wär schon gut wenn es global wäre 	TODO IN C++
 - Ist die Anzahl der gemachten Iterationen größer als der max count und der max count wird anschließend hochgesetzt,
   kommt es zu Unstetigkeiten in den gemalten Iterationen
   Genauere Erklärung: der nächste Halbkreis wird richtig gefunden und gemalt, und der alte Halbkreis wird mit dem 
-  neuen durch eine gerade Linie verbunden, ungeachtet dessen, dass dazwischen Iterationen fehlen
+  neuen durch eine gerade Linie verbunden, ungeachtet dessen, dass dazwischen Iterationen fehlen X IGNORE
 	( KANN GEFIXED WERDEN, INDEM SETZEN VON MAX COUNT ALLE TRAJECOTRIEN ZURÜCKSETZT, WIRD DANN IN C++ gemacht)
-
-there is some something wrong with adding points to phasespace. it gets called even if there is nothing? 
-HAB ICH DAS GESCHIREBEN? WENN JA; DANN HAT SICH DAS GEKLÄRT
 
 Zeige Koordinaten der aktuellen Mausposition für regular space, phasespace und flowmap an, vermutlich in der oberen
 rechten Ecke der jeweiligen Felder -> funktioniert  X
 Dazu zu klären:
 - Wie genau soll die Position angezeigt werden? Braucht es wirklich 6 Nachkommastellen oder sollen wir weniger 
-  angeben?
+  angeben?	NUTZE 3 NAchkommastellen
 - Sollen im Phasespace und in der Flowmap Koordinaten auch angegeben werden wenn sie außerhalb des zulässigen 
-  Bereichs sind? Eher nicht, oder? -> Ist jetzt mit nein implementiert  
-- Soll es einen Button geben mit dem man das Anzeigen der Koordinaten deaktivieren kann?
+  Bereichs sind? Eher nicht, oder? -> Ist jetzt mit nein implementiert  X
+- Soll es einen Button geben mit dem man das Anzeigen der Koordinaten deaktivieren kann? NEIN X
 
-Vertizes über Textfelder eingeben passt nicht mit der y-Achse X
 
 Felder zum verschieben der Polygon Vertexe und zur Positionierung der Startposition müssen variable an den Zoom
 angepasst werden 
@@ -66,23 +56,23 @@ DISABLED X
 Anleitung schreiben
 
 (FlowMap und Phasespace kamera bekommen limits für rechts und links bewegung, damit man nicht mehr sieht als die 
-Bilder)
+Bilder) NEIN X
 
 Koordinaten von Startposition/richtung und polygon muss über textfeld eingebbar sein:
 - Start und Richtung von Trajektorien die über den Phasespace gespawnt werden werden nicht in die Textfelder
-  geschrieben
-- Soll Reihenfolge veränderbar sein? (eher nicht erstmal) NEIN
-- Sollen zusätzliche Vertices hinzufügbar sein? NEIN
+  geschrieben X
+- Soll Reihenfolge veränderbar sein? (eher nicht erstmal) NEIN X
+- Sollen zusätzliche Vertices hinzufügbar sein? NEIN X
 - Gezeichnete initial Linie bleibt bestehen wenn Trajektorien aus der Flowmap nur geshowed werden. Das sollte nicht
-  so sein, aber wie lässt es sich fixen? passiert auch wenn vertices verschoben werden 
-- Soll die geschriebene Startposition sich ebenfalls ändern wenn sich die Koordinaten der Polygons Vertices verändern?
+  so sein, aber wie lässt es sich fixen? passiert auch wenn vertices verschoben werden X
+- Soll die geschriebene Startposition sich ebenfalls ändern wenn sich die Koordinaten der Polygons Vertices verändern? JA S.O.
 
 Koordinatensystem in den Hintergrund des normal Spaces legen, ein- und ausschaltbar
 
 Button in Flowmap control der aktuell angezeigt trajectorie als normale Trajektorie spawnt
 
 Sollen wir uns optisch noch mehr Mühe machen? Oder lassen wir es so? Soll ich die Font wieder entfernen oder 
-überall hinzufügen? 
+überall hinzufügen?  NE, passt so
 
 Füge nützliche tooltips zu buttons und textfeldern hinzu um die Bedienung zu erleichtern, damit könnten dann auch
 die Instruction labels entfernt werden, denke ich
@@ -91,6 +81,14 @@ die Instruction labels entfernt werden, denke ich
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+Vertizes über Textfelder eingeben passt nicht mit der y-Achse X
+
+Sollen beim spawnen von Trajektorien in Löchern im phasespace wirklich alle Trajektorien iteriert werden? Ich weiß 
+nicht was an dieser Stelle sinnvoll ist ... DAFÜR IST SET_MAX_ITER DA
+
+Color picker für phasespace Trajektorie verändert sich jetzt automatisch zu einer zufälligen neuen Farbe nachdem eine 
+Trajektorie gespawnt wurde, soll man das ein und ausschalten können? NEIN, IST FIX AN
 
 Beschriftungen für regular space, phasespace und flowmap hinzufügen  X
 
