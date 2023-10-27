@@ -90,7 +90,8 @@ namespace godot {
         void reset_trajectories();                                              // reset all trajectories and inverse trajectories and symplectic trajectories
         void set_initial_values(int index, Vector2 start, Vector2 dir);         // set the initial values of trajectory with index "index"
         void set_color(int index, Color c);                                     // set color of trajectory 'index'
-        void set_max_count(int index, int newMaxCount);                         // set maxCount of trajectory 'index'
+        void set_max_count_index(int index, int newMaxCount);                   // set maxCount of trajectory 'index' (currently not used)
+        void set_max_count(int newMaxCount);                                    // set maxCount for all trajectories, including new ones
         void set_max_iter(int newMaxIter);
 
         PoolColorArray get_trajectory_colors();                                 // returns Godot array of all colors of the trajectories

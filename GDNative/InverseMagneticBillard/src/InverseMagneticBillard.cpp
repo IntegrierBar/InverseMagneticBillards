@@ -37,6 +37,7 @@ namespace godot {
         register_method((char*)"get_trajectories", &InverseMagneticBillard::get_trajectories);
         register_method((char*)"set_color", &InverseMagneticBillard::set_color);
         register_method((char*)"set_max_count", &InverseMagneticBillard::set_max_count);
+        register_method((char*)"set_max_count_index", &InverseMagneticBillard::set_max_count_index);
         register_method((char*)"set_max_iter", &InverseMagneticBillard::set_max_iter);
         register_method((char*)"reset_trajectories", &InverseMagneticBillard::reset_trajectories);
         register_method((char*)"iterate_batch", &InverseMagneticBillard::iterate_batch); 
@@ -474,7 +475,7 @@ namespace godot {
         update();
     }
 
-    void InverseMagneticBillard::set_max_count(int index, int newMaxCount)
+    void InverseMagneticBillard::set_max_count_index(int index, int newMaxCount)
     {
 
         if (index >= trajectories.size() || index < 0) {
@@ -482,6 +483,15 @@ namespace godot {
             return;
         }
         trajectories[index].maxCount = newMaxCount;
+    }
+
+    void InverseMagneticBillard::set_max_count(int newMaxCount)
+    {
+        maxCount = newMaxCount;
+        for (auto& t : trajectories)
+        {
+            t.maxCount = newMaxCount;
+        }
     }
 
     void InverseMagneticBillard::set_max_iter(int newMaxIter)
