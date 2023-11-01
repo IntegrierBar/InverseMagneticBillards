@@ -1,6 +1,8 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
+Überlegen die Trennung von FTLE und normalem FlowMap shader zu beenden
+
 Trajectory drawn in nromal space funktioniert nicht. Der index ist falsch ICH HAB DAS JETZT MAL AUF -6 GEÄNDERT; DAMIT GEHT ES; ABER ICH WEIß NICHT WARUM??
 
 Pixelgröße in phasespace setzbar
