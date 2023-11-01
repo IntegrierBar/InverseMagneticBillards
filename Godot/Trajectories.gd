@@ -636,7 +636,7 @@ func _spawn_ps_traj_on_click(ps_coord, draw):
 	single_ps_traj.get_child(0).get_child(1).set_pick_color(random_colour)
 	
 	if !draw:
-		trajectories.set_max_count_index(traj_control.get_child_count() - 6, 0)
+		trajectories.set_max_count_index(traj_control.get_child_count() - 6, -1)
 
 
 # spawns a batch of trajectories in a rectangle between two clicks in phasespace

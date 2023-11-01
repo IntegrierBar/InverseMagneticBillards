@@ -186,68 +186,68 @@ vec3 intersect_polygon_circle(vec2 start, vec2 dir, vec2 center, float direction
     return vec3(intersectionPoint, float(index));
 }
 
-// returns phasespace corrds
-vec2 iterateBackwards(vec2 currentPosition, vec2 currentDirection) {
-	// the cirlce outide the polygon
-	vec2 center = currentPosition + radius * vec2(-currentDirection.y, currentDirection.x); // center of the circle 
-	vec3 next = intersect_polygon_circle(currentPosition, currentDirection, center, -1.);
-	vec2 nextIterate = next.xy;
-	int currentIndexOnPolygon = int(next.z);
-	currentPosition = nextIterate;
-	currentDirection = normalize(vec2((center - nextIterate).y, -(center - nextIterate).x));
-
-
-	// the line inside the polygon
-	vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, -1.);
-	nextIterate = intersection.xy;
-	currentIndexOnPolygon = int(intersection.z);
-	currentPosition = nextIterate;  // direction stays the same
-
-	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
-}
-
-vec2 iterateForwards(vec2 currentPosition, vec2 currentDirection, int currentIndexOnPolygon) {
-	vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, 1.);
-	vec2 nextIterate = intersection.xy;
-	int nextIndex = int(intersection.z);
-	// get new direction by calculating the next iterate by intersecting the polygon with line from old position with direction of the edge of the polygon of the new position
-	vec2 dir = normalize(getPolyVertex(nextIndex + 1) - getPolyVertex(nextIndex));
-	// still have to find out in which direction we need to go
-	// Use intersection test for this
-	vec2 start = currentPosition + eps * currentDirection;
-	int intersections = 0;
-	for (int i = 0; i < n - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
-	{
-	    // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
-	    float denominator = (getPolyVertex(i + 1).x - getPolyVertex(i).x) * dir.y - (getPolyVertex(i + 1).y - getPolyVertex(i).y) * dir.x;
-	    if (abs(denominator) < 1e-8)
-	    {
-	        continue; // no intersection possible, since lines near parallel
-	    }
-	    float t = ((getPolyVertex(i).y - start.y) * dir.x - (getPolyVertex(i).x - start.x) * dir.y) / denominator;
-	    if (0.0 <= t && t < 1.0) // allow t = 0 but not t = 1 to avoid double counting
-	    {
-	        float u = ((getPolyVertex(i).x - start.x) * (getPolyVertex(i).y - getPolyVertex(i + 1).y) - (getPolyVertex(i).y - start.y) * (getPolyVertex(i).x - getPolyVertex(i + 1).x)) / denominator;
-	        if (i != currentIndexOnPolygon && u > 0.0)
-	        {
-	            intersections++;
-	        }
-	    }
-	}
-	// if even amount of intersections, the we went the wrong direction
-	if (intersections % 2 == 0)
-	{
-	    dir = -dir;
-	}
-	
-	vec3 secondIntersection = intersect_polygon_line(currentPosition, dir, currentIndexOnPolygon, 1.);
-
-	currentIndexOnPolygon = nextIndex;
-	currentPosition = nextIterate;
-	currentDirection = normalize(secondIntersection.xy - currentPosition);
-	
-	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
-}
+//// returns phasespace corrds
+//vec2 iterateBackwards(vec2 currentPosition, vec2 currentDirection) {
+//	// the cirlce outide the polygon
+//	vec2 center = currentPosition + radius * vec2(-currentDirection.y, currentDirection.x); // center of the circle 
+//	vec3 next = intersect_polygon_circle(currentPosition, currentDirection, center, -1.);
+//	vec2 nextIterate = next.xy;
+//	int currentIndexOnPolygon = int(next.z);
+//	currentPosition = nextIterate;
+//	currentDirection = normalize(vec2((center - nextIterate).y, -(center - nextIterate).x));
+//
+//
+//	// the line inside the polygon
+//	vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, -1.);
+//	nextIterate = intersection.xy;
+//	currentIndexOnPolygon = int(intersection.z);
+//	currentPosition = nextIterate;  // direction stays the same
+//
+//	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
+//}
+//
+//vec2 iterateForwards(vec2 currentPosition, vec2 currentDirection, int currentIndexOnPolygon) {
+//	vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, 1.);
+//	vec2 nextIterate = intersection.xy;
+//	int nextIndex = int(intersection.z);
+//	// get new direction by calculating the next iterate by intersecting the polygon with line from old position with direction of the edge of the polygon of the new position
+//	vec2 dir = normalize(getPolyVertex(nextIndex + 1) - getPolyVertex(nextIndex));
+//	// still have to find out in which direction we need to go
+//	// Use intersection test for this
+//	vec2 start = currentPosition + eps * currentDirection;
+//	int intersections = 0;
+//	for (int i = 0; i < n - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
+//	{
+//	    // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
+//	    float denominator = (getPolyVertex(i + 1).x - getPolyVertex(i).x) * dir.y - (getPolyVertex(i + 1).y - getPolyVertex(i).y) * dir.x;
+//	    if (abs(denominator) < 1e-8)
+//	    {
+//	        continue; // no intersection possible, since lines near parallel
+//	    }
+//	    float t = ((getPolyVertex(i).y - start.y) * dir.x - (getPolyVertex(i).x - start.x) * dir.y) / denominator;
+//	    if (0.0 <= t && t < 1.0) // allow t = 0 but not t = 1 to avoid double counting
+//	    {
+//	        float u = ((getPolyVertex(i).x - start.x) * (getPolyVertex(i).y - getPolyVertex(i + 1).y) - (getPolyVertex(i).y - start.y) * (getPolyVertex(i).x - getPolyVertex(i + 1).x)) / denominator;
+//	        if (i != currentIndexOnPolygon && u > 0.0)
+//	        {
+//	            intersections++;
+//	        }
+//	    }
+//	}
+//	// if even amount of intersections, the we went the wrong direction
+//	if (intersections % 2 == 0)
+//	{
+//	    dir = -dir;
+//	}
+//
+//	vec3 secondIntersection = intersect_polygon_line(currentPosition, dir, currentIndexOnPolygon, 1.);
+//
+//	currentIndexOnPolygon = nextIndex;
+//	currentPosition = nextIterate;
+//	currentDirection = normalize(secondIntersection.xy - currentPosition);
+//
+//	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
+//}
 
 vec2 iterateForwardsnTimes(vec2 pos) {
 	
@@ -265,7 +265,7 @@ vec2 iterateForwardsnTimes(vec2 pos) {
 		vec2 dir = normalize(getPolyVertex(nextIndex + 1) - getPolyVertex(nextIndex));
 		// still have to find out in which direction we need to go
 		// Use intersection test for this
-		vec2 start = currentPosition + eps * currentDirection;
+		vec2 start = currentPosition + 100.*eps * dir;
 		int intersections = 0;
 		for (int j = 0; j < n - 1; j++) // only loop till -1, since we know that polygon closed means that first == last point
 		{
@@ -301,27 +301,55 @@ vec2 iterateForwardsnTimes(vec2 pos) {
 	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
 }
 
+
 vec2 iterateBackwardsnTimes(vec2 pos) {
 	// the cirlce outide the polygon
 	mat3 coords = phaseSpaceToR2(pos);
 	vec2 currentPosition = coords[0].xy;
 	vec2 currentDirection = coords[1].xy;
-	int currentIndexOnPolygon; 
+	int currentIndexOnPolygon = int(coords[2].x); 
 	
 	for  (int i=0; i < iterations; i++) {
-		vec2 center = currentPosition + radius * vec2(-currentDirection.y, currentDirection.x); // center of the circle 
-		vec3 next = intersect_polygon_circle(currentPosition, currentDirection, center, -1.);
-		vec2 nextIterate = next.xy;
-		currentIndexOnPolygon = int(next.z);
-		currentPosition = nextIterate;
-		currentDirection = normalize(vec2((center - nextIterate).y, -(center - nextIterate).x));
+		// calculate one iteration forward in order to go backwards
+		vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, 1.);
+		vec2 nextIterate = intersection.xy;	// the forwards point
+		int nextIndex = int(intersection.z);
+		// get direction to backwards iterate from the currentIndexOnPolygon edge
+		vec2 dir = normalize(getPolyVertex(currentIndexOnPolygon) - getPolyVertex(currentIndexOnPolygon + 1));
+		// still have to find out in which direction we need to go
+		// Use intersection test for this
+		vec2 start = nextIterate + 100.*eps*dir;
+		int intersections = 0;
+		for (int j = 0; j < n - 1; j++) // only loop till -1, since we know that polygon closed means that first == last point
+		{
+		    // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
+		    float denominator = (getPolyVertex(j + 1).x - getPolyVertex(j).x) * dir.y - (getPolyVertex(j + 1).y - getPolyVertex(j).y) * dir.x;
+		    if (abs(denominator) < 1e-8)
+		    {
+		        continue; // no intersection possible, since lines near parallel
+		    }
+		    float t = ((getPolyVertex(j).y - start.y) * dir.x - (getPolyVertex(j).x - start.x) * dir.y) / denominator;
+		    if (0.0 <= t && t < 1.0) // allow t = 0 but not t = 1 to avoid double counting
+		    {
+		        float u = ((getPolyVertex(j).x - start.x) * (getPolyVertex(j).y - getPolyVertex(j + 1).y) - (getPolyVertex(j).y - start.y) * (getPolyVertex(j).x - getPolyVertex(j + 1).x)) / denominator;
+		        if (j != currentIndexOnPolygon && u > 0.0)
+		        {
+		            intersections++;
+		        }
+		    }
+		}
+		// if even amount of intersections, the we went the wrong direction
+		if (intersections % 2 == 0)
+		{
+		    dir = -dir;
+		}
+		
+		// now calculate the previous iterate
+		vec3 secondIntersection = intersect_polygon_line(nextIterate, dir, nextIndex, 1.);
 
-
-		// the line inside the polygon
-		vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, -1.);
-		nextIterate = intersection.xy;
-		currentIndexOnPolygon = int(intersection.z);
-		currentPosition = nextIterate;  // direction stays the same
+		currentIndexOnPolygon = int(secondIntersection.z);
+		currentDirection = normalize(currentPosition - secondIntersection.xy);
+		currentPosition = secondIntersection.xy;
 	}
 	
 	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);

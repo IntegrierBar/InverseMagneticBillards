@@ -274,7 +274,7 @@ namespace godot {
         vec2_d dir = normalize(polygon[intersection.second + 1] - polygon[intersection.second]);
         // still have to find out in which direction we need to go
         // Use intersection test for this
-        vec2_d start = currentPosition + eps * currentDirection;
+        vec2_d start = currentPosition + 100*eps * dir;     // maybe error here, previous was currentDirection instead of dir, but I think it should be dir here, but it does not make a difference apparently?
         int intersections = 0;
         for (size_t i = 0; i < polygon.size() - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
         {

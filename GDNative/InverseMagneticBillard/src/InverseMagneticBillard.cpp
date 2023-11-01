@@ -490,7 +490,12 @@ namespace godot {
         maxCount = newMaxCount;
         for (auto& t : trajectories)
         {
-            t.maxCount = newMaxCount;
+            // -1 is used to make sure the trajectory never draws
+            if (t.maxCount > -1)
+            {
+                t.maxCount = newMaxCount;
+            }
+            
         }
     }
 

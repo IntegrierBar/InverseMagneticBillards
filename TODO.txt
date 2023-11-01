@@ -3,6 +3,8 @@ TODO:
 --------------------------------------------------------------------------------------------------------------------
 Trajectory drawn in nromal space funktioniert nicht. Der index ist falsch ICH HAB DAS JETZT MAL AUF -6 GEÄNDERT; DAMIT GEHT ES; ABER ICH WEIß NICHT WARUM??
 
+Pixelgröße in phasespace setzbar
+
 Backwards Symplectic Flowmap muss noch implementiert werden, auch für den FTLE, aktuell wird die magnetic inverse
 flowmap/FTLE angezeigt
 
@@ -19,12 +21,12 @@ Bis jetzt: Ein Knopf für alle Trajektorien
 Probleme:
 - Nur der max count von bereits existierenden Trajektorien wird verändert, neu hinzugefügte Trajektorien behalten
   den urspünglich vordefinierten max count von 100 (WOLLEN WIR DASS ES GLOBAL IST? DANN KANN ICH NOCH NE FUNKTION 
-  EINGABEUN; DASS ES GLOBAL IST) wär schon gut wenn es global wäre 	TODO IN C++ SOLLTE NUR GEMACHT WERDEN; WENN BISHER GRÖßER -1
+  EINGABEUN; DASS ES GLOBAL IST) wär schon gut wenn es global wäre 	TODO IN C++ SOLLTE NUR GEMACHT WERDEN; WENN BISHER GRÖßER -1 X
 - Ist die Anzahl der gemachten Iterationen größer als der max count und der max count wird anschließend hochgesetzt,
   kommt es zu Unstetigkeiten in den gemalten Iterationen
   Genauere Erklärung: der nächste Halbkreis wird richtig gefunden und gemalt, und der alte Halbkreis wird mit dem 
   neuen durch eine gerade Linie verbunden, ungeachtet dessen, dass dazwischen Iterationen fehlen X IGNORE
-	( KANN GEFIXED WERDEN, INDEM SETZEN VON MAX COUNT ALLE TRAJECOTRIEN ZURÜCKSETZT, WIRD DANN IN C++ gemacht)
+	( KANN GEFIXED WERDEN, INDEM SETZEN VON MAX COUNT ALLE TRAJECOTRIEN ZURÜCKSETZT, WIRD DANN IN C++ gemacht) X
 
 Zeige Koordinaten der aktuellen Mausposition für regular space, phasespace und flowmap an, vermutlich in der oberen
 rechten Ecke der jeweiligen Felder -> funktioniert  X
