@@ -2,7 +2,7 @@
 
 namespace godot {
 
-    Vector2 InverseTrajectory::iterate()
+    std::optional<Vector2> InverseTrajectory::iterate()
     {
         // First part: polygon circle intersection
         vec2_d center = currentPosition + radius * vec2_d(-currentDirection.y, currentDirection.x); // center of the circle 
@@ -58,7 +58,7 @@ namespace godot {
         trajectory.push_back(nextIterate);
 
         count++;
-        return Vector2(pos, abs(anglePhasespace) / M_PI);
+        return { Vector2(pos, abs(anglePhasespace) / M_PI) };
     }
 
     PoolVector2Array InverseTrajectory::iterate_batch(int batch)
@@ -85,10 +85,142 @@ namespace godot {
         }
 
 
+        if (count >= maxIter)
+        {
+            return coordinatesPhasespace;
+        }
+
+        batch = std::min(batch, maxIter - count);   // make sure we don't iterate to far
+
         coordinatesPhasespace.resize(batch);
         for (size_t i = 0; i < batch; i++)
         {
-            coordinatesPhasespace.set(i, iterate());
+            if (auto point = iterate())
+            {
+                coordinatesPhasespace.set(i, *point);
+            }
+            else
+            {
+                // if we got a nullopt, we stop
+                Godot::print("got nullopt from iteration");
+                break;
+            }
+        }
+        return coordinatesPhasespace;
+    }
+
+    std::optional<Vector2> InverseTrajectory::iterate_symplectic()
+    {
+        // first intersect polygon with new line to get next position.
+        // then using this get the original position
+        auto intersectionOpt = Trajectory::intersect_polygon_line(currentPosition, currentDirection);   // use function from baseclass
+        if (!intersectionOpt)
+        {
+            // if the intersection failed, stop the iteration by setting count to maxIter and return nullopt to tell the calling code
+            count = maxIter;
+            return std::nullopt;
+        }
+        auto& intersection = *intersectionOpt;
+        auto nextIterate = intersection.first;
+        // get previous position by calculating by intersecting the polygon with line from next position with direction of the edge of the polygon of the current position
+        vec2_d dir = normalize(polygon[currentIndexOnPolygon] - polygon[currentIndexOnPolygon + 1]);
+        // still have to find out in which direction we need to go
+        // Use intersection test for this
+        vec2_d start = nextIterate + 100 * eps * dir;
+        int intersections = 0;
+        for (size_t i = 0; i < polygon.size() - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
+        {
+            // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
+            double denominator = (polygon[i + 1].x - polygon[i].x) * dir.y - (polygon[i + 1].y - polygon[i].y) * dir.x;
+            if (abs(denominator) < eps)
+            {
+                continue; // no intersection possible, since lines near parallel
+            }
+            double t = ((polygon[i].y - start.y) * dir.x - (polygon[i].x - start.x) * dir.y) / denominator;
+            if (0 <= t && t < 1) // allow t = 0 but not t = 1 to avoid double counting
+            {
+                double u = ((polygon[i].x - start.x) * (polygon[i].y - polygon[i + 1].y) - (polygon[i].y - start.y) * (polygon[i].x - polygon[i + 1].x)) / denominator;
+                if (i != currentIndexOnPolygon && u > 0)
+                {
+                    intersections++;
+                }
+            }
+        }
+        if (intersections % 2 == 0)
+        {
+            dir = -dir;
+        }
+
+        auto secondIntersectionOpt = Trajectory::intersect_polygon_line(nextIterate, dir);
+        if (!secondIntersectionOpt)
+        {
+            // if the intersection failed, stop the iteration by setting count to maxIter and return nullopt to tell the calling code
+            count = maxIter;
+            return std::nullopt;
+        }
+
+        auto& secondIntersection = *secondIntersectionOpt;
+        currentIndexOnPolygon = secondIntersection.second;
+        currentDirection = normalize(currentPosition - secondIntersection.first);
+        currentPosition = secondIntersection.first;
+
+
+        if (count < maxCount)   //draw in normal space if desired
+        {
+            trajectoryToDraw.push_back(currentPosition.to_draw());
+        }
+
+        // calculate phase space coordinates
+        double anglePhasespace = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
+        double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
+        phaseSpaceTrajectory.push_back(vec2_d(pos, abs(anglePhasespace) / M_PI));
+        count++;
+        return { Vector2(pos, abs(anglePhasespace) / M_PI) };
+    }
+
+    PoolVector2Array InverseTrajectory::iterate_symplectic_batch(int batch)
+    {
+        PoolVector2Array coordinatesPhasespace = PoolVector2Array();
+        // do checks to make sure that everything is valid
+        if (polygon.size() < 3)
+        {
+            Godot::print("polygon not enough vertices");
+            return coordinatesPhasespace;
+        }
+        if (polygon.size() != polygonLength.size())
+        {
+            Godot::print("polygon structures not of same size");
+            Godot::print(Vector2(polygon.size(), polygonLength.size()));
+            return coordinatesPhasespace;
+        }
+        if (length_squared(polygon[0] - polygon.back()) > eps)
+        {
+            Godot::print("polygon not closed");
+            Godot::print(polygon[0].to_godot());
+            Godot::print(polygon.back().to_godot());
+            return coordinatesPhasespace;
+        }
+
+
+        if (count >= maxIter)
+        {
+            return coordinatesPhasespace;
+        }
+
+        batch = std::min(batch, maxIter - count);   // make sure we don't iterate to far
+
+        coordinatesPhasespace.resize(batch);
+        for (size_t i = 0; i < batch; i++)
+        {
+            if (auto point = iterate_symplectic())
+            {
+                coordinatesPhasespace.set(i, *point);
+            }
+            else
+            {
+                // if we got a nullopt, we stop
+                break;
+            }
         }
         return coordinatesPhasespace;
     }
