@@ -16,14 +16,18 @@ We extend "Trajectory" and only change the "iterate" and the intersection functi
 namespace godot {
     struct InverseTrajectory : public Trajectory {
     public:
-        Vector2 iterate();                          // iterates backwards
+        std::optional<Vector2> iterate();                          // iterates backwards with inverse magnetic billard
         PoolVector2Array iterate_batch(int batch);
+
+        std::optional<Vector2> iterate_symplectic();
+        PoolVector2Array iterate_symplectic_batch(int batch);
 
     protected:
         /* Functions used to calculate the iterations of the trajectory */
 
         // intersects the line defined by "start" and "dir" with the polygon. 
         // Returns the closest intersection in NEGATIVE direction together with the index of the edge of the polygon
+        // COULD CONSIDER USING OPTIONAL AS WELL HERE; BUT NOT REALY NECCESSARY AS THIS CLASS IS ONLY USED WHEN HOVERING OVER THE FLOWMAP
         std::pair<vec2_d, int> intersect_polygon_line(vec2_d start, vec2_d dir);
 
         // "center" is the center of the circle, "start" is on the circle and "dir" the tangent at "start"

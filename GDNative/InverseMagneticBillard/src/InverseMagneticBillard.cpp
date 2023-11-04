@@ -35,6 +35,7 @@ namespace godot {
         register_method((char*)"clear_trajectories", &InverseMagneticBillard::clear_trajectories);
         register_method((char*)"get_trajectory_colors", &InverseMagneticBillard::get_trajectory_colors);
         register_method((char*)"get_trajectories", &InverseMagneticBillard::get_trajectories);
+        register_method((char*)"get_trajecotries_phasespace", &InverseMagneticBillard::get_trajecotries_phasespace);
         register_method((char*)"set_color", &InverseMagneticBillard::set_color);
         register_method((char*)"set_max_count", &InverseMagneticBillard::set_max_count);
         register_method((char*)"set_max_count_index", &InverseMagneticBillard::set_max_count_index);
@@ -288,6 +289,16 @@ namespace godot {
         return ts;
     }
 
+    Array InverseMagneticBillard::get_trajecotries_phasespace()
+    {
+        Array ts = Array();
+        for (size_t i = 0; i < trajectories.size(); i++)
+        {
+            ts.push_back(trajectories[i].phaseSpaceTrajectory[0].to_godot());   // maybe need some carefull testing that this does not cause a crash. In theory phaseSpaceTrajectory should always have one element
+        }
+        return ts;
+    }
+
     Array InverseMagneticBillard::iterate_batch(int batch)
     {
         Array phaseSpace;
@@ -332,7 +343,17 @@ namespace godot {
         Array phaseSpace;
         for (auto& t : inverseTrajectories)
         {
-            phaseSpace.push_back(t.iterate_batch(batch));
+            PoolVector2Array phaseSpacePoints;  // points from this trajectory
+            if (billardType == 0)
+            {
+                phaseSpacePoints = t.iterate_batch(batch);
+            }
+            else if (billardType == 1)
+            {
+                phaseSpacePoints = t.iterate_symplectic_batch(batch);
+            }
+            phaseSpace.push_back(phaseSpacePoints);
+            //fill_grid_with_points(phaseSpacePoints, t.trajectoryColor);   // do not need this for inverse
         }
         update();
         return phaseSpace;
