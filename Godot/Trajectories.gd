@@ -30,6 +30,8 @@ var newdir # now also need a variable for the direction to draw
 # inistialise to value it cannot take before first use to check whether it was set
 var last_shown_traj: Vector2 = Vector2(-1,-1) 
 
+var zoom: float = 0.1 # initialse zoom to initial value from Camera2D
+
 # var lines_to_draw # will be handled in gdnative
 
 # for polygon with n vertices has n+1 entries, the first and last one are the same
@@ -88,6 +90,8 @@ func _ready():
 	traj_num_spawn = get_tree().get_nodes_in_group("TrajNumToSpawn")[0]
 	maxit_edit = get_tree().get_nodes_in_group("MaxNumIterations")[0]
 	rs_coords = get_tree().get_nodes_in_group("RegularSpaceCoordinates")[0]
+	
+	$"../Camera2D".connect("zoom_changed", self, "zoom_changed")
 	
 	# set radius and batch size
 	batch = 1  # number of iterations made on one "iterate" click
@@ -166,7 +170,7 @@ func _draw():
 			draw_line(polygon.back(), get_local_mouse_position(), polygon_color)
 		STATES.SET_START:
 			# draw circle on the trajectory closest to current mouse position
-			draw_circle(snap_to_polygon(get_local_mouse_position()), 1.0, trajectories.get_trajectory_colors()[trajectory_to_edit])
+			draw_circle(snap_to_polygon(get_local_mouse_position()), 10.0 * zoom, trajectories.get_trajectory_colors()[trajectory_to_edit])
 		STATES.TEXT_EDIT:
 			# only needed to draw indication line if start position or direction are set via text_edit
 			draw_line(newpos, newdir + newpos, trajectories.get_trajectory_colors()[trajectory_to_edit])
@@ -881,3 +885,6 @@ func _on_BilliardTypeControl_toggled(button_pressed):
 	flow_map.change_billiard_type(button_pressed)
 
 
+# update zoom variable whenever zooming happens in the regular space
+func zoom_changed(z):
+	zoom = z

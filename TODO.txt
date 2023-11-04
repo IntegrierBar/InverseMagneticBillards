@@ -45,10 +45,11 @@ Dazu zu klären:
   Bereichs sind? Eher nicht, oder? -> Ist jetzt mit nein implementiert  X
 - Soll es einen Button geben mit dem man das Anzeigen der Koordinaten deaktivieren kann? NEIN X
 
-Felder zum verschieben der Polygon Vertexe und zur Positionierung der Startposition müssen variable an den Zoom
-angepasst werden 
-
 Bug: (0,0) als Startposition führt zu Problemen
+Ist unabhängig davon, wie (0,0) gesetzt wird
+Zwei Sachen können passieren (scheint an der Startrichtung zu hängen):
+- Fehler werden ausgegeben: "could not intersect polygon with line" und "got nullopt from iteration"
+- Startposition springt an einen anderen Punkt auf dem Polygon
 
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
@@ -77,6 +78,9 @@ die Instruction labels entfernt werden, denke ich
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+Felder zum verschieben der Polygon Vertexe und zur Positionierung der Startposition müssen variable an den Zoom
+angepasst werden  X
 
 Button in Flowmap control der aktuell angezeigt trajectorie als normale Trajektorie spawnt  X
 
