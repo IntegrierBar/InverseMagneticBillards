@@ -26,6 +26,9 @@ var newpos # currently needed to change direction
 			# TODO: have this handled in gdnative 
 var newdir # now also need a variable for the direction to draw 
 
+# phasespace coordinates of the starting position of the last shown trajectory
+# inistialise to value it cannot take before first use to check whether it was set
+var last_shown_traj: Vector2 = Vector2(-1,-1) 
 
 # var lines_to_draw # will be handled in gdnative
 
@@ -110,21 +113,8 @@ func _ready():
 	current_state = STATES.SET_POLYGON 
 	# set add trajetory with some initial position and direction
 	add_trajectory(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
-	# trajectories.add_trajectory(invert_y(Vector2(1, 0)), invert_y(Vector2(0, -1)), Color.green)
-	# phase_space.add_trajectory(Vector2(0.5, 0.5), Color.green)
 	trajectory_to_edit = 0 
 	trajectories.set_billard_type(0) ########## for inverse magnetic
-	
-	
-	# connect buttons of already existing trajectory 
-#	var inst = traj_control.find_node("VBoxContainer")
-#	var newStartPos = inst.get_child(0).get_child(0)
-#	var id = inst.get_instance_id()
-#	newStartPos.connect("pressed", self, "_on_NewStartPos_pressed", [id])
-#	var deleteTraj = inst.get_child(0).get_child(1)
-#	deleteTraj.connect("pressed", self, "_on_delete_trajectory_pressed", [id])
-#	var colourPicker = inst.get_child(1).get_child(2)
-#	colourPicker.connect("popup_closed", self, "_on_color_changed", [id])
 
 
 func _process(_delta):
@@ -158,7 +148,9 @@ func _process(_delta):
 	
 	# Shows coordinates of current mouse position in the upper right corner of the regular space field
 	var mouse_pos = get_local_mouse_position()
-	rs_coords.text = String(invert_y(mouse_pos))
+	var p0 = stepify(mouse_pos[0], 0.001)
+	var p1 = stepify(mouse_pos[1], 0.001)
+	rs_coords.text = String(Vector2(p0, p1))
 
 
 func _draw():
@@ -252,6 +244,8 @@ func change_polygon_vertex(pos: Vector2, n: int):
 	phase_space.reset_all_trajectories()
 	emit_signal("close_polygon", polygon)
 	update()
+	# TODO: update written starting position and direction
+	# does it go here or in the nodes that organise the vertices?
 
 
 # prejects the point onto all sides of the polygon and returns the closest
@@ -720,6 +714,14 @@ func _spawn_fm_traj_on_click(ps_coord):
 	add_trajectory_ps(ps_coord, colour)
 
 
+# spawns trajectory that is currently shown in regular space as trajectory
+func _on_SpawnShowenTrajButton_pressed():
+	if trajectory_to_show.visible:
+		if last_shown_traj != Vector2(-1,-1):
+			var colour = Color(randf(), randf(), randf())
+			add_trajectory_ps(last_shown_traj, colour)
+
+
 ####################### SHOW TRAJECTORIES ##########################################################
 
 
@@ -744,6 +746,8 @@ func _show_fm_traj_on_click(ps_coord):
 		# removes the indication of start position and direction of the normal trajectories that 
 		# have not been iterated yet
 		trajectory_to_show.update()
+		
+		last_shown_traj = ps_coord
 
 
 func _show_backwards_fm_traj_on_click(ps_coord):
@@ -757,6 +761,8 @@ func _show_backwards_fm_traj_on_click(ps_coord):
 		trajectory_to_show.add_inverse_trajectory_phasespace(ps_coord, color)
 		trajectory_to_show.iterate_inverse_batch(batch_to_show)
 		trajectory_to_show.update()
+		
+		last_shown_traj = ps_coord
 
 
 ####################### DELETE TRAJECTORIES ########################################################

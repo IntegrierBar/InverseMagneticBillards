@@ -114,7 +114,6 @@ func mouse_input():
 	if valid_coord:
 		# adding trajectories is handled in trajectories
 		traj_script._spawn_fm_traj_on_click(pos)
-			
 
 
 # currently only used for showing (but not adding) trajectories from the flowmap
@@ -127,7 +126,9 @@ func _process(_delta):
 	var valid_coord = pos[0] >= 0 and pos[0] <=1 and pos[1] >= 0 and pos[1] <= 1
 
 	if valid_coord:
-		fm_coords.text = String(pos)
+		var p0 = stepify(pos[0], 0.001)
+		var p1 = stepify(pos[1], 0.001)
+		fm_coords.text = String(Vector2(p0, p1))
 		
 		if hold_mouse:
 			if forwards: 
@@ -238,6 +239,7 @@ func _on_FTLEButton_toggled(button_pressed):
 	$"../FTLE".visible = button_pressed and (billiard_type == 0)
 	$"../FMSymplectic".visible = !button_pressed and (billiard_type == 1)
 	$"../FTLESymplectic".visible = button_pressed and (billiard_type == 1)
+
 
 # If toggled on the position in phasespace is colour coded in the flowmap
 func _on_FMPositionCheck_toggled(button_pressed):
