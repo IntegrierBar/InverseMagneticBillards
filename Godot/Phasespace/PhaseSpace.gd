@@ -56,9 +56,8 @@ func _process(delta):
 		var ps_coord = local_to_ps()
 		var valid_coord = ps_coord[0] >= 0 and ps_coord[0] <=1 and ps_coord[1] >= 0 and ps_coord[1] <= 1
 		if valid_coord:
-			var p0 = stepify(ps_coord[0], 0.001)
-			var p1 = stepify(ps_coord[1], 0.001)
-			ps_coords.text = String(Vector2(p0, p1))
+			var string = "(%.3f, %.3f)"
+			ps_coords.text = string % [ps_coord[0], ps_coord[1]]
 		else:
 			ps_coords.text = ""
 

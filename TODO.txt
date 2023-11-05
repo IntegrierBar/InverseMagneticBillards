@@ -1,6 +1,10 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
+Sollen Trajektorien mit mehr als 744 Iterationen malbar sein? dann müssen sie zerstückelt werden ... 
+-> Nachfragen!
+Original Batch Buffer Size: 16384
+
 Optional: Wenn man in einem Fenster scrollt, sollte im dahinterliegenden Bild nicht auch gescrollt werden, das muss
 man irgendwie mit Inputs regeln
 
@@ -12,9 +16,6 @@ C++ code, safe data to file
 
 Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?
 
-Textfelder für Startposition und Startrichtung ausfüllen für Trajektorien die im Phasespace gespawnt wurden und für
-den Fall dass das Polygon verändert wird
-
 Beim Iterieren muss geprüft werden ob eine Ecke getroffen wird, falls ja sollte nicht weiter iteriert werden, 
 insbesondere wichtig für symplektisches Billard (SOLLTEN WIR NOCHMAL NACHFRAGEN?)
 
@@ -22,10 +23,11 @@ Zeige Koordinaten der aktuellen Mausposition für regular space, phasespace und 
 rechten Ecke der jeweiligen Felder -> funktioniert  X
 Dazu zu klären:
 - Wie genau soll die Position angezeigt werden? Braucht es wirklich 6 Nachkommastellen oder sollen wir weniger 
-  angeben?	NUTZE 3 NAchkommastellen  -> X Implementiert aber es gibt einen Bug beim regular space!
+  angeben?	NUTZE 3 NAchkommastellen  -> X Implementiert aber es gibt einen Bug beim regular space!  X gefixt
 - Sollen im Phasespace und in der Flowmap Koordinaten auch angegeben werden wenn sie außerhalb des zulässigen 
   Bereichs sind? Eher nicht, oder? -> Ist jetzt mit nein implementiert  X
 - Soll es einen Button geben mit dem man das Anzeigen der Koordinaten deaktivieren kann? NEIN X
+- Neuer Bug: Abhängig vom Zoomstatus werden die neuen Koorinaten nicht mit voller Präzesion angezeigt
 
 Bug: (0,0) als Startposition führt zu Problemen
 Ist unabhängig davon, wie (0,0) gesetzt wird
@@ -61,6 +63,8 @@ die Instruction labels entfernt werden, denke ich
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
 
+Textfelder für Startposition und Startrichtung ausfüllen für Trajektorien die im Phasespace gespawnt wurden und für
+den Fall dass das Polygon verändert wird  X
 
 Funktion in C++ um die Startpositionen aller Trajektorien in Phasespace Koordinaten auszugeben X
 

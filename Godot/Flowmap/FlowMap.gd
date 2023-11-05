@@ -126,9 +126,8 @@ func _process(_delta):
 	var valid_coord = pos[0] >= 0 and pos[0] <=1 and pos[1] >= 0 and pos[1] <= 1
 
 	if valid_coord:
-		var p0 = stepify(pos[0], 0.001)
-		var p1 = stepify(pos[1], 0.001)
-		fm_coords.text = String(Vector2(p0, p1))
+		var string = "(%.3f, %.3f)"
+		fm_coords.text = string % [pos[0], pos[1]]
 		
 		if hold_mouse:
 			if forwards: 

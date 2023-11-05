@@ -152,9 +152,8 @@ func _process(_delta):
 	
 	# Shows coordinates of current mouse position in the upper right corner of the regular space field
 	var mouse_pos = get_local_mouse_position()
-	var p0 = stepify(mouse_pos[0], 0.001)
-	var p1 = stepify(mouse_pos[1], 0.001)
-	rs_coords.text = String(Vector2(p0, p1))
+	var string = "(%.3f, %.3f)"
+	rs_coords.text = string % [mouse_pos[0], (-1) * mouse_pos[1]]
 
 
 func _draw():
@@ -250,6 +249,11 @@ func change_polygon_vertex(pos: Vector2, n: int):
 	update()
 	# TODO: update written starting position and direction
 	# does it go here or in the nodes that organise the vertices?
+	
+	var trajs_ps = trajectories.get_trajecotries_phasespace()
+	
+	for i in trajs_ps.size():
+		write_StartPosAndDir(trajs_ps[i], i)
 
 
 # prejects the point onto all sides of the polygon and returns the closest
@@ -308,7 +312,10 @@ func add_trajectory_ps(pos: Vector2, color: Color):
 	trajectories.add_trajectory_phasespace(pos, color)
 	phase_space.add_trajectory(pos, color)
 	_new_trajectory_added(color)
-	write_StartPosAndDir(pos)
+	
+	var count = traj_control.get_child_count()
+	var number = count - 6 # new trajectories are always added at the end
+	write_StartPosAndDir(pos, number)
 
 
 # spawns and connects single trajectory control 
@@ -342,22 +349,20 @@ func _new_trajectory_added(colour):
 # coordinates
 # trajectories spawned via mouse input in regular space have there text set before set_inital_values
 # is called and therefore have to handled somwhere else, see write_StartPos and write_EndPos
-func write_StartPosAndDir(pscoords: Vector2):
+func write_StartPosAndDir(pscoords: Vector2, number: int):
 	print("writing into ui")
 	var rs = PSToR2(pscoords)
-	var startpos = rs[0]
-	var startdir = rs[1]
+	var startpos = invert_y(rs[0])
+	var startdir = invert_y(rs[1])
 	
-	var count = traj_control.get_child_count()
-	# only gets called after a new trajectory was added so always access the last trajectory
-	var traj = traj_control.get_child(count - 2) 
+	# trajectory number plus 4 is the position of the current trajectory control node
+	var traj = traj_control.get_child(number + 4) 
 	
 	var start = traj.get_child(1).get_child(0)
 	start.text = String(startpos)
 	
 	var direction = traj.get_child(1).get_child(1)
 	direction.text = String(startdir)
-	
 
 
 func iterate_batch():
