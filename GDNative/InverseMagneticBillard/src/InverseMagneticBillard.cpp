@@ -61,6 +61,8 @@ namespace godot {
         register_property((char*)"defaultBatch", &InverseMagneticBillard::defaultBatch, 1000);
         register_method((char*)"hole_in_phasespace", &InverseMagneticBillard::hole_in_phasespace);
 
+        register_method((char*)"get_phasespace_data", &InverseMagneticBillard::get_phasespace_data);
+
         //register_signal<InverseMagneticBillard>((char*)"iterated", "phasespace_points", GODOT_VARIANT_TYPE_ARRAY);
     }
 
@@ -470,6 +472,22 @@ namespace godot {
             grid[xCoord][yCoord] = c;
         }
     }
+
+    String InverseMagneticBillard::get_phasespace_data()
+    {
+        String data;
+        for (const auto& t : trajectories)
+        {
+            for (const auto& point : t.phaseSpaceTrajectory)
+            {
+                data += point.to_string();
+                data += "\n";
+            }
+            data += "\n";
+        }
+        return data;
+    }
+
 
     //Array InverseMagneticBillard::iterate_symplectic_batch(int batch)
     //{

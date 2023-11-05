@@ -8,6 +8,7 @@ Simple structs for double preccision 2d vectors and matricies
 
 #include <Vector2.hpp>
 #include <cmath>
+#include <string>
 
 # define M_PI           3.14159265358979323846
 
@@ -33,6 +34,12 @@ namespace godot {
 			double angle = std::atan2(y, x);
 			if (angle < 0) return angle + 2 * M_PI; // make sure angle is always positive!
 			return angle;
+		}
+		String to_string() const {
+			String s = std::to_string(x).c_str();	// there should be a more elegant way of doing this, but I dont know it
+			s += " ";
+			s += std::to_string(y).c_str();
+			return s;
 		}
 	};
 

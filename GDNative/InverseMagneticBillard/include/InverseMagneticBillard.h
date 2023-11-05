@@ -23,6 +23,8 @@ Manages trajectories and inverse trajectories and the drawing
 #include <OS.hpp>
 #include <InverseTrajectory.h>
 #include <optional>
+#include <File.hpp>
+#include <Ref.hpp>
 //#include <SymplecticTrajectory.h>
 
 namespace godot {
@@ -107,6 +109,8 @@ namespace godot {
         void set_grid_size(int gs);
         Array hole_in_phasespace();                                           // finds a large square hole in the current phasespace and returns a point inside it and a Color close to it. Used to automatically fill the phasespace
         void fill_grid_with_points(PoolVector2Array points, Color c);
+
+        String get_phasespace_data();                                           // returns String with all phasespace points. Used to save the phasespace data
     };
 }
 
