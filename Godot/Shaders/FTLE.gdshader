@@ -11,7 +11,7 @@ uniform int iterations; 	// how many iterations should be done
 uniform bool forwards;		// should we iterate forwards or backwards?
 
 uniform float zoom;			// zoom factor of camera. Used to determine the pixel size
-
+uniform float step_size_modifier;		// allows user to modify step_size
 
 const float M_PI = 3.14159265;
 const float eps = 1e-6;
@@ -309,7 +309,8 @@ void fragment() {
 //	vec2 vert = vec2(0, pixel[1]);
 //	float pixelsize = length(pixel);
 	
-	float pixelsize = zoom*0.01;	// magic formula to determine stepsize
+	//float pixelsize = zoom*0.01;	// magic formula to determine stepsize
+	float pixelsize = zoom*step_size_modifier;	// magic formula to determine stepsize
 	vec2 hor = vec2(pixelsize, 0);
 	vec2 vert = vec2(0, pixelsize);
 	

@@ -169,6 +169,7 @@ func _draw():
 			draw_line(polygon.back(), get_local_mouse_position(), polygon_color)
 		STATES.SET_START:
 			# draw circle on the trajectory closest to current mouse position
+			# BUG INvalid get index 0 DO NOT DELETE WHEN INSIDE SET_START OR DIRECTION
 			draw_circle(snap_to_polygon(get_local_mouse_position()), 10.0 * zoom, trajectories.get_trajectory_colors()[trajectory_to_edit])
 		STATES.TEXT_EDIT:
 			# only needed to draw indication line if start position or direction are set via text_edit

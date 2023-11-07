@@ -108,6 +108,7 @@ shader_param/n = null
 shader_param/iterations = null
 shader_param/forwards = null
 shader_param/zoom = null
+shader_param/step_size_modifier = null
 
 [sub_resource type="ShaderMaterial" id=20]
 shader = ExtResource( 17 )
@@ -125,6 +126,7 @@ shader_param/n = null
 shader_param/iterations = null
 shader_param/forwards = null
 shader_param/zoom = null
+shader_param/step_size_modifier = null
 
 [node name="InverseMagneticBillard" type="Node2D"]
 

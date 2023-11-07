@@ -57,6 +57,7 @@ func _ready():
 	$"../FTLE".material.set_shader_param("forwards", true)
 	$"../FTLE".material.set_shader_param("radius", 1.0)
 	$"../FTLE".material.set_shader_param("zoom", 0.1)
+	$"../FTLE".material.set_shader_param("step_size_modifier", 0.01)
 	# initialise parameters for symplectic flowmap shader
 	$"../FMSymplectic".material.set_shader_param("iterations", 1)
 	$"../FMSymplectic".material.set_shader_param("forwards", true)
@@ -68,6 +69,7 @@ func _ready():
 	$"../FTLESymplectic".material.set_shader_param("forwards", true)
 	$"../FTLESymplectic".material.set_shader_param("radius", 1.0)
 	$"../FTLESymplectic".material.set_shader_param("zoom", 0.1)
+	$"../FTLESymplectic".material.set_shader_param("step_size_modifier", 0.01)
 	
 	
 	sizey = texture.get_height()

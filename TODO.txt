@@ -1,6 +1,23 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
+BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS nicht mehr tut. Wenn im 
+
+Nach "delete all" muss hilfslinie verschwinden
+
+Fill PS angepasst auf den Bereich, der aktuell sichtbar ist. (Also nur dort werden Trajektorien gespawn)
+
+(double Precission im Shader oder andere Tricks für geringen Radius)
+
+Button der entscheidet, ob Trajektorien an Ecken anhalten oder Fest definierte Seite wählen (also nicht durch zufall entschieden, welche Setite es ist)
+
+#drawn in REGULAR space nennen und so machen, dass mehr als 744 geht, indem man Stückelt und Batchsize erhöht.
+
+Beim Iterieren muss geprüft werden ob eine Ecke getroffen wird, falls ja sollte nicht weiter iteriert werden, 
+insbesondere wichtig für symplektisches Billard (SOLLTEN WIR NOCHMAL NACHFRAGEN?)
+
+make stepsize of FTLE choosable from UI, SHADER IS IMPLEMENTED, NEEDS UI
+
 Sollen Trajektorien mit mehr als 744 Iterationen malbar sein? dann müssen sie zerstückelt werden ... 
 -> Nachfragen!
 Original Batch Buffer Size: 16384
@@ -10,14 +27,11 @@ man irgendwie mit Inputs regeln
 
 Überlegen die Trennung von FTLE und normalem FlowMap shader zu beenden
 
-Pixelgröße in phasespace setzbar
+Pixelgröße in phasespace setzbar WAS MACHE ICH DA FALSCH??
 
 C++ code, safe data to file
 
 Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?
-
-Beim Iterieren muss geprüft werden ob eine Ecke getroffen wird, falls ja sollte nicht weiter iteriert werden, 
-insbesondere wichtig für symplektisches Billard (SOLLTEN WIR NOCHMAL NACHFRAGEN?)
 
 Zeige Koordinaten der aktuellen Mausposition für regular space, phasespace und flowmap an, vermutlich in der oberen
 rechten Ecke der jeweiligen Felder -> funktioniert  X
@@ -47,6 +61,7 @@ Polygons ab  X
 - Löschen von trajektorien im set start state und set direction state führt zum absturz des Programms X
 - Dürfen Trajektorien hinzugefügt werden, bevor das Polygon geschlossen wurde? Sorgt aktuell für offene Polygone 
 DISABLED X
+- Change radius + Delete Trajectories bugged Fill PS
 
 Anleitung schreiben
 

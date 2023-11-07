@@ -2,6 +2,7 @@
 
 extends MultiMeshInstance2D
 
+onready var point_shader: Shader = preload("res://Phasespace/Point_shader.gdshader")
 
 var color: Color = Color.red
 
@@ -12,6 +13,17 @@ func _ready():
 	multimesh.color_format = MultiMesh.COLOR_FLOAT
 	multimesh.instance_count = 100000	# could consider higher
 	multimesh.visible_instance_count = 0
+#	var material = ShaderMaterial.new()
+#	material.shader = point_shader
+#	material.set_shader_param("point_size", 100123)
+#	var material = SpatialMaterial.new()
+#	material.flags_use_point_size = true
+#	material.params_point_size = 10.0
+#
+#	multimesh.mesh.surface_set_material(0, material)
+	#multimesh.mesh.material = material
+	#print(multimesh.mesh.material.params_point_size)
+	#set_point_size(100000)
 
 func add_trajectory_points(points: Array):
 	for i in range(points.size()):
@@ -29,3 +41,8 @@ func set_color(c: Color):
 	self.color = c
 	for i in range(multimesh.visible_instance_count):
 		multimesh.set_instance_color(i, color)
+
+
+#func set_point_size(new_point_size: float):
+#	var mat = multimesh.mesh.surface_get_material(0)
+#	mat.set_shader_param("point_size", new_point_size)
