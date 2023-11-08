@@ -21,6 +21,7 @@ var grid_size
 var traj_num_spawn
 var maxit_edit
 var rs_coords
+var stop_at_corner
 
 var newpos # currently needed to change direction 
 			# TODO: have this handled in gdnative 
@@ -90,6 +91,7 @@ func _ready():
 	traj_num_spawn = get_tree().get_nodes_in_group("TrajNumToSpawn")[0]
 	maxit_edit = get_tree().get_nodes_in_group("MaxNumIterations")[0]
 	rs_coords = get_tree().get_nodes_in_group("RegularSpaceCoordinates")[0]
+	stop_at_corner = get_tree().get_nodes_in_group("StopAtCorner")[0]
 	
 	$"../Camera2D".connect("zoom_changed", self, "zoom_changed")
 	
@@ -368,7 +370,7 @@ func write_StartPosAndDir(pscoords: Vector2, number: int):
 
 
 func iterate_batch():
-	var phase_space_points = trajectories.iterate_batch(batch, true)	# false is whether to stop at vertex
+	var phase_space_points = trajectories.iterate_batch(batch, stop_at_corner.pressed)	# bool is whether to stop at vertex
 	phase_space.add_points_to_phasespace(phase_space_points)
 #	for i in range(trajectories.size()):
 #		var coordsPhasespace = trajectories[i].iterate_batch(batch)
@@ -800,6 +802,7 @@ func _on_delete_trajectory_pressed(id):
 		node.queue_free()
 		phase_space.remove_trajectory(trajectory_to_edit)
 		trajectories.remove_trajectory(trajectory_to_edit)
+		update()
 
 # deletes all trajectories in normal space, also resets phasespace image 
 # only works if we are in the iterate state. Otherwise does nothing to prevent bugs

@@ -15,6 +15,7 @@ var forwards = true
 
 var traj_script 
 var fm_coords
+var ftle_stepsize
 
 var billiard_type: int = 0   	# 0 = inverse magnetic, 1 = symplectic 
 var showFTLE: bool = false   	# tracks if FTLE or flowmap are shown 
@@ -76,6 +77,7 @@ func _ready():
 	sizex = texture.get_width()
 	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
 	fm_coords = get_tree().get_nodes_in_group("FlowmapCoordinates")[0]
+	ftle_stepsize = get_tree().get_nodes_in_group("FTLEStepsize")[0]
 
 
 # checks if mouse is inside or outside flowmap
@@ -275,6 +277,11 @@ func change_billiard_type(type: bool):
 	$"../FTLE".visible = !type and showFTLE
 	$"../FMSymplectic".visible = type and !showFTLE
 	$"../FTLESymplectic".visible = type and showFTLE
-	
 
 
+func _on_FTLEStepsizeEdit_text_changed():
+	var text = ftle_stepsize.text
+	if text.is_valid_float():
+		var stepsize = float(text)
+		$"../FTLE".material.set_shader_param("step_size_modifier", stepsize)
+		$"../FTLESymplectic".material.set_shader_param("step_size_modifier", stepsize)
