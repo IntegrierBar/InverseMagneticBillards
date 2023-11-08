@@ -889,7 +889,7 @@ margin_top = 2.0
 margin_right = 136.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
-text = "Set grid size"
+text = "Grid size"
 clip_text = true
 
 [node name="GridSizeEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/GridSizeControl" groups=["GridSize"]]
@@ -910,7 +910,7 @@ margin_top = 2.0
 margin_right = 136.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
-text = "Set #trajectories to spawn"
+text = "#trajectories to spawn"
 clip_text = true
 
 [node name="TrajNumToSpawnEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/TrajNumControl" groups=["TrajNumToSpawn"]]
@@ -924,6 +924,8 @@ text = "1"
 margin_top = 62.0
 margin_right = 277.0
 margin_bottom = 82.0
+hint_tooltip = "Iteratively spawns a trajectory inside the largest square hole 
+inside the currently visible phase space and iterates all trajectories"
 text = "Start to fill phasespace"
 clip_text = true
 

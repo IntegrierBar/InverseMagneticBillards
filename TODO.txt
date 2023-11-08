@@ -9,7 +9,7 @@ BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS 
 
 Nach "delete all" muss hilfslinie verschwinden X
 
-Fill PS angepasst auf den Bereich, der aktuell sichtbar ist. (Also nur dort werden Trajektorien gespawn)
+Fill PS angepasst auf den Bereich, der aktuell sichtbar ist. (Also nur dort werden Trajektorien gespawn) X
 
 (double Precission im Shader oder andere Tricks für geringen Radius)
 

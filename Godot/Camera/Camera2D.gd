@@ -34,6 +34,12 @@ func _set_zoom_level(value: float) -> void:
 	var tween = create_tween()
 	tween.tween_property(self, "zoom", Vector2(_zoom_level, _zoom_level), zoom_duration)
 	emit_signal("zoom_changed", _zoom_level)
+#	var ctrans = get_canvas_transform()
+#	var min_pos = -ctrans.get_origin() / ctrans.get_scale()
+#	var view_size = get_viewport_rect().size / ctrans.get_scale()
+#	var max_pos = min_pos + view_size
+#	print(min_pos)
+#	print(max_pos)
 
 
 func input(event):
@@ -48,6 +54,15 @@ func input(event):
 	if event is InputEventMouseMotion:
 		if event.button_mask == BUTTON_MASK_RIGHT:
 			position -= event.relative * zoom
+
+
+func get_view_rectangle() -> Array:
+	var ctrans = get_canvas_transform()
+	var min_pos = -ctrans.get_origin() / ctrans.get_scale()
+	var view_size = get_viewport_rect().size / ctrans.get_scale()
+	var max_pos = min_pos + view_size
+	return [min_pos, max_pos]
+
 #
 #func _set_inside():
 #	#print("inside")

@@ -101,13 +101,19 @@ func add_points_to_phasespace(points: Array):
 	for i in range(points.size()):
 		meshes[i].add_trajectory_points(rescale(points[i]))
 
-
+# from phase space coords, to world coords
 func rescale(points: Array) -> Array:
 	var rescaled_points = []
 	for p in points:
 		rescaled_points.append(Vector2(sizex*p.x, sizey*p.y) - Vector2(sizex/2, sizey/2))
 	return rescaled_points
 
+# from world coords to phase space coords
+func rescale_to_ps(points: Array) -> Array:
+	var rescaled_points: Array = []
+	for p in points:
+		rescaled_points.append(Vector2(p.x/sizex + 0.5, p.y/sizey + 0.5))
+	return rescaled_points
 
 func add_preliminary_trajectory(color: Color):
 	var trajectory = multimesh_scene.instance()
