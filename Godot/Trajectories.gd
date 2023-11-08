@@ -321,7 +321,7 @@ func add_trajectory_ps(pos: Vector2, color: Color):
 
 # spawns and connects single trajectory control 
 func _new_trajectory_added(colour):
-	print("adding ui for trajectory")
+	#print("adding ui for trajectory")
 	var count = traj_control.get_child_count()
 	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
 	var newTrajControl = scene.instance()
@@ -351,7 +351,7 @@ func _new_trajectory_added(colour):
 # trajectories spawned via mouse input in regular space have there text set before set_inital_values
 # is called and therefore have to handled somwhere else, see write_StartPos and write_EndPos
 func write_StartPosAndDir(pscoords: Vector2, number: int):
-	print("writing into ui")
+	#print("writing into ui")
 	var rs = PSToR2(pscoords)
 	var startpos = invert_y(rs[0])
 	var startdir = invert_y(rs[1])
@@ -367,7 +367,7 @@ func write_StartPosAndDir(pscoords: Vector2, number: int):
 
 
 func iterate_batch():
-	var phase_space_points = trajectories.iterate_batch(batch)
+	var phase_space_points = trajectories.iterate_batch(batch, true)	# false is whether to stop at vertex
 	phase_space.add_points_to_phasespace(phase_space_points)
 #	for i in range(trajectories.size()):
 #		var coordsPhasespace = trajectories[i].iterate_batch(batch)
@@ -752,7 +752,7 @@ func _show_fm_traj_on_click(ps_coord):
 		# trajectory does not get added to the phasespace, only phasespace coordinates are used to
 		# add the trajectory to the node
 		trajectory_to_show.add_trajectory_phasespace(ps_coord, color)
-		trajectory_to_show.iterate_batch(batch_to_show)
+		trajectory_to_show.iterate_batch(batch_to_show, false)
 		# removes the indication of start position and direction of the normal trajectories that 
 		# have not been iterated yet
 		trajectory_to_show.update()
@@ -789,16 +789,19 @@ func _on_delete_trajectory_pressed(id):
 		trajectories.remove_trajectory(trajectory_to_edit)
 
 # deletes all trajectories in normal space, also resets phasespace image 
+# only works if we are in the iterate state. Otherwise does nothing to prevent bugs
 func _on_DeleteAllTrajectories_pressed():
-	var trajcount = trajectories.get_trajectory_colors().size()
-	for i in range(trajcount): 
-		var container = traj_control.get_child(4 + i)
-		container.queue_free() # BUG here after running fill PS
-		trajectories.remove_trajectory(0)
-	phase_space.remove_all_trajectories()
-	# Note: moving the position of the delete button means that the code for adding new trajectories
-	# has to be changed as well! The new trajectories are currentlly moved to a fixed position in 
-	# relation to the other children of the parent!
+	if current_state == STATES.ITERATE:
+		var trajcount = trajectories.get_trajectory_colors().size()
+		for i in range(trajcount): 
+			var container = traj_control.get_child(4 + i)
+			container.queue_free() # BUG here after running fill PS
+			trajectories.remove_trajectory(0)
+		phase_space.remove_all_trajectories()
+		# Note: moving the position of the delete button means that the code for adding new trajectories
+		# has to be changed as well! The new trajectories are currentlly moved to a fixed position in 
+		# relation to the other children of the parent!
+		update()
 
 
 ####################### OTHER FUNCTIONS ############################################################

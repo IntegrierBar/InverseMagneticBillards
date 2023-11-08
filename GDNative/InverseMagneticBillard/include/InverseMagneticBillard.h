@@ -100,8 +100,8 @@ namespace godot {
 
         Array get_trajectories();                                               // returns array of "currentPosition"s of all trajectories 
         Array get_trajecotries_phasespace();                                    // returns array of all initial phasespace coords
-        Array iterate_batch(int batch);                                         // iterates all trajectories and returns a 2d array with all phasespace coordinates from the iteration
-        PoolVector2Array iterate_trajectory(int index, int batch);              // iterates the "index"-th trajectory
+        Array iterate_batch(int batch, bool stopAtVertex);                                         // iterates all trajectories and returns a 2d array with all phasespace coordinates from the iteration
+        PoolVector2Array iterate_trajectory(int index, int batch, bool stopAtVertex);              // iterates the "index"-th trajectory
         Array iterate_inverse_batch(int batch);
         //Array iterate_symplectic_batch(int batch);
 

@@ -34,7 +34,8 @@ namespace godot {
 
         // use one long polyline for drawing in normal space
         // Important: Godot drawing works with negative y axis. Therefore use .to_draw() conversion
-        PoolVector2Array trajectoryToDraw;          // this is used to draw the trajectory in normal space
+        // Idealy would use one PoolVector2Array, but due to limitations, only 745 iterations can be drawn, therefore split every 700
+        std::vector<PoolVector2Array> trajectoryToDraw;                     // this is used to draw the trajectory in normal space
 
 
 		Trajectory();
@@ -46,12 +47,12 @@ namespace godot {
 
         void set_polygon(std::vector<vec2_d> p, std::vector<double> l); // set the polygon. Keeps the inital phasespace coordinates
 
-        std::optional<Vector2> iterate();                               // one iteration of the system. Returns the phase space coordinates of the new point
-        PoolVector2Array iterate_batch(int batch);                      // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
+        std::optional<Vector2> iterate(bool stopAtVertex);              // one iteration of the system. Returns the phase space coordinates of the new point. stopAtVertex decides whether the trajectory stops if it hits a vertex. If true return nullopt to signal calling code.
+        PoolVector2Array iterate_batch(int batch, bool stopAtVertex);   // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
 
         // symplectic iteration
-        std::optional<Vector2> iterate_symplectic();                    // one iteration of the system. Returns the phase space coordinates of the new point
-        PoolVector2Array iterate_symplectic_batch(int batch);           // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
+        std::optional<Vector2> iterate_symplectic(bool stopAtVertex);               // one iteration of the system. Returns the phase space coordinates of the new point. stopAtVertex decides whether the trajectory stops if it hits a vertex 
+        PoolVector2Array iterate_symplectic_batch(int batch, bool stopAtVertex);    // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
 
 	protected:
         /* Functions used to calculate the iterations of the trajectory */

@@ -3,15 +3,16 @@ TODO:
 --------------------------------------------------------------------------------------------------------------------
 BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS nicht mehr tut. Wenn im 
 
-Nach "delete all" muss hilfslinie verschwinden
+Nach "delete all" muss hilfslinie verschwinden X
 
 Fill PS angepasst auf den Bereich, der aktuell sichtbar ist. (Also nur dort werden Trajektorien gespawn)
 
 (double Precission im Shader oder andere Tricks für geringen Radius)
 
 Button der entscheidet, ob Trajektorien an Ecken anhalten oder Fest definierte Seite wählen (also nicht durch zufall entschieden, welche Setite es ist)
+BENÖTIGT NUR NOCH UI UND TESTEN, OB eps GUT GEWÄHLT
 
-#drawn in REGULAR space nennen und so machen, dass mehr als 744 geht, indem man Stückelt und Batchsize erhöht.
+#drawn in REGULAR space nennen und so machen, dass mehr als 744 geht, indem man Stückelt. X
 
 Beim Iterieren muss geprüft werden ob eine Ecke getroffen wird, falls ja sollte nicht weiter iteriert werden, 
 insbesondere wichtig für symplektisches Billard (SOLLTEN WIR NOCHMAL NACHFRAGEN?)

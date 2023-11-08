@@ -77,17 +77,22 @@ namespace godot {
     {
         // TODO consider using antialiasing and width
         for (auto& t : trajectories) {
-            if (t.trajectoryToDraw.size() > 1)
+            // due to constraints of Godot drawing, we need to split trajecotry every 700 iterations
+            for (const auto& line : t.trajectoryToDraw)
             {
-                draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
+                if (line.size() > 1)
+                {
+                    draw_polyline(line, t.trajectoryColor, 1.0F, true);   // antialiasing could hit draw performance
+                }
+                
             }
             
         }
 
-
+        // inverse trajecotries are always small so no noeed to split them
         for (auto& t : inverseTrajectories) {
             if (t.trajectoryToDraw.size() > 1) {
-                draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
+                draw_polyline(t.trajectoryToDraw[0], t.trajectoryColor);
             }
         }
 
@@ -301,7 +306,7 @@ namespace godot {
         return ts;
     }
 
-    Array InverseMagneticBillard::iterate_batch(int batch)
+    Array InverseMagneticBillard::iterate_batch(int batch, bool stopAtVertex)
     {
         Array phaseSpace;
         for (auto& t : trajectories)
@@ -309,12 +314,12 @@ namespace godot {
             PoolVector2Array phaseSpacePoints;  // points from this trajectory
             if (billardType == 0)
             {
-                phaseSpacePoints = t.iterate_batch(batch);
+                phaseSpacePoints = t.iterate_batch(batch, stopAtVertex);
                 //phaseSpace.push_back(t.iterate_batch(batch));
             }
             else if (billardType == 1)
             {
-                phaseSpacePoints = t.iterate_symplectic_batch(batch);
+                phaseSpacePoints = t.iterate_symplectic_batch(batch, stopAtVertex);
                 //phaseSpace.push_back(t.iterate_symplectic_batch(batch));
             }
             phaseSpace.push_back(phaseSpacePoints);
@@ -325,7 +330,7 @@ namespace godot {
         return phaseSpace;
     }
 
-    PoolVector2Array InverseMagneticBillard::iterate_trajectory(int index, int batch)
+    PoolVector2Array InverseMagneticBillard::iterate_trajectory(int index, int batch, bool stopAtVertex)
     {
         if (index < 0) {
             Godot::print("index less then 0 not possible");
@@ -335,7 +340,7 @@ namespace godot {
             Godot::print("index to large");
             return PoolVector2Array();
         }
-        auto phaseSpacePoints = trajectories[index].iterate_batch(batch);
+        auto phaseSpacePoints = trajectories[index].iterate_batch(batch, stopAtVertex);
         fill_grid_with_points(phaseSpacePoints, trajectories[index].trajectoryColor);
         return phaseSpacePoints;
     }

@@ -28,9 +28,9 @@ namespace godot {
             for (size_t i = 0; i < n; i++)
             {
                 currentAngle = rotation * currentAngle;
-                trajectoryToDraw.push_back((currentAngle + center).to_draw());
+                trajectoryToDraw[0].push_back((currentAngle + center).to_draw());
             }
-            trajectoryToDraw.push_back(nextIterate.to_draw());
+            trajectoryToDraw[0].push_back(nextIterate.to_draw());
         }
         currentIndexOnPolygon = next.second;
         currentPosition = nextIterate;
@@ -44,7 +44,7 @@ namespace godot {
         // for drawing
         if (count < maxCount)
         {
-            trajectoryToDraw.push_back(nextIterate.to_draw());
+            trajectoryToDraw[0].push_back(nextIterate.to_draw());
         }
 
         currentIndexOnPolygon = intersection.second;
@@ -167,7 +167,7 @@ namespace godot {
 
         if (count < maxCount)   //draw in normal space if desired
         {
-            trajectoryToDraw.push_back(currentPosition.to_draw());
+            trajectoryToDraw[0].push_back(currentPosition.to_draw());
         }
 
         // calculate phase space coordinates

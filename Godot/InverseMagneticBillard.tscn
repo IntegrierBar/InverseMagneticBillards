@@ -304,7 +304,7 @@ margin_right = 106.0
 margin_bottom = 18.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "Set #iterations: "
+text = "#iterations: "
 valign = 1
 clip_text = true
 
@@ -328,7 +328,7 @@ margin_top = 2.0
 margin_right = 106.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
-text = "Set max. #drawn iterations"
+text = "Max. #drawn iterations in regular space"
 clip_text = true
 
 [node name="EditMaxDrawnIterations" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxDrawnIterationsCount" groups=["MaxNumberIterationsDrawn"]]
@@ -349,7 +349,7 @@ margin_top = 2.0
 margin_right = 106.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
-text = "Set max. #iterations"
+text = "Max. #iterations"
 clip_text = true
 
 [node name="EditMaxIterations" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxIterationsControl" groups=["MaxNumIterations"]]

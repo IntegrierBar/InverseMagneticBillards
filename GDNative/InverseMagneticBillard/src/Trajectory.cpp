@@ -47,7 +47,9 @@ namespace godot {
         count = 0;
         trajectory = { currentPosition };
         trajectoryToDraw = {};
-        trajectoryToDraw.push_back(currentPosition.to_draw());
+        PoolVector2Array polyline;
+        polyline.push_back(currentPosition.to_draw());
+        trajectoryToDraw.push_back(polyline);
     }
 
     void Trajectory::set_initial_values(vec2_d pos)
@@ -115,7 +117,9 @@ namespace godot {
         phaseSpaceTrajectory = { pos };
         trajectory = { currentPosition };
         trajectoryToDraw = {};
-        trajectoryToDraw.push_back(currentPosition.to_draw());
+        PoolVector2Array polyline;
+        polyline.push_back(currentPosition.to_draw());
+        trajectoryToDraw.push_back(polyline);
     }
 
     void Trajectory::reset_trajectory()
@@ -128,8 +132,23 @@ namespace godot {
     }
 
 
-    std::optional<Vector2> Trajectory::iterate()
+    std::optional<Vector2> Trajectory::iterate(bool stopAtVertex)
     {
+        // check if we are at a vertex
+        if (stopAtVertex)
+        {
+            // for every vertex of the polygon, check if we are close
+            for (const auto& v : polygon)
+            {
+                if (length_squared(currentPosition - v) < eps)  // consider using something else then eps
+                {
+                    Godot::print("stopped iteration since we landed in polygon vertex");
+                    count = maxIter;
+                    return std::nullopt;
+                }
+            }
+        }
+
         // First part: intersect polygon with line
         auto intersectionOpt = intersect_polygon_line(currentPosition, currentDirection);
         if (!intersectionOpt)
@@ -144,12 +163,12 @@ namespace godot {
         currentIndexOnPolygon = intersection.second;
         if (currentIndexOnPolygon >= polygon.size() - 1)
         {
-            Godot::print("currentIndexOnPolygon is to large on first occasion");   // todo check if this acutally ever happens
+            Godot::print("currentIndexOnPolygon is to large on first occasion");   // todo check if this acutally ever happens SWITCH TO NULLOPT
             return Vector2(0, 0);
         }
         if (count < maxCount)   //draw in normal space if desired
         {
-            trajectoryToDraw.push_back(nextIterate.to_draw());
+            trajectoryToDraw[trajectoryToDraw.size() - 1].push_back(nextIterate.to_draw());
         }
         
         currentPosition = nextIterate;  // direction stays the same
@@ -192,9 +211,17 @@ namespace godot {
             for (size_t i = 0; i < n; i++)
             {
                 currentAngle = rotation * currentAngle;
-                trajectoryToDraw.push_back((currentAngle + center).to_draw());
+                trajectoryToDraw[trajectoryToDraw.size() - 1].push_back((currentAngle + center).to_draw());
             }
-            trajectoryToDraw.push_back(nextIterate.to_draw());
+            trajectoryToDraw[trajectoryToDraw.size() - 1].push_back(nextIterate.to_draw());
+
+            // need to split every 700 iterations
+            if (count % 700 == 0)
+            {
+                PoolVector2Array nextPolyline;
+                nextPolyline.push_back(nextIterate.to_draw());
+                trajectoryToDraw.push_back(nextPolyline);
+            }
         }
 
         trajectory.push_back(nextIterate);
@@ -211,7 +238,7 @@ namespace godot {
     }
 
     // iterate batch
-    PoolVector2Array Trajectory::iterate_batch(int batch)
+    PoolVector2Array Trajectory::iterate_batch(int batch, bool stopAtVertex)
     {
         PoolVector2Array coordinatesPhasespace = PoolVector2Array();
         // do checks to make sure that everything is valid
@@ -244,7 +271,7 @@ namespace godot {
         coordinatesPhasespace.resize(batch);
         for (size_t i = 0; i < batch; i++)
         {
-            if (auto point = iterate())
+            if (auto point = iterate(stopAtVertex))
             {
                 coordinatesPhasespace.set(i, *point);
             }
@@ -258,8 +285,23 @@ namespace godot {
         return coordinatesPhasespace;
     }
 
-    std::optional<Vector2> Trajectory::iterate_symplectic()
+    std::optional<Vector2> Trajectory::iterate_symplectic(bool stopAtVertex)
     {
+        // check if we are at a vertex
+        if (stopAtVertex)
+        {
+            // for every vertex of the polygon, check if we are close
+            for (const auto& v : polygon)
+            {
+                if (length_squared(currentPosition - v) < eps)
+                {
+                    Godot::print("stopped iteration since we landed in polygon vertex");
+                    count = maxIter;
+                    return std::nullopt;
+                }
+            }
+        }
+
         // first intersect polygon with new line to get next position.
         auto intersectionOpt = intersect_polygon_line(currentPosition, currentDirection);
         if (!intersectionOpt)
@@ -315,7 +357,15 @@ namespace godot {
 
         if (count < maxCount)   //draw in normal space if desired
         {
-            trajectoryToDraw.push_back(currentPosition.to_draw());
+            trajectoryToDraw[trajectoryToDraw.size() - 1].push_back(currentPosition.to_draw());
+
+            // need to split every 700 iterations   // TODO need to check this number. Higher should be possible
+            if (count % 700 == 0)
+            {
+                PoolVector2Array nextPolyline;
+                nextPolyline.push_back(nextIterate.to_draw());
+                trajectoryToDraw.push_back(nextPolyline);
+            }
         }
 
         // calculate phase space coordinates
@@ -326,7 +376,7 @@ namespace godot {
         return { Vector2(pos, abs(anglePhasespace) / M_PI) };
     }
 
-    PoolVector2Array Trajectory::iterate_symplectic_batch(int batch)
+    PoolVector2Array Trajectory::iterate_symplectic_batch(int batch, bool stopAtVertex)
     {
         PoolVector2Array coordinatesPhasespace = PoolVector2Array();
         // do checks to make sure that everything is valid
@@ -359,7 +409,7 @@ namespace godot {
         coordinatesPhasespace.resize(batch);
         for (size_t i = 0; i < batch; i++)
         {
-            if (auto point = iterate_symplectic())
+            if (auto point = iterate_symplectic(stopAtVertex))
             {
                 coordinatesPhasespace.set(i, *point);
             }
