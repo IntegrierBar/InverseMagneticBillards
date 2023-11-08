@@ -135,6 +135,7 @@ func _process(_delta):
 			# find hole and add new trajecotry there
 			if fill_ps_trajectories_to_spawn <= 0:
 				current_state = STATES.ITERATE
+				trajectories.addPointsToGrid = false
 				fill_ps_trajectories_to_spawn = int(traj_num_spawn.text)
 				return
 			var c = Color.from_hsv(randf(), 1.0, 1.0)	# create random color to add to our hole color
@@ -582,9 +583,16 @@ func _on_EditBatchSize_text_changed():
 # starts to look for holes in phasespace by entering the fill phasespace state
 func _on_StartFillPSButton_pressed():
 	current_state = STATES.FILL_PS
+	trajectories.addPointsToGrid = true	# add points after iteration to grid
+	#TODO caluculate lower_left and upper_right
+	var lower_left: Vector2 = Vector2(0, 0)
+	var upper_right = Vector2(1, 1)
+	trajectories.set_bounds(lower_left, upper_right)
+	_on_GridSizeEdit_text_changed()
 
 
 # sets grid size for looking for holes in phasespace
+# TODO WE CAN ACTUALLY REMOVE THIS SIGNAL AS THIS WILL ALWAYS GET CALLED WHEN WE START FILL_PS
 func _on_GridSizeEdit_text_changed():
 	if grid_size.text.is_valid_float():
 		var gs = float(grid_size.text)

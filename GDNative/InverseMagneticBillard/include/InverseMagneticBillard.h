@@ -59,9 +59,15 @@ namespace godot {
         std::vector<InverseTrajectory> inverseTrajectories;
 
         // variables to automatically fill phasespace
+        // the grid is only of the visible phase space. The elements of bounds are the lower left and the upper right points of the visible phasespace
         int gridSize = 64;                                      // grid the phasespace into resolution^2 boxes (divide each axis into resolution amount parts)
         std::vector<std::vector<std::optional<Color>>> grid;    // grid of the phasespace. Each cells remembers one color of a trajectory inside it (nullopt if there is no trajectory)
-        int defaultBatch = 1000;                                // batch size done in every iteration
+        vec2_d lowerLeft;                                       // upper left and lower right points of the rectangle that is the visible phase space
+        vec2_d upperRight;
+        double gridWidth;
+        double gridHeight;
+        bool addPointsToGrid = false;                           // decides if points from iterate_batch are added to the grid. Is only true if system is currently filling PS. Is used to speed up normal iterations
+        //int defaultBatch = 1000;                              // batch size done in every iteration
         
         
 
@@ -106,9 +112,10 @@ namespace godot {
         //Array iterate_symplectic_batch(int batch);
 
         // helper functions for automatic filling of phasespace
-        void set_grid_size(int gs);
-        Array hole_in_phasespace();                                           // finds a large square hole in the current phasespace and returns a point inside it and a Color close to it. Used to automatically fill the phasespace
-        void fill_grid_with_points(PoolVector2Array points, Color c);
+        void set_grid_size(int gs);                                             // resets the grid and automatically fills it with all points from the phasespace
+        void set_bounds(Vector2 lowerLeft, Vector2 upperRight);                 // setter for bounds. both lowerLeft and upperRight should be between 0 and 1
+        Array hole_in_phasespace();                                             // finds a large square hole in the current phasespace and returns a point inside it and a Color close to it. Used to automatically fill the phasespace
+        void fill_grid_with_points(PoolVector2Array points, Color c);           // only adds points that are inside the visible phase space
 
         String get_phasespace_data();                                           // returns String with all phasespace points. Used to save the phasespace data
     };

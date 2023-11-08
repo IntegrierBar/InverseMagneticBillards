@@ -1,6 +1,10 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
+CONSIDER FLIPPING y_axis for PS and FM
+
+Für höhre geschwindigkeit: Füge bool hinzu der entscheidet, ob nach iteration Punkte in phasesraum Grid eingefügt werden sollen
+
 BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS nicht mehr tut. Wenn im 
 
 Nach "delete all" muss hilfslinie verschwinden X

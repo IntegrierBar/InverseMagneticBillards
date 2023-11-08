@@ -58,8 +58,10 @@ namespace godot {
         //register_property((char*)"maxCount", &InverseMagneticBillard::maxCount, 1000);
         //register_property((char*)"polygonClosed", &InverseMagneticBillard::polygonClosed, false);
         register_method((char*)"set_grid_size", &InverseMagneticBillard::set_grid_size);
-        register_property((char*)"defaultBatch", &InverseMagneticBillard::defaultBatch, 1000);
+        register_method((char*)"set_bounds", &InverseMagneticBillard::set_bounds);
         register_method((char*)"hole_in_phasespace", &InverseMagneticBillard::hole_in_phasespace);
+        register_property((char*)"addPointsToGrid", &InverseMagneticBillard::addPointsToGrid, false);
+        //register_property((char*)"defaultBatch", &InverseMagneticBillard::defaultBatch, 1000);
 
         register_method((char*)"get_phasespace_data", &InverseMagneticBillard::get_phasespace_data);
 
@@ -192,9 +194,14 @@ namespace godot {
 
         t.set_initial_values(vec2_d(start), vec2_d(dir));
         trajectories.push_back(t);
-        PoolVector2Array startPoint;
-        startPoint.push_back(t.phaseSpaceTrajectory[0].to_godot());
-        fill_grid_with_points(startPoint, color);
+        
+        if (addPointsToGrid)
+        {
+            PoolVector2Array startPoint;
+            startPoint.push_back(t.phaseSpaceTrajectory[0].to_godot());
+            fill_grid_with_points(startPoint, color);
+        }
+        
     }
 
     void InverseMagneticBillard::add_inverse_trajectory(Vector2 start, Vector2 dir, Color color)
@@ -225,9 +232,13 @@ namespace godot {
 
         t.set_initial_values(vec2_d(pos));
         trajectories.push_back(t);
-        PoolVector2Array startPoint;
-        startPoint.push_back(t.phaseSpaceTrajectory[0].to_godot());
-        fill_grid_with_points(startPoint, color);
+        if (addPointsToGrid)
+        {
+            PoolVector2Array startPoint;
+            startPoint.push_back(t.phaseSpaceTrajectory[0].to_godot());
+            fill_grid_with_points(startPoint, color);
+        }
+        
     }
 
     void InverseMagneticBillard::add_inverse_trajectory_phasespace(Vector2 pos, Color color)
@@ -323,7 +334,11 @@ namespace godot {
                 //phaseSpace.push_back(t.iterate_symplectic_batch(batch));
             }
             phaseSpace.push_back(phaseSpacePoints);
-            fill_grid_with_points(phaseSpacePoints, t.trajectoryColor);
+            if (addPointsToGrid)
+            {
+                fill_grid_with_points(phaseSpacePoints, t.trajectoryColor);
+            }
+            
         }
 
         update();
@@ -341,7 +356,10 @@ namespace godot {
             return PoolVector2Array();
         }
         auto phaseSpacePoints = trajectories[index].iterate_batch(batch, stopAtVertex);
-        fill_grid_with_points(phaseSpacePoints, trajectories[index].trajectoryColor);
+        if (addPointsToGrid)
+        {
+            fill_grid_with_points(phaseSpacePoints, trajectories[index].trajectoryColor);
+        }
         return phaseSpacePoints;
     }
 
@@ -376,8 +394,16 @@ namespace godot {
         {
             PoolVector2Array pstrajectory;
             for (const auto& p : t.phaseSpaceTrajectory) { pstrajectory.push_back(p.to_godot()); }
-            fill_grid_with_points(pstrajectory, t.trajectoryColor);
+            fill_grid_with_points(pstrajectory, t.trajectoryColor); // always add points here
         }
+    }
+
+    void InverseMagneticBillard::set_bounds(Vector2 lowerLeft2, Vector2 upperRight2)
+    {
+        lowerLeft = lowerLeft2;
+        upperRight = upperRight2;
+        gridWidth = upperRight.x - lowerLeft.x;
+        gridHeight = upperRight.y - lowerLeft.y;
     }
 
     // go through the grid trying to find the largest sqare hole and return point inside
@@ -435,6 +461,7 @@ namespace godot {
                 }
             }
         }
+        // check if no hole was found. Return dummy values to let calling code know
         if (largestHoleOffset == 0)
         {
             Array coordsAndColor;
@@ -460,7 +487,9 @@ namespace godot {
             }
         }
         // calculate the coordinates of the next point by taking the center coords of the first emtpy grid cell
-        Vector2 coords = Vector2(((double)largestHoleCoords.first) / gridSize + 1. / (2 * gridSize), ((double)largestHoleCoords.second) / gridSize + 1. / (2 * gridSize));
+        //Vector2 coords = Vector2(((double)largestHoleCoords.first) / gridSize + 1. / (2 * gridSize), ((double)largestHoleCoords.second) / gridSize + 1. / (2 * gridSize));    // OLD. Does not use visible Phase space
+
+        Vector2 coords = lowerLeft.to_godot() + Vector2(((double)largestHoleCoords.first + 0.5) / gridSize * gridWidth, ((double)largestHoleCoords.second + 0.5) / gridSize * gridHeight);
         Array coordsAndColor;
         coordsAndColor.push_back(coords);
         coordsAndColor.push_back(holeColor);
@@ -472,9 +501,17 @@ namespace godot {
     {
         for (size_t i = 0; i < points.size(); i++)
         {
-            int xCoord = std::floor(points[i].x * gridSize);
-            int yCoord = std::floor(points[i].y * gridSize);
-            grid[xCoord][yCoord] = c;
+            // check if inside the visible phase space
+            if (points[i].x > lowerLeft.x && points[i].x < upperRight.x && points[i].y > lowerLeft.y && points[i].y < upperRight.y)
+            {
+                int xCoord = std::floor((points[i].x - lowerLeft.x)/gridWidth * gridSize);
+                int yCoord = std::floor((points[i].y - lowerLeft.y)/gridHeight * gridSize);
+                grid[xCoord][yCoord] = c;
+            }
+            // old. Does not use visible phase space but entire phase space
+            //int xCoord = std::floor(points[i].x * gridSize);
+            //int yCoord = std::floor(points[i].y * gridSize);
+            //grid[xCoord][yCoord] = c;
         }
     }
 
