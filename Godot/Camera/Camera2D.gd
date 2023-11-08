@@ -55,7 +55,8 @@ func input(event):
 		if event.button_mask == BUTTON_MASK_RIGHT:
 			position -= event.relative * zoom
 
-
+# I dont know why this formula works, but it does. So I will not touch it.
+# https://ask.godotengine.org/13740/get-camera-extents-rect-2d
 func get_view_rectangle() -> Array:
 	var ctrans = get_canvas_transform()
 	var min_pos = -ctrans.get_origin() / ctrans.get_scale()
