@@ -1,5 +1,21 @@
 # InverseMagneticBillards
-Requires Godot game engine version 3.5 (we used 3.5.2)
+A simulator of inverse magnetic billard for polygonal tables written with Godot 3.5.2
+
+
+# How to use
+The simulator is split into 3 spaces (regular space, flow map and phase space) and 2 controlls (main control and phase space control)
+
+Both flow map and phase space use inverted y-Axis
+
+### Regular Space
+The regular space shows the polygon and the trajectory as polygonal lines
+
+### Flow Map
+The flow map shows the flow map of the current system. Controls can be opened under "Flow Map Control"
+
+### Phase Space
+The phase space will show the trajecotries as points inside the phase space. The x-axis is the polygon and the y-Axis the angle with the positive tangent.
+
 
 
 # How to compile
@@ -19,7 +35,8 @@ For Web compilation use emscripten (https://emscripten.org/)
 ## Compiling GDNative
 If you are compiling for Windows or web this part can be skipped
 
-First compile the project inside the GDNative folder using cmake.
+First compile the project inside the GDNative folder using cmake.  
+(If you are using emscripten, simply using the commands "emcmake" and "emmake" should suffice)
 
 Next copy the compiled library into "Godot/GDNative"
 
@@ -31,10 +48,10 @@ Find you target system, click the folder icon and select the library you just co
 ## Compiling the Project
 Detailed explenation can be found in the official Godot docs (https://docs.godotengine.org/en/3.5/tutorials/export/exporting_projects.html)
 
-When compiling for web, make sure the export type is set to GDNative
-
 Open the project with Godot (Godot/project.godot).  
 First add the export templates by clicking "Editor->Manage Export Templates" and downloading them.
 
 Then click on project->Export  
 Add the export target if it is not already there and click "Export Project"
+
+When compiling for web, make sure the export type is set to GDNative.
