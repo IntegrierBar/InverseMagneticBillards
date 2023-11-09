@@ -20,7 +20,7 @@ man irgendwie mit Inputs regeln
 
 Pixelgröße in phasespace setzbar WAS MACHE ICH DA FALSCH??
 
-C++ code, safe data to file. Benötigt nur noch Godot Code
+C++ code, safe data to file. Benötigt nur noch Godot UI
 
 Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?
 

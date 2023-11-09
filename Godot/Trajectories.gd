@@ -822,6 +822,21 @@ func _on_DeleteAllTrajectories_pressed():
 
 ####################### OTHER FUNCTIONS ############################################################
 
+# saves all phase space trajectory data to a file
+func save_phase_space():
+	var data: String = trajectories.get_phasespace_data()
+	var file_name: String = "trajectories" + Time.get_date_string_from_system() + ".txt"
+	if OS.has_feature("web"):	# If we are on web, make it as a dowload
+		JavaScript.download_buffer(data.to_utf8(), file_name)
+	elif OS.has_feature("pc"):	# If on PC make saves data inside %APPDATA%\Godot\app_userdata\InverseMagneticBillard
+		var file = File.new()
+		file.open("user://" + file_name, File.WRITE)
+		file.store_string(data)
+		file.close()
+	else:
+		print("this should not be calling")
+
+
 # button that resets all trajectories to their start position and direction (at least in theory) 
 func _on_ResetAllTrajectories_pressed():
 	trajectories.reset_trajectories()
