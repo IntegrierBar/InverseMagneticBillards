@@ -23,7 +23,7 @@ First compile the project inside the GDNative folder using cmake.
 
 Next copy the compiled library into "Godot/GDNative"
 
-If you are not compiling for Windows or web, you will need to register it inside the Godot project. \n
+If you are not compiling for Windows or web, you will need to register it inside the Godot project.  
 For this open the Project with Godot and in the file system open the GDNative/InverseMagneticBillard.tres.
 This will open up a list in the bottom of the center. 
 Find you target system, click the folder icon and select the library you just compiled.
