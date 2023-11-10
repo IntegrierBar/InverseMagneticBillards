@@ -24,7 +24,7 @@ The checkmark "Trajectory Drawn in Regular Space" decides whether the spawned tr
 
 ##### 1. On Click
 After pressing the button left clickin inside the phase space will create a new trajectory with those coordinates.
-###### muahaha
+
 ##### 2. On Coordinates
 Typing the phase space coordinates (first is polygon, second is angle) and then pressing the button "Spawn PS trajectory on Coordinates" will create a trajectory at those coordinates.
 
