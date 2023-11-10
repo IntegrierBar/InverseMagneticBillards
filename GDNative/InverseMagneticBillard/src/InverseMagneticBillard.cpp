@@ -84,7 +84,7 @@ namespace godot {
         // inverse trajecotries are always small so no noeed to split them
         for (auto& t : inverseTrajectories) {
             if (t.trajectoryToDraw.size() > 1) {
-                draw_polyline(t.trajectoryToDraw[0], t.trajectoryColor);
+                draw_polyline(t.trajectoryToDraw[0], t.trajectoryColor, 1.0F, true);    // antialiasing could hit draw performance
             }
         }        
     }
