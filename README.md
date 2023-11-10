@@ -13,10 +13,10 @@ The regular space shows the polygon and the trajectory as polygonal lines.
 ### Flow Map
 The flow map shows the flow map of the current system. Controls can be opened under "Flow Map Control".
 
-### Phase Space
+## Phase Space
 The phase space will show the trajecotries as points inside the phase space. The x-axis is the polygon and the y-Axis the angle with the positive tangent.
 
-#### Fill Phase Space
+### Fill Phase Space
 
 
 # How to compile
