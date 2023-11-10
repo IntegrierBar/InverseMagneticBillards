@@ -1,3 +1,4 @@
+// DEPRECATED
 #include "SymplecticTrajectory.h"
 
 namespace godot {

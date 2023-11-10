@@ -49,19 +49,11 @@ namespace godot {
         register_method((char*)"add_inverse_trajectory_phasespace", &InverseMagneticBillard::add_inverse_trajectory_phasespace);
         register_method((char*)"iterate_inverse_batch", &InverseMagneticBillard::iterate_inverse_batch);
 
-        // for symplectic Trajectories
-        //register_method((char*)"add_symplectic_trajectory", &InverseMagneticBillard::add_symplectic_trajectory);
-        //register_method((char*)"add_symplectic_trajectory_phasespace", &InverseMagneticBillard::add_symplectic_trajectory_phasespace);
-        //register_method((char*)"iterate_symplectic_batch", &InverseMagneticBillard::iterate_symplectic_batch);
-
-        //register_property<InverseMagneticBillard, double>((char*)"radius", &InverseMagneticBillard::radius, 1);
-        //register_property((char*)"maxCount", &InverseMagneticBillard::maxCount, 1000);
-        //register_property((char*)"polygonClosed", &InverseMagneticBillard::polygonClosed, false);
+        // for the grid for automatic filling of the phase space
         register_method((char*)"set_grid_size", &InverseMagneticBillard::set_grid_size);
         register_method((char*)"set_bounds", &InverseMagneticBillard::set_bounds);
         register_method((char*)"hole_in_phasespace", &InverseMagneticBillard::hole_in_phasespace);
         register_property((char*)"addPointsToGrid", &InverseMagneticBillard::addPointsToGrid, false);
-        //register_property((char*)"defaultBatch", &InverseMagneticBillard::defaultBatch, 1000);
 
         register_method((char*)"get_phasespace_data", &InverseMagneticBillard::get_phasespace_data);
 
@@ -70,14 +62,14 @@ namespace godot {
 
     void InverseMagneticBillard::_process()
     {
-        // TODO could do stuff here
+        // is disabled
         Godot::print("process runs");
     }
 
     // For each trajectory use polyline to draw it in normal space
     void InverseMagneticBillard::_draw()
     {
-        // TODO consider using antialiasing and width
+        // could consider using antialiasing and width
         for (auto& t : trajectories) {
             // due to constraints of Godot drawing, we need to split trajecotry every 700 iterations
             for (const auto& line : t.trajectoryToDraw)
@@ -85,10 +77,8 @@ namespace godot {
                 if (line.size() > 1)
                 {
                     draw_polyline(line, t.trajectoryColor, 1.0F, true);   // antialiasing could hit draw performance
-                }
-                
-            }
-            
+                }                
+            }            
         }
 
         // inverse trajecotries are always small so no noeed to split them
@@ -96,14 +86,7 @@ namespace godot {
             if (t.trajectoryToDraw.size() > 1) {
                 draw_polyline(t.trajectoryToDraw[0], t.trajectoryColor);
             }
-        }
-
-        //for (auto& t : symplecticTrajectories) {
-        //    if (t.trajectoryToDraw.size() > 1) {
-        //        draw_polyline(t.trajectoryToDraw, t.trajectoryColor);
-        //    }
-        //}
-        
+        }        
     }
 
     void InverseMagneticBillard::clear_polygon()
@@ -117,18 +100,20 @@ namespace godot {
 
     void InverseMagneticBillard::add_polygon_vertex(Vector2 vertex)
     {
-        if (polygonClosed) {    // if the polygon es closed do nothing
+        if (polygonClosed) 
+        {   // if the polygon es closed do nothing
             return;
         }
         
         if (polygon.size() > 0)
         {
-            if (polygonLength.size() < 1) { // TODO should be unneccessary now
+            if (polygonLength.size() < 1) 
+            {   // TODO should be unneccessary now
                 polygonLength.push_back(length(polygon.back() - vec2_d(vertex)));
             }
-            else {
+            else 
+            {
                 polygonLength.push_back(polygonLength.back() + length(polygon.back() - vec2_d(vertex)));
-
             }
                 
         }
@@ -142,24 +127,22 @@ namespace godot {
 
     void InverseMagneticBillard::close_polygon()
     {
-        if (polygonClosed || polygon.size() < 3) { return; }    // polygon needs to haev at least 3 edges
+        if (polygonClosed || polygon.size() < 3) { return; }    // polygon needs to have at least 3 edges
 
         polygonLength.push_back(polygonLength.back() + length(polygon.back() - vec2_d(polygon[0])));
         
-
         polygon.push_back(polygon[0]);
         polygonClosed = true;
 
         // only update polygon for the trajectories, once polygon is closed
-        for (auto& t : trajectories) {
+        for (auto& t : trajectories) 
+        {
             t.set_polygon(polygon, polygonLength);
         }
-        for (auto& t : inverseTrajectories) {
+        for (auto& t : inverseTrajectories) 
+        {
             t.set_polygon(polygon, polygonLength);
         }
-        //for (auto& t : symplecticTrajectories) {
-        //    t.set_polygon(polygon, polygonLength);
-        //}
 
         update();
     }
@@ -175,7 +158,8 @@ namespace godot {
         oldPolygon[index] = vertex;
         oldPolygon.pop_back();
         clear_polygon();
-        for (auto& v : oldPolygon) {
+        for (auto& v : oldPolygon) 
+        {
             add_polygon_vertex(v.to_godot());
         }
         close_polygon();
@@ -256,34 +240,6 @@ namespace godot {
         inverseTrajectories.push_back(t);
     }
 
-    //void InverseMagneticBillard::add_symplectic_trajectory(Vector2 start, Vector2 dir, Color color)
-    //{
-    //    SymplecticTrajectory t = SymplecticTrajectory();
-    //    t.radius = radius;
-    //    t.maxCount = maxCount;
-    //    t.trajectoryColor = color;
-
-    //    t.polygon = polygon;
-    //    t.polygonLength = polygonLength;
-
-    //    t.set_initial_values(vec2_d(start), vec2_d(dir));
-    //    symplecticTrajectories.push_back(t);
-    //}
-
-    //void InverseMagneticBillard::add_symplectic_trajectory_phasespace(Vector2 pos, Color color)
-    //{
-    //    SymplecticTrajectory t = SymplecticTrajectory();
-    //    t.radius = radius;
-    //    t.maxCount = maxCount;
-    //    t.trajectoryColor = color;
-
-    //    t.polygon = polygon;
-    //    t.polygonLength = polygonLength;
-
-    //    t.set_initial_values(vec2_d(pos));
-    //    symplecticTrajectories.push_back(t);
-    //}
-
     void InverseMagneticBillard::remove_trajectory(int index)
     {
         trajectories.erase(trajectories.begin() + index);
@@ -294,7 +250,6 @@ namespace godot {
     {
         trajectories.clear();
         inverseTrajectories.clear();
-        //symplecticTrajectories.clear();
     }
 
     Array InverseMagneticBillard::get_trajectories()
@@ -326,12 +281,10 @@ namespace godot {
             if (billardType == 0)
             {
                 phaseSpacePoints = t.iterate_batch(batch, stopAtVertex);
-                //phaseSpace.push_back(t.iterate_batch(batch));
             }
             else if (billardType == 1)
             {
                 phaseSpacePoints = t.iterate_symplectic_batch(batch, stopAtVertex);
-                //phaseSpace.push_back(t.iterate_symplectic_batch(batch));
             }
             phaseSpace.push_back(phaseSpacePoints);
             if (addPointsToGrid)
@@ -347,11 +300,13 @@ namespace godot {
 
     PoolVector2Array InverseMagneticBillard::iterate_trajectory(int index, int batch, bool stopAtVertex)
     {
-        if (index < 0) {
+        if (index < 0) 
+        {
             Godot::print("index less then 0 not possible");
             return PoolVector2Array();
         }
-        if (index >= trajectories.size()) {
+        if (index >= trajectories.size()) 
+        {
             Godot::print("index to large");
             return PoolVector2Array();
         }
@@ -388,7 +343,6 @@ namespace godot {
     {
         gridSize = gs;
         grid = std::vector<std::vector<std::optional<Color>>>(gridSize, std::vector<std::optional<Color>>(gridSize, std::nullopt)); // initialize grid with nullopt everywhere
-        //reset_trajectories();
         // add points to grid
         for (const auto& t : trajectories)
         {
@@ -433,27 +387,8 @@ namespace godot {
                     }
                     offset++;
                 }
+
             foundmaxsquare:
-
-                /*while (!grid[i+sizeX][j])
-                {
-                    int sizeY = 0;
-                    while (!grid[i+sizeX][j+sizeY])
-                    {
-                        size++;
-                        sizeY++;
-                        if (sizeY + j >= gridSize)
-                        {
-                            break;
-                        }
-                    }
-                    sizeX++;
-                    if (sizeX + i >= gridSize)
-                    {
-                        break;
-                    }
-                }*/
-
                 if (offset > largestHoleOffset)
                 {
                     largestHoleOffset = offset;
@@ -508,10 +443,6 @@ namespace godot {
                 int yCoord = std::floor((points[i].y - lowerLeft.y)/gridHeight * gridSize);
                 grid[xCoord][yCoord] = c;
             }
-            // old. Does not use visible phase space but entire phase space
-            //int xCoord = std::floor(points[i].x * gridSize);
-            //int yCoord = std::floor(points[i].y * gridSize);
-            //grid[xCoord][yCoord] = c;
         }
     }
 
@@ -530,19 +461,6 @@ namespace godot {
         return data;
     }
 
-
-    //Array InverseMagneticBillard::iterate_symplectic_batch(int batch)
-    //{
-    //    Array phaseSpace;
-    //    Godot::print(Vector2(symplecticTrajectories.size(), 1));
-    //    for (auto& t : symplecticTrajectories)
-    //    {
-    //        phaseSpace.push_back(t.iterate_batch(batch));
-    //    }
-    //    update();
-    //    return phaseSpace;
-    //}
-
     void InverseMagneticBillard::set_initial_values(int index, Vector2 start, Vector2 dir)
     {
         trajectories[index].set_initial_values(start, dir);
@@ -558,7 +476,6 @@ namespace godot {
 
     void InverseMagneticBillard::set_max_count_index(int index, int newMaxCount)
     {
-
         if (index >= trajectories.size() || index < 0) {
             Godot::print("trying to set max count of not existing trajecotry");
             return;
@@ -619,11 +536,6 @@ namespace godot {
             i.reset_trajectory();
         }
 
-        //for (auto& i : symplecticTrajectories)
-        //{
-        //    i.radius = r;
-        //    i.reset_trajectory();
-        //}
         update();
     }
 
@@ -637,10 +549,7 @@ namespace godot {
         {
             t.reset_trajectory();
         }
-        //for (auto& t : symplecticTrajectories)
-        //{
-        //    t.reset_trajectory();
-        //}
+
         // Fill grid
         set_grid_size(gridSize);    // recalculate the grid
         update();

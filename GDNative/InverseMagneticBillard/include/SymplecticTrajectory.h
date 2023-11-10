@@ -1,4 +1,5 @@
 /*
+* DEPRECATED
 This class handles the symplectic iteration of the polygon. NO MAGNETIC FIELD
 We extend "Trajectory" and only change the "iterate" and do not use the intersection functions
 */

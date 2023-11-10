@@ -67,31 +67,25 @@ namespace godot {
         double gridWidth;
         double gridHeight;
         bool addPointsToGrid = false;                           // decides if points from iterate_batch are added to the grid. Is only true if system is currently filling PS. Is used to speed up normal iterations
-        //int defaultBatch = 1000;                              // batch size done in every iteration
         
         
 
         // Member functions
-        void set_billard_type(int type);                    // used by other godot nodes to set the type. Resets all trajectories
+        void set_billard_type(int type);                                        // used by other godot nodes to set the type. Resets all trajectories
 
-        void set_radius(double r);
+        void set_radius(double r);                                              // radius = 1/magnetic field strength
         void clear_polygon();
-        void add_polygon_vertex(Vector2 vertex);
-        void close_polygon();                               // closes the polygon by appending polygon[0] at the end
-        void set_polygon_vertex(int index, Vector2 vertex); // set polygon[index] = vertex
+        void add_polygon_vertex(Vector2 vertex);                                // add a vertex to the polygon
+        void close_polygon();                                                   // closes the polygon by appending polygon[0] at the end
+        void set_polygon_vertex(int index, Vector2 vertex);                     // set polygon[index] = vertex
 
         void add_trajectory(Vector2 start, Vector2 dir, Color color);           // add trajectory with initial values start and direction
         void add_trajectory_phasespace(Vector2 pos, Color color);               // add trajectory with initial values from phase space coordinates
         void remove_trajectory(int index);                                      // remove trajectory at index "index"
-        //void remove_inverse_trajectory(int index);
 
         void add_inverse_trajectory(Vector2 start, Vector2 dir, Color color);   // add inverse trajectory with initial values start and direction
         void add_inverse_trajectory_phasespace(Vector2 pos, Color color);       // add inverse trajectory with initial values from phase space coordinates
         //void remove_inverse_trajectory(int index);
-
-        //void add_symplectic_trajectory(Vector2 start, Vector2 dir, Color color);   // add symplectic trajectory with initial values start and direction
-        //void add_symplectic_trajectory_phasespace(Vector2 pos, Color color);       // add symplectic trajectory with initial values from phase space coordinates
-        ////void remove_inverse_trajectory(int index);
 
         void clear_trajectories();                                              // remove all trajectories and inverse trajectories
         
@@ -104,12 +98,11 @@ namespace godot {
 
         PoolColorArray get_trajectory_colors();                                 // returns Godot array of all colors of the trajectories
 
-        Array get_trajectories();                                               // returns array of "currentPosition"s of all trajectories 
-        Array get_trajecotries_phasespace();                                    // returns array of all initial phasespace coords
-        Array iterate_batch(int batch, bool stopAtVertex);                                         // iterates all trajectories and returns a 2d array with all phasespace coordinates from the iteration
-        PoolVector2Array iterate_trajectory(int index, int batch, bool stopAtVertex);              // iterates the "index"-th trajectory
+        Array get_trajectories();                                                       // returns array of "currentPosition"s of all trajectories 
+        Array get_trajecotries_phasespace();                                            // returns array of all initial phasespace coords
+        Array iterate_batch(int batch, bool stopAtVertex);                              // iterates all trajectories and returns a 2d array with all phasespace coordinates from the iteration
+        PoolVector2Array iterate_trajectory(int index, int batch, bool stopAtVertex);   // iterates the "index"-th trajectory
         Array iterate_inverse_batch(int batch);
-        //Array iterate_symplectic_batch(int batch);
 
         // helper functions for automatic filling of phasespace
         void set_grid_size(int gs);                                             // resets the grid and automatically fills it with all points from the phasespace

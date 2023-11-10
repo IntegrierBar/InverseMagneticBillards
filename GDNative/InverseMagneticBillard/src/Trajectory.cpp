@@ -23,12 +23,9 @@ namespace godot {
         {
             double t = (length_squared(start) - dot(start, polygon[i])) / dot(start, polygon[i + 1] - polygon[i]);
             // snap to corners of edge
-            if (t < 0) {
-                t = 0;
-            }
-            else if (t > 1) {
-                t = 1;
-            }
+            if (t < 0) { t = 0; }
+            else if (t > 1) { t = 1; }
+
             pointProjected = (1 - t) * polygon[i] + t * polygon[i + 1];
             double distance = length_squared(vec2_d(start) - pointProjected);
             if (distance < min_distance) {
@@ -126,7 +123,6 @@ namespace godot {
     {
         if (phaseSpaceTrajectory.size() > 0)    // should always be true
         {
-            //currentPosition = trajectory[0];
             set_initial_values(phaseSpaceTrajectory[0]);
         }
     }
@@ -195,14 +191,13 @@ namespace godot {
         if (count < maxCount)   //draw in normal space if desired
         {
             // To draw a circle we take the current position and rotate it n times by a small step around the center
-
             double angle = angle_between((currentPosition - center), (nextIterate - center));
             if (angle < 0)
             {
                 angle += 2 * M_PI;      // need angle counter clockwise, i.e. no negative angles
             }
 
-            int n = 20; 
+            int n = 20; // how many edges the regular polygon that draws the circle segment should have
 
             // divide angle for step size
             double step = angle / double(n);
@@ -232,16 +227,16 @@ namespace godot {
         // calculate phase space coordinates
         double anglePhasespace = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
         double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
-        phaseSpaceTrajectory.push_back(vec2_d(pos, abs(anglePhasespace) / M_PI) );
+        phaseSpaceTrajectory.push_back( vec2_d(pos, abs(anglePhasespace)/M_PI) );
         count++;
-        return Vector2(pos, abs(anglePhasespace) / M_PI);
+        return Vector2(pos, abs(anglePhasespace)/M_PI);
     }
 
     // iterate batch
     PoolVector2Array Trajectory::iterate_batch(int batch, bool stopAtVertex)
     {
         PoolVector2Array coordinatesPhasespace = PoolVector2Array();
-        // do checks to make sure that everything is valid
+        // do checks to make sure that everything is valid. Can probably be taken out
         if (polygon.size() < 3)
         {
             Godot::print("polygon not enough vertices");
@@ -316,7 +311,7 @@ namespace godot {
         vec2_d dir = normalize(polygon[intersection.second + 1] - polygon[intersection.second]);
         // still have to find out in which direction we need to go
         // Use intersection test for this
-        vec2_d start = currentPosition + 100*eps * dir;     // maybe error here, previous was currentDirection instead of dir, but I think it should be dir here, but it does not make a difference apparently?
+        vec2_d start = currentPosition + 100*eps * dir; // maybe error here, previous was currentDirection instead of dir, but I think it should be dir here, but it does not make a difference apparently?
         int intersections = 0;
         for (size_t i = 0; i < polygon.size() - 1; i++) // only loop till -1, since we know that polygon closed means that first == last point
         {
@@ -354,7 +349,6 @@ namespace godot {
         currentPosition = nextIterate;
         currentDirection = normalize(secondIntersection.first - currentPosition);
 
-
         if (count < maxCount)   //draw in normal space if desired
         {
             trajectoryToDraw[trajectoryToDraw.size() - 1].push_back(currentPosition.to_draw());
@@ -371,9 +365,9 @@ namespace godot {
         // calculate phase space coordinates
         double anglePhasespace = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
         double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
-        phaseSpaceTrajectory.push_back(vec2_d(pos, abs(anglePhasespace) / M_PI));
+        phaseSpaceTrajectory.push_back(vec2_d(pos, abs(anglePhasespace)/M_PI));
         count++;
-        return { Vector2(pos, abs(anglePhasespace) / M_PI) };
+        return { Vector2(pos, abs(anglePhasespace)/M_PI) };
     }
 
     PoolVector2Array Trajectory::iterate_symplectic_batch(int batch, bool stopAtVertex)
