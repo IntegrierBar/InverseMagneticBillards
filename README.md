@@ -19,17 +19,28 @@ The phase space will show the trajecotries as points inside the phase space. The
 #### Spawning Trajectories
 The control center for the phase space allows for 3 different methods of creating new trajectories.
 
-For individual trajectories the color can be chosen with the color selector "Trajectorie Color".  
-The checkmark "Trajectory drawn in regular space" decides
+For individual trajectories the color can be chosen with the color selector "Trajectory Color".  
+The checkmark "Trajectory Drawn in Regular Space" decides whether the spawned trajectories should also be drawn in regular space.
+
 ##### 1. On Click
-After pressing the button
+After pressing the button left clickin inside the phase space will create a new trajectory with those coordinates.
+
+##### 2. On Coordinates
+Typing the phase space coordinates (first is polygon, second is angle) and then pressing the button "Spawn PS trajectory on Coordinates" will create a trajectory at those coordinates.
+
+##### 3. Batch
+By pressing the button "Spawn PS Trajectory Batch" you can specify a rectangular area inside the phase space by left clicking at two positions.  
+Then "#Trajectories in Batch" trajectories will be evenly created inside this rectangle.  
+The color of the trajectories is a predefined color gradient.
+
+Due to problems with browsers it is not recomended to spawn more then 20 trajectories in one batch.  
 
 #### Fill Phase Space
 By pressing to button "Start to fill phase space" the program will automatically find the largest sqaure hole and spawn a new trajectory at the upper left corner (lower left in terms of coordinates).  
 In order to to generate a gradient, the program will check if there is another trajectory close to it.  
 If yes, it will choose a similar color for the new trajectory.
 Otherwise the color is random.
-Afterwards the all trajectories are iterated "#iterations" times.
+Afterwards the all trajectories are iterated "#Iterations" times.
 
 The program will repeat this process every frame as often as is specified in the "#trajectories to spawn" field.
 
@@ -42,6 +53,10 @@ This will only visualy clear the phase space.
 It will not affect the actual trajectories.
 Only the main control is able to do that
 
+#### Save Phase Space
+Will write the phase space trajectories of all trajectories to a file and save it.  
+If running in a browser it will be saved as a download.  
+On PC it will save the file in "AppData"...
 
 ### Flow Map
 The flow map shows the flow map of the current system. Controls can be opened under "Flow Map Control".
