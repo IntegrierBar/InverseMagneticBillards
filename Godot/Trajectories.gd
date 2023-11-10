@@ -822,20 +822,6 @@ func _on_DeleteAllTrajectories_pressed():
 
 ####################### OTHER FUNCTIONS ############################################################
 
-# saves all phase space trajectory data to a file
-func save_phase_space():
-	var data: String = trajectories.get_phasespace_data()
-	var file_name: String = "trajectories" + Time.get_date_string_from_system() + ".txt"
-	if OS.has_feature("web"):	# If we are on web, make it as a dowload
-		JavaScript.download_buffer(data.to_utf8(), file_name)
-	elif OS.has_feature("pc"):	# If on PC make saves data inside %APPDATA%\Godot\app_userdata\InverseMagneticBillard
-		var file = File.new()
-		file.open("user://" + file_name, File.WRITE)
-		file.store_string(data)
-		file.close()
-	else:
-		print("this should not be calling")
-
 
 # button that resets all trajectories to their start position and direction (at least in theory) 
 func _on_ResetAllTrajectories_pressed():
@@ -917,14 +903,28 @@ func is_in_iterate_state() -> bool:
 		return false
 
 
-func _on_BilliardTypeControl_toggled(button_pressed):
-	# this only works because we only have 0 and 1 now!
-	trajectories.set_billard_type(button_pressed)  
-	trajectory_to_show.set_billard_type(button_pressed)
-	phase_space.reset_all_trajectories()
-	flow_map.change_billiard_type(button_pressed)
-
-
 # update zoom variable whenever zooming happens in the regular space
 func zoom_changed(z):
 	zoom = z
+
+
+func _on_BilliardTypeOptions_item_selected(index):
+	trajectories.set_billard_type(index)
+	trajectory_to_show.set_billard_type(index)
+	phase_space.reset_all_trajectories()
+	flow_map.change_billiard_type(index)
+
+
+# saves all phase space trajectory data to a file
+func _on_SavePhaseSpaceData_pressed():
+	var data: String = trajectories.get_phasespace_data()
+	var file_name: String = "trajectories_" + Time.get_date_string_from_system() + ".txt"
+	if OS.has_feature("web"):	# If we are on web, make it as a dowload
+		JavaScript.download_buffer(data.to_utf8(), file_name)
+	elif OS.has_feature("pc"):	# If on PC make saves data inside %APPDATA%\Godot\app_userdata\InverseMagneticBillard
+		var file = File.new()
+		file.open("user://" + file_name, File.WRITE)
+		file.store_string(data)
+		file.close()
+	else:
+		print("this should not be calling")
