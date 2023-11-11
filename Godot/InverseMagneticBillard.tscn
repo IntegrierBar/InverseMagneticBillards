@@ -100,6 +100,7 @@ shader_param/iterations = null
 shader_param/forwards = null
 shader_param/showPosition = null
 shader_param/showAngle = null
+shader_param/polygon2 = null
 
 [sub_resource type="ShaderMaterial" id=19]
 shader = ExtResource( 18 )

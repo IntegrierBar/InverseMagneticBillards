@@ -10,6 +10,7 @@ uniform bool forwards;		// should we iterate forwards or backwards?
 uniform bool showPosition;	// determine if Position should be added to COLOR
 uniform bool showAngle;		// determine if Agnle should be added to COLOR
 
+uniform vec2 polygon2;
 
 const float M_PI = 3.14159265;
 const float eps = 1e-6;
