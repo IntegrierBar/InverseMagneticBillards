@@ -160,6 +160,10 @@ func local_to_ps() -> Vector2:
 	var y = locpos[1] / sizey
 	return Vector2(x, y)
 
+# is called everytime the #iterations is changed
+func set_instance_count(count: int):
+	for mesh in get_children():
+		mesh.set_instance_count(count)
 
 func _on_SpawnTrajOnClickButton_pressed():
 	current_state = STATES.SINGLE

@@ -454,11 +454,13 @@ func _on_EditMaxDrawnIterations_text_changed():
 		
 		trajectories.set_max_count(maxnum)
 
-
+# Sets the maximum number of iterations
+# Also changes the instance count for all multimeshes in phase space
 func _on_EditMaxIterations_text_changed():
 	if maxit_edit.text.is_valid_integer():
 		var maxiter = int(maxit_edit.text)
 		trajectories.set_max_iter()
+		phase_space.set_instance_count(maxiter + 1)
 
 
 # user wants to make new polygon

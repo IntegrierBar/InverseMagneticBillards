@@ -941,7 +941,7 @@ margin_right = 277.0
 margin_bottom = 82.0
 hint_tooltip = "Iteratively spawns a trajectory inside the largest square hole 
 inside the currently visible phase space and iterates all trajectories"
-text = "Start to fill phasespace"
+text = "Start to Fill Phase Space"
 clip_text = true
 
 [node name="ClearPSTrajectories" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]

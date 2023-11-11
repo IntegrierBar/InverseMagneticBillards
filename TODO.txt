@@ -1,8 +1,13 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
+
+Start to fill PS does not use "Trajectory drawn in regular space. Maybe change this?
+
 SCHEIß BUG:
 Browser kann nicht mehr als 86 trajectorien. Vermutlich ein Buffer problem.
+WICHTIG: Mehr als ca 86*100.000 Punkte können nicht in den PS gemalt werden wegen Buffer!!!
+ -> fix: #iterations setzt die Anzahl der Punkte für Phase space
 
 Überprüfe das mit "Stop at corner" alles stimmt, richtig initialisiert und korrekt in der UI angezeigt etc.
 
