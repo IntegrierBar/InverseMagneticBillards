@@ -20,7 +20,7 @@ margin_right = 106.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "New start position"
+text = "New Start Position"
 clip_text = true
 
 [node name="DeleteTrajButton" type="Button" parent="HBoxContainer"]
@@ -28,7 +28,7 @@ margin_left = 110.0
 margin_right = 216.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-text = "Delete trajectory"
+text = "Delete Trajectory"
 clip_text = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]

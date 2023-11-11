@@ -3,7 +3,7 @@ TODO:
 --------------------------------------------------------------------------------------------------------------------
 Überprüfe das mit "Stop at corner" alles stimmt, richtig initialisiert und korrekt in der UI angezeigt etc.
 
-Alles groß schreiben
+Alles groß schreiben X
 
 Name der Anwendung in Settings vo Praktikum auf Inverse Magnetic Billiards ändern
 
