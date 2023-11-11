@@ -11,7 +11,7 @@ func _ready():
 	multimesh.mesh = PointMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_2D
 	multimesh.color_format = MultiMesh.COLOR_FLOAT
-	multimesh.instance_count = 100000	# could consider higher
+	multimesh.instance_count = 10000	# could consider higher
 	multimesh.visible_instance_count = 0
 #	var material = ShaderMaterial.new()
 #	material.shader = point_shader
