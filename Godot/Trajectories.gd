@@ -235,7 +235,7 @@ func clear_polygon():
 	$PolygonVertexHandler.clear()
 	polygon_vertex.clear_polygon()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
-	phase_space.remove_all_trajectories()	############################# WHY ARE WE CALLING THIS???????????
+	phase_space.remove_all_trajectories()
 	if trajcount >= 1:	#TODO: can we please delete this part? ###############################################################################
 		phase_space.add_preliminary_trajectory(trajectories.get_trajectory_colors()[0])
 
