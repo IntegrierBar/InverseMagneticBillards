@@ -1,6 +1,9 @@
 --------------------------------------------------------------------------------------------------------------------
 TODO:
 --------------------------------------------------------------------------------------------------------------------
+SCHEIß BUG:
+Browser kann nicht mehr als 86 trajectorien. Vermutlich ein Buffer problem.
+
 Überprüfe das mit "Stop at corner" alles stimmt, richtig initialisiert und korrekt in der UI angezeigt etc.
 
 CONSIDER FLIPPING y_axis for PS and FM MAYBE NOT: TOO MUCH WORK
