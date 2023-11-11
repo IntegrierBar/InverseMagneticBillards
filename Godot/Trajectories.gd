@@ -585,6 +585,11 @@ func _on_EditBatchSize_text_changed():
 # starts to look for holes in phasespace by entering the fill phasespace state
 func _on_StartFillPSButton_pressed():
 	if current_state == STATES.ITERATE:
+		if traj_num_spawn.text.is_valid_integer():
+			var tns = int(traj_num_spawn.text)
+			fill_ps_trajectories_to_spawn = tns
+		else:	# If the user did not write valid integer, do nothing
+			return
 		current_state = STATES.FILL_PS
 		trajectories.addPointsToGrid = true	# add points after iteration to grid
 		# caluculate lower_left and upper_right
@@ -606,11 +611,12 @@ func _on_GridSizeEdit_text_changed():
 		trajectories.set_grid_size(gs)
 
 
+# DEPRECATED NOW JUST READ DATA WHEN WE ITERATE
 # Sets number of trajectories that are to be spawned into holes in phasespace
-func _on_TrajNumToSpawnEdit_text_changed():
-	if traj_num_spawn.text.is_valid_integer():
-		var tns = int(traj_num_spawn.text)
-		fill_ps_trajectories_to_spawn = tns
+#func _on_TrajNumToSpawnEdit_text_changed():
+#	if traj_num_spawn.text.is_valid_integer():
+#		var tns = int(traj_num_spawn.text)
+#		fill_ps_trajectories_to_spawn = tns
 
 
 ####################### ADDING TRAJECTORIES ########################################################

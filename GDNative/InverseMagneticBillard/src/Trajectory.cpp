@@ -21,7 +21,7 @@ namespace godot {
         vec2_d pointProjected;
         for (int i = 0; i < polygon.size() - 1; i++)
         {
-            double t = (length_squared(start) - dot(start, polygon[i])) / dot(start, polygon[i + 1] - polygon[i]);
+            double t = (dot(start - polygon[i], polygon[i + 1] - polygon[i]) / length_squared(polygon[i + 1] - polygon[i])); // maybe there is an error here, be carefull
             // snap to corners of edge
             if (t < 0) { t = 0; }
             else if (t > 1) { t = 1; }
@@ -185,7 +185,7 @@ namespace godot {
         if (currentIndexOnPolygon >= polygon.size() - 1)
         {
             Godot::print("currentIndexOnPolygon is to large on second occasion");
-            return Vector2(0, 0);
+            return std::nullopt;
         }
 
         if (count < maxCount)   //draw in normal space if desired

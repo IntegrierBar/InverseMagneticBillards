@@ -3,23 +3,11 @@ TODO:
 --------------------------------------------------------------------------------------------------------------------
 Überprüfe das mit "Stop at corner" alles stimmt, richtig initialisiert und korrekt in der UI angezeigt etc.
 
-Alles groß schreiben X
-
-Name der Anwendung in Settings vo Praktikum auf Inverse Magnetic Billiards ändern
-
-Close polygon, C zum schließen hinzufügen und potentiell rechte Maustaste durch mittlere Maustaste ersetzen 
-
 CONSIDER FLIPPING y_axis for PS and FM MAYBE NOT: TOO MUCH WORK
 
-BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS nicht mehr tut. Wenn im 
+BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS nicht mehr tut. Wenn im  CANNOT REPRODUCE ANYMORE; MAYBE CHECK IN WEB
 
 (double Precission im Shader oder andere Tricks für geringen Radius)
-
-Button der entscheidet, ob Trajektorien an Ecken anhalten oder Fest definierte Seite wählen (also nicht durch zufall 
-entschieden, welche Seite es ist)
-BENÖTIGT NUR NOCH UI UND TESTEN, OB eps GUT GEWÄHLT  -> UI ist fertig
-Beim Iterieren muss geprüft werden ob eine Ecke getroffen wird, falls ja sollte nicht weiter iteriert werden, 
-insbesondere wichtig für symplektisches Billard (SOLLTEN WIR NOCHMAL NACHFRAGEN?)
 
 Optional: Wenn man in einem Fenster scrollt, sollte im dahinterliegenden Bild nicht auch gescrollt werden, das muss
 man irgendwie mit Inputs regeln
@@ -28,25 +16,9 @@ man irgendwie mit Inputs regeln
 
 Pixelgröße in phasespace setzbar WAS MACHE ICH DA FALSCH??
 
-C++ code, safe data to file. Benötigt nur noch Godot UI
+C++ code, safe data to file. Benötigt nur noch Godot UI X TEST WEB
 
 Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?
-
-Zeige Koordinaten der aktuellen Mausposition für regular space, phasespace und flowmap an, vermutlich in der oberen
-rechten Ecke der jeweiligen Felder -> funktioniert  X
-Dazu zu klären:
-- Wie genau soll die Position angezeigt werden? Braucht es wirklich 6 Nachkommastellen oder sollen wir weniger 
-  angeben?	NUTZE 3 NAchkommastellen  -> X Implementiert aber es gibt einen Bug beim regular space!  X gefixt
-- Sollen im Phasespace und in der Flowmap Koordinaten auch angegeben werden wenn sie außerhalb des zulässigen 
-  Bereichs sind? Eher nicht, oder? -> Ist jetzt mit nein implementiert  X
-- Soll es einen Button geben mit dem man das Anzeigen der Koordinaten deaktivieren kann? NEIN X
-- Neuer Bug: Abhängig vom Zoomstatus werden die neuen Koorinaten nicht mit voller Präzesion angezeigt
-
-Bug: (0,0) als Startposition führt zu Problemen
-Ist unabhängig davon, wie (0,0) gesetzt wird
-Zwei Sachen können passieren (scheint an der Startrichtung zu hängen):
-- Fehler werden ausgegeben: "could not intersect polygon with line" und "got nullopt from iteration"
-- Startposition springt an einen anderen Punkt auf dem Polygon
 
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
@@ -76,6 +48,34 @@ die Instruction labels entfernt werden, denke ich
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+Bug: (0,0) als Startposition führt zu Problemen X SOLLTE GEFIXED SEIN, PROBLEM IM C++ CODE BEIM SETZEN DER INITIAL VALUES
+Ist unabhängig davon, wie (0,0) gesetzt wird
+Zwei Sachen können passieren (scheint an der Startrichtung zu hängen):
+- Fehler werden ausgegeben: "could not intersect polygon with line" und "got nullopt from iteration"
+- Startposition springt an einen anderen Punkt auf dem Polygon
+
+Zeige Koordinaten der aktuellen Mausposition für regular space, phasespace und flowmap an, vermutlich in der oberen
+rechten Ecke der jeweiligen Felder -> funktioniert  X
+Dazu zu klären:
+- Wie genau soll die Position angezeigt werden? Braucht es wirklich 6 Nachkommastellen oder sollen wir weniger 
+  angeben?	NUTZE 3 NAchkommastellen  -> X Implementiert aber es gibt einen Bug beim regular space!  X gefixt
+- Sollen im Phasespace und in der Flowmap Koordinaten auch angegeben werden wenn sie außerhalb des zulässigen 
+  Bereichs sind? Eher nicht, oder? -> Ist jetzt mit nein implementiert  X
+- Soll es einen Button geben mit dem man das Anzeigen der Koordinaten deaktivieren kann? NEIN X
+- Neuer Bug: Abhängig vom Zoomstatus werden die neuen Koorinaten nicht mit voller Präzesion angezeigt
+
+Button der entscheidet, ob Trajektorien an Ecken anhalten oder Fest definierte Seite wählen (also nicht durch zufall 
+entschieden, welche Seite es ist)
+BENÖTIGT NUR NOCH UI UND TESTEN, OB eps GUT GEWÄHLT  -> UI ist fertig X
+Beim Iterieren muss geprüft werden ob eine Ecke getroffen wird, falls ja sollte nicht weiter iteriert werden, 
+insbesondere wichtig für symplektisches Billard (SOLLTEN WIR NOCHMAL NACHFRAGEN?) X
+
+Alles groß schreiben X
+
+Name der Anwendung in Settings vo Praktikum auf Inverse Magnetic Billiards ändern X
+
+Close polygon, C zum schließen hinzufügen und potentiell rechte Maustaste durch mittlere Maustaste ersetzen X
 
  X #drawn in REGULAR space nennen und so machen, dass mehr als 744 geht, indem man Stückelt. X
  X Sollen Trajektorien mit mehr als 744 Iterationen malbar sein? dann müssen sie zerstückelt werden ... 
