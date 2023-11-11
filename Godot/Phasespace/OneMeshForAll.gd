@@ -82,7 +82,7 @@ func remove_all():
 	trajectory_data = []
 	multimesh.visible_instance_count = 0
 
-# allows the user to set the instance count sinze the maximum is hardware dependant
+# allows the user to set the instance count sinze the maximum is hardware dependent
 func set_instance_count(count: int):
 	multimesh.instance_count = count
 	redraw()
