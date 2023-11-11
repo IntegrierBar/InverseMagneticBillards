@@ -20,7 +20,7 @@
 [ext_resource path="res://Shaders/FTLE.gdshader" type="Shader" id=18]
 [ext_resource path="res://Viewport/ViewportSkriptForMouseInput.gd" type="Script" id=19]
 [ext_resource path="res://Flowmap/FlowmapControl.gd" type="Script" id=20]
-[ext_resource path="res://Phasespace/MultiMesh.tscn" type="PackedScene" id=21]
+[ext_resource path="res://Phasespace/OneMeshForAll.tscn" type="PackedScene" id=21]
 [ext_resource path="res://Shaders/FTLESymplectic.gdshader" type="Shader" id=22]
 
 [sub_resource type="Resource" id=8]
@@ -672,8 +672,7 @@ _zoom_level = 2.0
 [node name="PhaseSpace" type="Sprite" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" groups=["PhaseSpace"]]
 script = ExtResource( 2 )
 
-[node name="MultiMeshInstance2D" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" instance=ExtResource( 21 )]
-visible = false
+[node name="PSPoints" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" instance=ExtResource( 21 )]
 
 [node name="PSAngleLabel" type="Label" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
 margin_left = -220.0

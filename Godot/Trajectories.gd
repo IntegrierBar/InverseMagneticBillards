@@ -118,7 +118,7 @@ func _ready():
 	#close_polygon()
 	current_state = STATES.SET_POLYGON 
 	# set add trajetory with some initial position and direction
-	add_trajectory(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
+	#add_trajectory(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
 	trajectory_to_edit = 0 
 	trajectories.set_billard_type(0) ########## for inverse magnetic
 
@@ -236,7 +236,7 @@ func clear_polygon():
 	polygon_vertex.clear_polygon()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
 	phase_space.remove_all_trajectories()	############################# WHY ARE WE CALLING THIS???????????
-	if trajcount >= 1:
+	if trajcount >= 1:	#TODO: can we please delete this part? ###############################################################################
 		phase_space.add_preliminary_trajectory(trajectories.get_trajectory_colors()[0])
 
 
@@ -308,7 +308,7 @@ func _on_RegularNGonButton_pressed():
 # after this function was called, set_initial_values will / should always be called!
 func add_trajectory(start: Vector2, dir: Vector2, color: Color):
 	trajectories.add_trajectory(invert_y(start), invert_y(dir), color)
-	phase_space.add_preliminary_trajectory(color)
+	phase_space.add_preliminary_trajectory(color)	# warum wird hier prelim verwendet und nicht einfach converted??????????????? TODO
 	_new_trajectory_added(color)
 
 # this function is only used, if the starting coordinates are already known! 

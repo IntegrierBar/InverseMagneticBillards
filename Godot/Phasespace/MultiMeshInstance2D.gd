@@ -2,7 +2,7 @@
 
 extends MultiMeshInstance2D
 
-onready var point_shader: Shader = preload("res://Phasespace/Point_shader.gdshader")
+#onready var point_shader: Shader = preload("res://Phasespace/Point_shader.gdshader")
 
 var color: Color = Color.red
 
@@ -14,7 +14,7 @@ func _ready():
 	multimesh.mesh = PointMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_2D
 	multimesh.color_format = MultiMesh.COLOR_FLOAT
-	multimesh.instance_count = 1000	# could consider higher
+	multimesh.instance_count = 100000	# could consider higher
 	multimesh.visible_instance_count = 0
 
 func add_trajectory_points(points: Array):
