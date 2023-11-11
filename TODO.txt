@@ -2,6 +2,8 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
+Benötige UI um anzahl PS punkte zu setzen. + Fehler fenster, wenn index zu hoch
+
 Start to fill PS does not use "Trajectory drawn in regular space. Maybe change this?
 
 SCHEIß BUG:
