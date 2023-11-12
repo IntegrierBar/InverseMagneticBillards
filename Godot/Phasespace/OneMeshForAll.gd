@@ -1,3 +1,4 @@
+# DEPRECATED USES MULTIMESHHANDLER INSTEAD
 # use one multimesh for all trajectories.
 # then have to save all data in one massive array
 

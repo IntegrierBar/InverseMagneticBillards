@@ -11,7 +11,8 @@ var traj_script
 var instr_label
 var num_traj_in_batch
 var ps_coords
-onready var multimesh = $"../PSPoints"	# this is where all the points are drawn
+#onready var multimesh = $"../PSPoints"	# this is where all the points are drawn
+onready var multimesh_handler = $"../MultimeshHandler"
 
 var mouse_inside = false
 var drawInNormalSpace = true
@@ -104,7 +105,8 @@ func add_points_to_phasespace(points: Array):
 	var rescaled_points = []
 	for i in range(points.size()):
 		rescaled_points.append(rescale(points[i]))
-	multimesh.add_points(rescaled_points)
+#	multimesh.add_points(rescaled_points)
+	multimesh_handler.add_points(rescaled_points)
 
 # from phase space coords, to world coords
 func rescale(points: Array) -> Array:
@@ -124,42 +126,49 @@ func add_preliminary_trajectory(color: Color):
 #	var trajectory = multimesh_scene.instance()
 #	trajectory.color = color
 #	add_child(trajectory)
-	multimesh.add_preliminary_trajectory(color)
+#	multimesh.add_preliminary_trajectory(color)
+	multimesh_handler.add_preliminary_trajectory(color)
 
 func add_trajectory(pos: Vector2, color: Color):
 #	var trajectory = multimesh_scene.instance()
 #	trajectory.color = color
 #	add_child(trajectory)
 #	trajectory.add_trajectory_points(rescale([pos]))
-	multimesh.add_trajectory(rescale([pos]), color)
+#	multimesh.add_trajectory(rescale([pos]), color)
+	multimesh_handler.add_trajectory(rescale([pos]), color)
 
 func remove_trajectory(index: int):
 #	get_child(index).queue_free()
-	multimesh.remove_trajectory(index)
+#	multimesh.remove_trajectory(index)
+	multimesh_handler.remove_trajectory(index)
 
 func remove_all_trajectories():
 #	for child in get_children():
 #		child.queue_free()
-	multimesh.remove_all()
+#	multimesh.remove_all()
+	multimesh_handler.remove_all()
 
 func reset_all_trajectories():
 #	for mesh in get_children():
 #		mesh.reset()
-	multimesh.reset()
+#	multimesh.reset()
+	multimesh_handler.reset()
 
 func set_initial_values(index: int, pos: Vector2):
 	#print("setting inital values of" + str(index))
-	if index >= get_child_count():
-		print("trying to acces child that does not exist")
+#	if index >= get_child_count():
+#		print("trying to acces child that does not exist")
 #	var mesh = get_children()[index]
 #	# this removes poiints of all trajectories from phasespace
 #	mesh.clear()
 #	mesh.add_trajectory_points(rescale([pos]))
-	multimesh.set_initial_values(index, rescale([pos]))
+#	multimesh.set_initial_values(index, rescale([pos]))
+	multimesh_handler.set_initial_values(index, rescale([pos]))
 
 func set_color(index: int, color: Color):
 #	get_child(index).set_color(color)
-	multimesh.set_color(index, color)
+#	multimesh.set_color(index, color)
+	multimesh_handler.set_color(index, color)
 
 
 func local_to_ps() -> Vector2:
@@ -192,7 +201,8 @@ func _on_SpawnTrajBatch_pressed():
 func _on_ClearPSTrajectories_pressed():
 #	for mesh in get_children():
 #		mesh.clear()
-	multimesh.clear()
+#	multimesh.clear()
+	multimesh_handler.clear()
 
 
 
