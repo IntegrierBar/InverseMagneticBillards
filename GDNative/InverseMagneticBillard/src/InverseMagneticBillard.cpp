@@ -1,6 +1,6 @@
 #include "InverseMagneticBillard.h"
 #include <iostream>
-
+#include <sstream>
 
 
 namespace godot {
@@ -448,7 +448,18 @@ namespace godot {
 
     String InverseMagneticBillard::get_phasespace_data()
     {
-        String data;
+        std::string data;
+        // calculate the size
+        int stringSize = 0;
+        int vec2_dSize = vec2_d(0, 0).to_string().size();
+        int newLineSize = std::string("\n").size();
+        for (size_t i = 0; i < trajectories.size(); i++)
+        {
+            stringSize += trajectories[i].phaseSpaceTrajectory.size() * (vec2_dSize + newLineSize) + newLineSize;
+        }
+        // reserve to prevent copying
+        data.reserve(stringSize);
+
         for (const auto& t : trajectories)
         {
             for (const auto& point : t.phaseSpaceTrajectory)
@@ -458,7 +469,7 @@ namespace godot {
             }
             data += "\n";
         }
-        return data;
+        return String(data.c_str());
     }
 
     void InverseMagneticBillard::set_initial_values(int index, Vector2 start, Vector2 dir)
