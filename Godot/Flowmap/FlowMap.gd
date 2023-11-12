@@ -24,26 +24,6 @@ var iterationcount = 1
 var hold_mouse = false # used to check whether the left mouse button is held, 
 						# needed to show trajectories 
 
-#var radius: float = 1.0;
-#
-#func _ready():
-#	var c = Color(10, 12, 13)
-#	print("color")
-#	print(c.r)
-#	print(c.g)
-#	print(c.b)
-#
-#	var test = []
-#	var length = []
-#	test.append(Vector2(0.0, 0.0))
-#	length.append(0.0)
-#	test.append(Vector2(10.0, 0.0))
-#	length.append(10.0)
-#	test.append(Vector2(0.0, 10.0))
-#	length.append(10.0+sqrt(200.0))
-#	test.append(Vector2(0.0, 0.0))
-#	length.append(10.0+sqrt(200.0) + 10.0)
-#	store_polygon_as_image(test, length)
 
 
 func _ready():
@@ -86,12 +66,11 @@ func _set_inside():
 	mouse_inside = true
 	fm_coords.show()
 
-
 func _set_outside():
 	mouse_inside = false
 	fm_coords.hide()
 
-	
+
 func _input(event):
 	if mouse_inside:
 		match fmstate: 
@@ -150,7 +129,7 @@ func _on_ShowSpawnButton_toggled(button_pressed):
 		fmstate = STATES.SHOW
 
 
-# ääähhhhhh
+# Sends the polygon data to the shaders as a sampler2D image
 func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	# pass the size to 
 	#print(polygon)
@@ -203,10 +182,8 @@ func set_radius(r):
 	$"../FMSymplectic".material.set_shader_param("radius", r)
 	$"../FTLESymplectic".material.set_shader_param("radius", r)
 
-
+# sets number of iterations also for the trajectories copy that is needed to show trajectories from the flow map
 func set_iterations(iter: int):
-	# sets number of iterations also for the trajectories copy that is needed to show trajectories
-	# from the flowmap
 	traj_script.batch_to_show = iter
 	material.set_shader_param("iterations", iter)
 	$"../FTLE".material.set_shader_param("iterations", iter)

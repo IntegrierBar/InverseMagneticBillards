@@ -28,24 +28,15 @@ func _process(delta):
 		var direction = Input.get_vector("move_camera_left", "move_camera_right", "move_camera_up", "move_camera_down")
 		position += camera_speed*delta*direction
 
-
+# use a tween to alter the zoom level smoothly
 func _set_zoom_level(value: float) -> void:
 	_zoom_level = clamp(value, min_zoom, max_zoom)
 	var tween = create_tween()
 	tween.tween_property(self, "zoom", Vector2(_zoom_level, _zoom_level), zoom_duration)
 	emit_signal("zoom_changed", _zoom_level)
-#	var ctrans = get_canvas_transform()
-#	var min_pos = -ctrans.get_origin() / ctrans.get_scale()
-#	var view_size = get_viewport_rect().size / ctrans.get_scale()
-#	var max_pos = min_pos + view_size
-#	print(min_pos)
-#	print(max_pos)
 
 
 func input(event):
-	#if mouse_inside:
-	#if get_viewport_rect().has_point(get_global_mouse_position()):
-		#print("moving by mouse"):
 	if event.is_action_pressed("zoom_in"):
 		_set_zoom_level(_zoom_level/zoom_factor)
 	if event.is_action_pressed("zoom_out"):
@@ -63,12 +54,3 @@ func get_view_rectangle() -> Array:
 	var view_size = get_viewport_rect().size / ctrans.get_scale()
 	var max_pos = min_pos + view_size
 	return [min_pos, max_pos]
-
-#
-#func _set_inside():
-#	#print("inside")
-#	mouse_inside = true
-#
-#func _set_outside():
-#	#print("outiside")
-#	mouse_inside = false

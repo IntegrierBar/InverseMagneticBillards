@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -20,7 +20,6 @@
 [ext_resource path="res://Shaders/FTLE.gdshader" type="Shader" id=18]
 [ext_resource path="res://Viewport/ViewportSkriptForMouseInput.gd" type="Script" id=19]
 [ext_resource path="res://Flowmap/FlowmapControl.gd" type="Script" id=20]
-[ext_resource path="res://Phasespace/OneMeshForAll.tscn" type="PackedScene" id=21]
 [ext_resource path="res://Shaders/FTLESymplectic.gdshader" type="Shader" id=22]
 [ext_resource path="res://Phasespace/MultimeshHandler.gd" type="Script" id=23]
 
@@ -673,9 +672,6 @@ _zoom_level = 1.0
 [node name="PhaseSpace" type="Sprite" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" groups=["PhaseSpace"]]
 script = ExtResource( 2 )
 
-[node name="PSPoints" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" instance=ExtResource( 21 )]
-visible = false
-
 [node name="MultimeshHandler" type="Node2D" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
 script = ExtResource( 23 )
 
@@ -1269,7 +1265,6 @@ clip_text = true
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnTrajOnClickButton" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajOnClickButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnPSTrajOnCoords" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SpawnPSTrajOnCoords_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SpawnTrajBatch" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajBatch_pressed"]
-[connection signal="text_changed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/GridSizeControl/GridSizeEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_GridSizeEdit_text_changed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/StartFillPSButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_StartFillPSButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/ClearPSTrajectories" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_ClearPSTrajectories_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SavePhaseSpaceData" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SavePhaseSpaceData_pressed"]

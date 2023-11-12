@@ -53,13 +53,6 @@ func set_color(index: int, color: Color):
 
 # points is 2D array of all phase space points
 func add_points(points: Array):
-#	if points.size() != trajectory_data.size():
-#		print("this should not happen")
-#		print(points)
-#		print(trajectory_data)
-#		print(points.size())
-#		print(trajectory_data.size())
-#		return
 	for i in range(points.size()):
 		trajectory_data[i].append_array(points[i])
 		if current_multimesh.multimesh.visible_instance_count + points[i].size() >= instance_count:

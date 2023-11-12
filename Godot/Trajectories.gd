@@ -95,17 +95,16 @@ func _ready():
 	
 	$"../Camera2D".connect("zoom_changed", self, "zoom_changed")
 	
-	# set radius and batch size
+	# set radius
 	batch = 1  # number of iterations made on one "iterate" click
-	#trajectories.maxCount = 100
 	radius = 1
 	trajectories.set_radius(radius)
 	trajectory_to_show.set_radius(radius)
 	radius_slider.value = radius
 	
-	
 	trajectories.reset_trajectories()
 	trajectory_to_show.reset_trajectories()
+	
 	# set initial polygon
 	polygon_closed = false
 	polygon = []
@@ -115,10 +114,8 @@ func _ready():
 	add_polygon_vertex(Vector2(0,-10))
 	
 	# polygon cannot be closed when starting the application because that leads to errors
-	#close_polygon()
+	# close_polygon()
 	current_state = STATES.SET_POLYGON 
-	# set add trajetory with some initial position and direction
-	#add_trajectory(Vector2(1, 0), Vector2(0, -1), Color(0,1,0))
 	trajectory_to_edit = 0 
 	trajectories.set_billard_type(0) ########## for inverse magnetic
 
@@ -172,7 +169,6 @@ func _draw():
 			draw_line(polygon.back(), get_local_mouse_position(), polygon_color)
 		STATES.SET_START:
 			# draw circle on the trajectory closest to current mouse position
-			# BUG INvalid get index 0 DO NOT DELETE WHEN INSIDE SET_START OR DIRECTION
 			draw_circle(snap_to_polygon(get_local_mouse_position()), 10.0 * zoom, trajectories.get_trajectory_colors()[trajectory_to_edit])
 		STATES.TEXT_EDIT:
 			# only needed to draw indication line if start position or direction are set via text_edit
@@ -218,17 +214,13 @@ func clear_polygon():
 	polygon_closed = false
 	
 	var trajcount = trajectories.get_trajectory_colors().size()
-	# print(trajcount)
-	if trajcount > 1:
-		for i in range(1, trajcount): 
-# Note: it looks like Godot and C++ have different ways to handle how to remove objects! Watch out with the indices!
-			# print(i)
-			var container = traj_control.get_child(4 + i)
-# this index has to change with the iterations despite the node at the position being removed
-			container.queue_free()
-			# print(container)
-			trajectories.remove_trajectory(1)
-# this index has to be the same because the trajectory previously at position 2 is removed in the previous iteration
+	
+	# remove all trajectories
+	for i in range(0, trajcount): 
+		# Note: it looks like Godot and C++ have different ways to handle how to remove objects! Watch out with the indices!
+		var container = traj_control.get_child(4 + i)	# this index has to change with the iterations despite the node at the position being removed
+		container.queue_free()
+		trajectories.remove_trajectory(0)	# this index has to be the same because the trajectory previously at position 2 is removed in the previous iteration
 	
 	trajectories.clear_polygon()
 	trajectory_to_show.clear_polygon()
@@ -236,8 +228,8 @@ func clear_polygon():
 	polygon_vertex.clear_polygon()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
 	phase_space.remove_all_trajectories()
-	if trajcount >= 1:	#TODO: can we please delete this part? ###############################################################################
-		phase_space.add_preliminary_trajectory(trajectories.get_trajectory_colors()[0])
+#	if trajcount >= 1:	# can we please delete this part? ###############################################################################
+#		phase_space.add_preliminary_trajectory(trajectories.get_trajectory_colors()[0])
 
 
 func change_polygon_vertex(pos: Vector2, n: int):
@@ -308,7 +300,7 @@ func _on_RegularNGonButton_pressed():
 # after this function was called, set_initial_values will / should always be called!
 func add_trajectory(start: Vector2, dir: Vector2, color: Color):
 	trajectories.add_trajectory(invert_y(start), invert_y(dir), color)
-	phase_space.add_preliminary_trajectory(color)	# warum wird hier prelim verwendet und nicht einfach converted??????????????? TODO
+	phase_space.add_preliminary_trajectory(color)
 	_new_trajectory_added(color)
 
 # this function is only used, if the starting coordinates are already known! 
@@ -372,16 +364,11 @@ func write_StartPosAndDir(pscoords: Vector2, number: int):
 func iterate_batch():
 	var phase_space_points = trajectories.iterate_batch(batch, stop_at_corner.pressed)	# bool is whether to stop at vertex
 	phase_space.add_points_to_phasespace(phase_space_points)
-#	for i in range(trajectories.size()):
-#		var coordsPhasespace = trajectories[i].iterate_batch(batch)
-#		#print(coordsPhasespace)
-#		phase_space.add_points_to_trajectory(i, coordsPhasespace)
 
 
 func set_initial_values(index: int, start: Vector2, dir: Vector2):
 	trajectories.set_initial_values(index, invert_y(start), invert_y(dir))
 	var pscoord = R2ToPS(start, dir)
-	#print(pscoord)
 	phase_space.set_initial_values(index, pscoord)
 
 
@@ -450,17 +437,15 @@ func _on_Button_pressed():
 func _on_EditMaxDrawnIterations_text_changed():
 	if maxnum_edit.text.is_valid_integer():
 		var maxnum = int(maxnum_edit.text)
-		var trajcount = trajectories.get_trajectory_colors().size()
+		#var trajcount = trajectories.get_trajectory_colors().size()
 		
 		trajectories.set_max_count(maxnum)
 
 # Sets the maximum number of iterations
-# Also changes the instance count for all multimeshes in phase space
 func _on_EditMaxIterations_text_changed():
 	if maxit_edit.text.is_valid_integer():
 		var maxiter = int(maxit_edit.text)
-		trajectories.set_max_iter()
-		phase_space.set_instance_count(maxiter + 1)
+		trajectories.set_max_iter(maxiter)
 
 
 # user wants to make new polygon
@@ -489,8 +474,6 @@ func _on_NewStartPos_pressed(id):
 		current_state = STATES.SET_START
 		var node = instance_from_id(id)  
 		trajectory_to_edit = node.get_index() - 4
-		# print(trajectory_to_edit)  
-		#phase_space.reset_trajectory() # TODO THIS IS UGLY
 		trajectory_instr.text = "Click to choose a new start position"
 
 
@@ -520,18 +503,13 @@ func on_InitialValues_text_changed(index: int, v_pos: Vector2, v_dir: Vector2):
 	current_state = STATES.TEXT_EDIT
 	trajectory_to_edit = index
 	var pos_on_polygon = snap_to_polygon(invert_y(v_pos))
-	#print(pos_on_polygon)
-	#print(v_pos)
-	#print("\n")
 	var traj = traj_control.get_child(trajectory_to_edit + 4)
 	var start = traj.get_child(1).get_child(0)
 	var string = String(invert_y(pos_on_polygon))
 	start.text = string
 	
-	
 	trajectories.set_initial_values(index, invert_y(pos_on_polygon), v_dir)
 	var pscoord = R2ToPS(pos_on_polygon, invert_y(v_dir))
-	#print(pscoord)
 	phase_space.set_initial_values(index, pscoord)
 	
 	newpos = pos_on_polygon
@@ -606,19 +584,10 @@ func _on_StartFillPSButton_pressed():
 
 
 # sets grid size for looking for holes in phasespace
-# TODO WE CAN ACTUALLY REMOVE THIS SIGNAL AS THIS WILL ALWAYS GET CALLED WHEN WE START FILL_PS
 func _on_GridSizeEdit_text_changed():
 	if grid_size.text.is_valid_float():
 		var gs = float(grid_size.text)
 		trajectories.set_grid_size(gs)
-
-
-# DEPRECATED NOW JUST READ DATA WHEN WE ITERATE
-# Sets number of trajectories that are to be spawned into holes in phasespace
-#func _on_TrajNumToSpawnEdit_text_changed():
-#	if traj_num_spawn.text.is_valid_integer():
-#		var tns = int(traj_num_spawn.text)
-#		fill_ps_trajectories_to_spawn = tns
 
 
 ####################### ADDING TRAJECTORIES ########################################################
@@ -699,16 +668,11 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int, draw: bool):
 	var pos = res[0]
 	
 	var colours = res[1]
-	#colours.resize(pos.size())
-	#colours.fill(Color.aqua)
-	#for i in range(colours.size()):
-	#	colours[i] = Color(pos[i].x, pos[i].y, 0, 1)
 	
 	for i in range(pos.size()):
 		add_trajectory_ps(pos[i], colours[i])
 		if !draw:
-			pass
-			# trajectories.set_max_count(-1, 0)
+			trajectories.set_max_count(-1, 0)
 
 
 # used when spawning trajectory batches from phasespace
@@ -723,9 +687,6 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 	var positions : Array = []
 	var colors : PoolColorArray = []
 	
-	# print(x)
-	# print(y)
-	
 	for i in range(x):
 		for j in range(y):
 			
@@ -733,7 +694,6 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 			positions.append(pos + xymin) 
 			var c = Color(min(1, 2 - ((i + 1)/float(x) + j/float(y))), (i + 1)/float(x), j/float(y), 1)  
 			# TODO: I should probably find out how to apply barycentric coords to this ...
-			# print(c)
 			colors.append(c) 
 			# colors still not very good, different but difficult to see, not bright enough
 	
@@ -891,10 +851,8 @@ func PSToR2(psc: Vector2) -> Array:
 	var normside = (polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]).normalized()
 	var currentPosition = polygon[currentIndexOnPolygon] + (distance_left - currentlength) * normside
 	
-	#var rotator = [Vector2( cos(PI * psc[1]), sin(PI * psc[1]) ), Vector2 (-sin(PI * psc[1]), cos(PI * psc[1]))]
 	var currentDirection = normside.rotated(PI * psc[1])
 	
-	# var dir = currentDirection
 	var start = currentPosition + 1e-6 * currentDirection
 	var is_inside = Geometry.is_point_in_polygon(start, polygon)
 	

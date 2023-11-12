@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Phasespace/MultiMeshInstance2D.gd" type="Script" id=1]
-[ext_resource path="res://Phasespace/material.tres" type="Material" id=2]
+[ext_resource path="res://DEPRECATED/MultiMeshInstance2D.gd" type="Script" id=1]
+[ext_resource path="res://DEPRECATED/material.tres" type="Material" id=2]
 
 [sub_resource type="PointMesh" id=22]
 material = ExtResource( 2 )
