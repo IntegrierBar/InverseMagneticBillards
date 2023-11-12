@@ -928,7 +928,7 @@ func _on_SavePhaseSpaceData_pressed():
 	var data: String = trajectories.get_phasespace_data()
 	var file_name: String = "trajectories_" + Time.get_date_string_from_system()# + ".txt"
 	if OS.has_feature("web"):	# If we are on web, make it as a dowload
-		JavaScript.download_buffer(data.to_utf8(), file_name)
+		JavaScript.download_buffer(data.to_utf8(), file_name + ".txt")
 	elif OS.has_feature("pc"):	# If on PC make saves data inside %APPDATA%\Godot\app_userdata\InverseMagneticBillard
 		var number: int = 0	# used to make sure we dont override at the same day
 		var file = File.new()
