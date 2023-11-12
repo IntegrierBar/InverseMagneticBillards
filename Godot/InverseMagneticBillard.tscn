@@ -668,7 +668,7 @@ script = ExtResource( 19 )
 camera = NodePath("Camera2D")
 
 [node name="Camera2D" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" instance=ExtResource( 1 )]
-_zoom_level = 2.0
+_zoom_level = 1.0
 
 [node name="PhaseSpace" type="Sprite" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport" groups=["PhaseSpace"]]
 script = ExtResource( 2 )
