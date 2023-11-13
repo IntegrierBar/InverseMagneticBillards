@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "Table",
 "language": "GDScript",
-"path": "res://Table/Table.gd"
+"path": "res://DEPRECATED/Table/Table.gd"
 } ]
 _global_script_class_icons={
 "Table": ""

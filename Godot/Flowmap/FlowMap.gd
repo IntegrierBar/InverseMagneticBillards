@@ -130,15 +130,12 @@ func _on_ShowSpawnButton_toggled(button_pressed):
 
 # Sends the polygon data to the shaders as a sampler2D image
 func store_polygon_as_image(polygon: Array, polygonLength: Array):
-	# pass the size to 
-	#print(polygon)
-	#print(polygonLength)
+	# pass the size to shader
 	material.set_shader_param("n", polygon.size())
 	$"../FTLE".material.set_shader_param("n", polygon.size())
 	$"../FMSymplectic".material.set_shader_param("n", polygon.size())
 	$"../FTLESymplectic".material.set_shader_param("n", polygon.size())
 	
-	#material.set_shader_param("radius", radius)
 	# convert array to imageTexture and send it to shader
 	var img = Image.new()
 	var polyLength = Image.new()

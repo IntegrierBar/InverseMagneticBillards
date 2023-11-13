@@ -454,7 +454,7 @@ func _on_ButtonPolygon_pressed():
 	current_state = STATES.SET_POLYGON
 	clear_polygon()
 	polygon_instr.text = "Click to position at least 3 points to create an new polygon"
-	
+
 
 # close polygon button pressed
 func _on_ButtonClosePolygon_pressed():

@@ -8,6 +8,7 @@ func add_polygon_vertex(v: Vector2):
 	Vertex.pos = v
 	add_child(Vertex)
 
+
 func clear():
 	for c in get_children():
 		c.queue_free()
