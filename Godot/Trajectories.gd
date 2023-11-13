@@ -52,6 +52,7 @@ var batch: int
 var batch_to_show: int = 1
 #var max_count: int  # I don't think this variable is currently used
 var radius: float
+var billiard_type: int = 0
 
 # use a state machine to hand changes of the polygon and the trajectory
 enum STATES {
@@ -529,7 +530,9 @@ func _on_TextEdit_text_changed():
 			# this allows to set the radius larger than 20 via the text field
 			# sets slider value to largest value possible
 			radius_slider.value = radius_slider.max_value
-			phase_space.reset_all_trajectories()
+			# only need to reset if we are in inverse magnetic billiard
+			if billiard_type == 0:
+				phase_space.reset_all_trajectories()
 			trajectories.set_radius(newradius)
 			trajectory_to_show.set_radius(newradius)
 			flow_map.set_radius(newradius)
@@ -546,7 +549,9 @@ func _on_RadiusSlider_value_changed(newradius):
 		if radius_edit.text != String(newradius): 
 			radius_edit.text = String(newradius) 
 		
-		phase_space.reset_all_trajectories()
+		# only need to reset if we are in inverse magnetic billiard
+		if billiard_type == 0:
+			phase_space.reset_all_trajectories()
 		trajectories.set_radius(newradius)
 		trajectory_to_show.set_radius(newradius)
 		flow_map.set_radius(newradius)
@@ -875,6 +880,7 @@ func zoom_changed(z):
 
 
 func _on_BilliardTypeOptions_item_selected(index):
+	billiard_type = index
 	trajectories.set_billard_type(index)
 	trajectory_to_show.set_billard_type(index)
 	phase_space.reset_all_trajectories()

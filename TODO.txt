@@ -2,24 +2,15 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
-CODE AUFRÄUMEN!!!!!!!!!!!!!!!!
+CODE AUFRÄUMEN!!!!!!!!!!!!!!!! KATRIN TODO
 
-Save phase space muss schneller laufen
-
-Set radius sollte nur resetten, wenn auch in Inverse Magnetic billiard
-
-Benötige UI um anzahl PS punkte pro multimesh zu setzen. + Fehler fenster, wenn index zu hoch
+Benötige UI um anzahl PS punkte pro multimesh zu setzen. (+ Fehler fenster, wenn index zu hoch)
 
 Start to fill PS does not use "Trajectory drawn in regular space. Maybe change this?
-
-SCHEIß BUG:
-Browser kann nicht mehr als 86 trajectorien. Vermutlich ein Buffer problem. X 
 
 Überprüfe das mit "Stop at corner" alles stimmt, richtig initialisiert und korrekt in der UI angezeigt etc.
 
 CONSIDER FLIPPING y_axis for PS and FM MAYBE NOT: TOO MUCH WORK
-
- X BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS nicht mehr tut. Wenn im  CANNOT REPRODUCE ANYMORE; MAYBE CHECK IN WEB
 
 (double Precission im Shader oder andere Tricks für geringen Radius)
 
@@ -29,8 +20,6 @@ man irgendwie mit Inputs regeln
 Überlegen die Trennung von FTLE und normalem FlowMap shader zu beenden
 
 Pixelgröße in phasespace setzbar WAS MACHE ICH DA FALSCH??
-
-C++ code, safe data to file. Benötigt nur noch Godot UI X TEST WEB
 
 Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?
 
@@ -62,6 +51,18 @@ die Instruction labels entfernt werden, denke ich
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+ X BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS nicht mehr tut. Wenn im  CANNOT REPRODUCE ANYMORE; MAYBE CHECK IN WEB
+
+
+SCHEIß BUG:
+Browser kann nicht mehr als 86 trajectorien. Vermutlich ein Buffer problem. X 
+
+Set radius sollte nur resetten, wenn auch in Inverse Magnetic billiard X
+
+Save phase space muss schneller laufen X
+
+C++ code, safe data to file. Benötigt nur noch Godot UI X TEST WEB X
 
 Bug: (0,0) als Startposition führt zu Problemen X SOLLTE GEFIXED SEIN, PROBLEM IM C++ CODE BEIM SETZEN DER INITIAL VALUES
 Ist unabhängig davon, wie (0,0) gesetzt wird

@@ -538,13 +538,20 @@ namespace godot {
         for (auto& t : trajectories)
         {
             t.radius = r;
-            t.reset_trajectory();
+            // only need to reset if we are in inverse magnetic billiard
+            if (billardType == 0)
+            {
+                t.reset_trajectory();
+            }            
         }
 
         for (auto& i : inverseTrajectories)
         {
             i.radius = r;
-            i.reset_trajectory();
+            if (billardType == 0)
+            {
+                i.reset_trajectory();
+            }            
         }
 
         update();
