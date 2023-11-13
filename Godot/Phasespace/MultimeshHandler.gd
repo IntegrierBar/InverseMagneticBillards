@@ -10,8 +10,10 @@ var trajectory_data: Array = []
 var current_multimesh
 var instance_count = 100000	# could consider higher
 
+
 func _ready():
 	add_multimesh()
+
 
 # adds a new multimesh to be used
 # and sets it as current multimesh
@@ -26,6 +28,7 @@ func add_multimesh():
 	add_child(new_multimesh)
 	current_multimesh = new_multimesh
 
+
 # add a new trajectory
 # pos is an Array with exactly one Vector2 inside
 func add_trajectory(pos: Array, color: Color):
@@ -38,18 +41,22 @@ func add_trajectory(pos: Array, color: Color):
 	current_multimesh.multimesh.set_instance_transform_2d(current_multimesh.multimesh.visible_instance_count, Transform2D(0, pos[0]))
 	current_multimesh.multimesh.visible_instance_count += 1
 
+
 func add_preliminary_trajectory(color: Color):
 	color_array.append(color)
 	trajectory_data.append([])
+
 
 # pos is an Array with exactly one Vector2 inside
 func set_initial_values(index: int, pos: Array):
 	trajectory_data[index] = pos
 	redraw()
 
+
 func set_color(index: int, color: Color):
 	color_array[index] = color
 	redraw()
+
 
 # points is 2D array of all phase space points
 func add_points(points: Array):
@@ -62,11 +69,13 @@ func add_points(points: Array):
 			current_multimesh.multimesh.set_instance_transform_2d(current_multimesh.multimesh.visible_instance_count, Transform2D(0, points[i][j]))
 			current_multimesh.multimesh.visible_instance_count += 1
 
+
 # delete a single trajectory
 func remove_trajectory(index: int):
 	color_array.remove(index)
 	trajectory_data.remove(index)
 	redraw()
+
 
 # redraws all points
 func redraw():
@@ -84,11 +93,13 @@ func redraw():
 			current_multimesh.multimesh.set_instance_transform_2d(current_multimesh.multimesh.visible_instance_count, Transform2D(0, trajectory_data[i][j]))
 			current_multimesh.multimesh.visible_instance_count += 1
 
+
 # resets all trajectories
 func reset():
 	for i in range(trajectory_data.size()):
 		trajectory_data[i] = [trajectory_data[i][0]]
 	redraw()
+
 
 func remove_all():
 	color_array = []
@@ -99,10 +110,13 @@ func remove_all():
 	# add a new child
 	add_multimesh()
 
+
 # allows the user to set the instance count sinze the maximum is hardware dependent
 func set_instance_count(count: int):
+	print("Setting instance count")
 	instance_count = count
 	redraw()
+
 
 func clear():
 	# remove all multimeshes
@@ -110,3 +124,9 @@ func clear():
 		child.queue_free()
 	# add a new child
 	add_multimesh()
+
+
+func _on_PSPointsInMultimeshTextEdit_text_entered(new_text):
+	if new_text.is_valid_integer():
+		var number = int(new_text)
+		set_instance_count(number) 

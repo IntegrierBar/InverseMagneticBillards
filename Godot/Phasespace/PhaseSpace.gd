@@ -93,12 +93,14 @@ func mouse_input():
 			STATES.REST:
 				pass
 
+
 # called everytime an iteration was done
 func add_points_to_phasespace(points: Array):
 	var rescaled_points = []
 	for i in range(points.size()):
 		rescaled_points.append(rescale(points[i]))
 	multimesh_handler.add_points(rescaled_points)
+
 
 # from phase space coords, to world coords
 func rescale(points: Array) -> Array:
@@ -107,6 +109,7 @@ func rescale(points: Array) -> Array:
 		rescaled_points.append(Vector2(sizex*p.x, sizey*p.y) - Vector2(sizex/2, sizey/2))
 	return rescaled_points
 
+
 # from world coords to phase space coords
 func rescale_to_ps(points: Array) -> Array:
 	var rescaled_points: Array = []
@@ -114,26 +117,34 @@ func rescale_to_ps(points: Array) -> Array:
 		rescaled_points.append(Vector2(p.x/sizex + 0.5, p.y/sizey + 0.5))
 	return rescaled_points
 
+
 func add_preliminary_trajectory(color: Color):
 	multimesh_handler.add_preliminary_trajectory(color)
+
 
 func add_trajectory(pos: Vector2, color: Color):
 	multimesh_handler.add_trajectory(rescale([pos]), color)
 
+
 func remove_trajectory(index: int):
 	multimesh_handler.remove_trajectory(index)
+
 
 func remove_all_trajectories():
 	multimesh_handler.remove_all()
 
+
 func reset_all_trajectories():
 	multimesh_handler.reset()
+
 
 func set_initial_values(index: int, pos: Vector2):
 	multimesh_handler.set_initial_values(index, rescale([pos]))
 
+
 func set_color(index: int, color: Color):
 	multimesh_handler.set_color(index, color)
+
 
 # calculates the phase space coords of the current mouse position
 func local_to_ps() -> Vector2:
@@ -143,8 +154,10 @@ func local_to_ps() -> Vector2:
 	var y = locpos[1] / sizey
 	return Vector2(x, y)
 
+
 func _on_SpawnTrajOnClickButton_pressed():
 	current_state = STATES.SINGLE
+
 
 func _on_SpawnTrajBatch_pressed():
 	if num_traj_in_batch.text.is_valid_integer():
@@ -153,8 +166,10 @@ func _on_SpawnTrajBatch_pressed():
 	else: 
 		instr_label.text = "Number of trajectories in the batch needed"
 
+
 func _on_ClearPSTrajectories_pressed():
 	multimesh_handler.clear()
+
 
 func _on_DrawnInNormalSpace_toggled(button_pressed):
 	drawInNormalSpace = button_pressed

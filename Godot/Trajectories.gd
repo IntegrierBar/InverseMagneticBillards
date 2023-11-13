@@ -777,6 +777,7 @@ func _on_delete_trajectory_pressed(id):
 		trajectories.remove_trajectory(trajectory_to_edit)
 		update()
 
+
 # deletes all trajectories in normal space, also resets phasespace image 
 # only works if we are in the iterate state. Otherwise does nothing to prevent bugs
 func _on_DeleteAllTrajectories_pressed():
@@ -812,12 +813,14 @@ func _on_color_changed(id):
 	trajectories.set_color(trajectory_to_edit, c) 
 	phase_space.set_color(trajectory_to_edit, c)
 
+
 # calculates length of the polygon up to index n, used PSToR2
 func calcPolygonLength(n: int) -> float:
 	var length = 0.0
 	for i in range(n):
 		length += (polygon[i] - polygon[i + 1]).length()
 	return length
+
 
 # converts normal coordinates to phase space coordinates
 func R2ToPS(start: Vector2, dir: Vector2) -> Vector2: 
@@ -844,13 +847,13 @@ func R2ToPS(start: Vector2, dir: Vector2) -> Vector2:
 	var pscoords = Vector2(pos / polylength, angle / PI)
 	return pscoords
 
+
 # converts phasespace coordinates to normal coordinates 
 func PSToR2(psc: Vector2) -> Array:
 	var distance_left = psc[0] * calcPolygonLength(polygon.size() - 1)
 	var currentIndexOnPolygon = 0
 	while (distance_left - calcPolygonLength(currentIndexOnPolygon + 1) > 0.0):
 		currentIndexOnPolygon += 1
-	
 	
 	var currentlength = calcPolygonLength(currentIndexOnPolygon) 
 	var normside = (polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]).normalized()
@@ -865,7 +868,7 @@ func PSToR2(psc: Vector2) -> Array:
 		currentDirection = normside.rotated(-PI * psc[1])
 	
 	return [currentPosition, currentDirection]
-	
+
 
 func is_in_iterate_state() -> bool:
 	if current_state == STATES.ITERATE:
