@@ -11,7 +11,6 @@ var trajectory_instr
 var radius_edit
 var radius_slider
 var traj_control
-var batch_edit
 var single_ps_traj
 var corner_count
 var ngon_radius
@@ -24,7 +23,6 @@ var rs_coords
 var stop_at_corner
 
 var newpos # currently needed to change direction 
-			# TODO: have this handled in gdnative 
 var newdir # now also need a variable for the direction to draw 
 
 # phasespace coordinates of the starting position of the last shown trajectory
@@ -70,6 +68,7 @@ var fill_ps_trajectories_to_spawn: int = 1
 # index of trajectory that is to be edited
 var trajectory_to_edit: int
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()	# make sure we get different random numbers every time we start
@@ -82,7 +81,6 @@ func _ready():
 	radius_edit = get_tree().get_nodes_in_group("RadiusEdit")[0]
 	radius_slider = get_tree().get_nodes_in_group("RadiusSlider")[0]
 	traj_control = get_tree().get_nodes_in_group("TrajectoriesControlPart")[0]
-	batch_edit = get_tree().get_nodes_in_group("BatchSizeEdit")[0]
 	single_ps_traj = get_tree().get_nodes_in_group("SinglePSTraj")[0]
 	corner_count = get_tree().get_nodes_in_group("SetCornerCount")[0]
 	ngon_radius = get_tree().get_nodes_in_group("SetNGonRadius")[0]
@@ -179,6 +177,8 @@ func _draw():
 
 
 ####################### POLYGON ####################################################################
+
+
 # Godot uses negative y-axis. Need to invert y to get correct coords
 func invert_y(p: Vector2) -> Vector2:
 	return Vector2(p.x, -p.y)
@@ -196,6 +196,7 @@ func add_polygon_vertex(vertex: Vector2):
 		
 	update()
 
+
 func close_polygon():
 	# polygon cannot be closed if it is already closed or contains less than three vertices
 	if polygon_closed || polygon.size() < 3:
@@ -208,6 +209,7 @@ func close_polygon():
 	polygon_closed = true
 	trajectories.reset_trajectories()
 	update()
+
 
 # removes all trajectories except the first
 func clear_polygon():
@@ -229,8 +231,6 @@ func clear_polygon():
 	polygon_vertex.clear_polygon()
 	trajectory_to_edit = 0 # need to set back to 0 because this should be the only trajectory left 
 	phase_space.remove_all_trajectories()
-#	if trajcount >= 1:	# can we please delete this part? ###############################################################################
-#		phase_space.add_preliminary_trajectory(trajectories.get_trajectory_colors()[0])
 
 
 func change_polygon_vertex(pos: Vector2, n: int):
@@ -244,8 +244,6 @@ func change_polygon_vertex(pos: Vector2, n: int):
 	phase_space.reset_all_trajectories()
 	emit_signal("close_polygon", polygon)
 	update()
-	# TODO: update written starting position and direction
-	# does it go here or in the nodes that organise the vertices?
 	
 	var trajs_ps = trajectories.get_trajecotries_phasespace()
 	
@@ -290,11 +288,10 @@ func _on_RegularNGonButton_pressed():
 		update()
 		if trajectories.get_trajectory_colors().size() > 0: 
 			current_state = STATES.SET_START
-		
-
 
 
 ##################### TRAJECTORIES #################################################################
+
 
 # function is currently only called to add INITIAL trajectories, that means the actual starting 
 # coordinates are not known yet! 
@@ -303,6 +300,7 @@ func add_trajectory(start: Vector2, dir: Vector2, color: Color):
 	trajectories.add_trajectory(invert_y(start), invert_y(dir), color)
 	phase_space.add_preliminary_trajectory(color)
 	_new_trajectory_added(color)
+
 
 # this function is only used, if the starting coordinates are already known! 
 func add_trajectory_ps(pos: Vector2, color: Color):
@@ -321,7 +319,6 @@ func _new_trajectory_added(colour):
 	var count = traj_control.get_child_count()
 	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
 	var newTrajControl = scene.instance()
-	
 	
 	traj_control.add_child(newTrajControl)
 	traj_control.move_child(newTrajControl, count - 1)
@@ -374,6 +371,8 @@ func set_initial_values(index: int, start: Vector2, dir: Vector2):
 
 
 ####################### USER INPUT #################################################################
+
+
 # used to know if mouse is inside the clickable area or not
 func _set_inside():
 	mouse_inside = true
@@ -442,6 +441,7 @@ func _on_EditMaxDrawnIterations_text_changed():
 		
 		trajectories.set_max_count(maxnum)
 
+
 # Sets the maximum number of iterations
 func _on_EditMaxIterations_text_changed():
 	if maxit_edit.text.is_valid_integer():
@@ -465,8 +465,7 @@ func _on_ButtonClosePolygon_pressed():
 			current_state = STATES.SET_START
 		else:
 			current_state = STATES.ITERATE
-		
-		
+
 
 # user wants to input new start position
 # only works if current_state is ITERATE to prevent bugs
@@ -560,10 +559,11 @@ func _on_RadiusSlider_value_changed(newradius):
 		# resetting image is done in the TextEdit_text_changed function
 		pass
 
+
 # change number of iterations that are computed and drawn when clicking on iterate
-func _on_EditBatchSize_text_changed():
-	if batch_edit.text.is_valid_integer():
-		var newbatch = int(batch_edit.text)
+func _on_EditBatchSize_text_entered(new_text):
+	if new_text.is_valid_integer():
+		var newbatch = int(new_text)
 		batch = newbatch
 
 
@@ -585,11 +585,11 @@ func _on_StartFillPSButton_pressed():
 		var lower_left: Vector2 = Vector2(max(0, scaled_view_rect[0].x), max(0, scaled_view_rect[0].y))
 		var upper_right: Vector2 = Vector2(min(1, scaled_view_rect[1].x), min(1, scaled_view_rect[1].y))
 		trajectories.set_bounds(lower_left, upper_right)
-		_on_GridSizeEdit_text_changed()
+		_get_GridSizeEdit()
 
 
-# sets grid size for looking for holes in phasespace
-func _on_GridSizeEdit_text_changed():
+# gets grid size for looking for holes in phasespace 
+func _get_GridSizeEdit():
 	if grid_size.text.is_valid_float():
 		var gs = float(grid_size.text)
 		trajectories.set_grid_size(gs)
@@ -698,7 +698,6 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 			var pos = Vector2(i * xstep, j * ystep)
 			positions.append(pos + xymin) 
 			var c = Color(min(1, 2 - ((i + 1)/float(x) + j/float(y))), (i + 1)/float(x), j/float(y), 1)  
-			# TODO: I should probably find out how to apply barycentric coords to this ...
 			colors.append(c) 
 			# colors still not very good, different but difficult to see, not bright enough
 	
@@ -906,3 +905,4 @@ func _on_SavePhaseSpaceData_pressed():
 		file.close()
 	else:
 		print("this should not be calling")
+

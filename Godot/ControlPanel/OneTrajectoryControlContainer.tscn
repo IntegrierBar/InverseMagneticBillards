@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://ControlPanel/OneTrajectoryControlContainer.gd" type="Script" id=1]
-[ext_resource path="res://ControlPanel/TextEditScrollbar.gd" type="Script" id=2]
 
 [node name="VBoxContainer" type="VBoxContainer"]
 margin_top = 18.0
@@ -44,7 +43,6 @@ margin_bottom = 20.0
 hint_tooltip = "Starting position"
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 2 )
 
 [node name="StartDir" type="TextEdit" parent="HBoxContainer2"]
 margin_left = 95.0

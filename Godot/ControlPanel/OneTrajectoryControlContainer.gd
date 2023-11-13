@@ -2,6 +2,7 @@ extends VBoxContainer
 
 var traj_script
 
+# TODO: Why the fuck does this shit depend on ScrollBar.gd??? A script that contains no function that does anything???
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

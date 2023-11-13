@@ -4,9 +4,7 @@ TODO:
 
 CODE AUFRÄUMEN!!!!!!!!!!!!!!!! KATRIN TODO
 
-Benötige UI um anzahl PS punkte pro multimesh zu setzen. (+ Fehler fenster, wenn index zu hoch)
-
-Start to fill PS does not use "Trajectory drawn in regular space. Maybe change this?
+Start to fill PS does not use "Trajectory drawn in regular space". Maybe change this?
 
 Überprüfe das mit "Stop at corner" alles stimmt, richtig initialisiert und korrekt in der UI angezeigt etc.
 
@@ -22,11 +20,6 @@ man irgendwie mit Inputs regeln
 Pixelgröße in phasespace setzbar WAS MACHE ICH DA FALSCH??
 
 Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?
-
-Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
-(Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)
-Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
-nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist 
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 Beispielbugs: 
@@ -52,8 +45,15 @@ die Instruction labels entfernt werden, denke ich
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
 
- X BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS nicht mehr tut. Wenn im  CANNOT REPRODUCE ANYMORE; MAYBE CHECK IN WEB
+Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
+(Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)  TUT AKZEPTABEL GENUG   X 
+Man kann außerdem überlegen ob man eine bessere startposition verteilung versucht zu implementieren, da aktuell
+nur Quadratzahlen gespawnt werden können und das bei Rechtecken auch sehr unregelmäßig ist   NE, KEIN BOCK  X
 
+Benötige UI um anzahl PS punkte pro multimesh zu setzen. (+ Fehler fenster, wenn index zu hoch) X
+
+ X BUG: Set Radius zu was kleinerem -> Delete all Traj. sorgt dafür, dass fill PS nicht mehr tut. Wenn im  CANNOT 
+REPRODUCE ANYMORE; MAYBE CHECK IN WEB
 
 SCHEIß BUG:
 Browser kann nicht mehr als 86 trajectorien. Vermutlich ein Buffer problem. X 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -8,13 +8,11 @@
 [ext_resource path="res://addons/dockable_container/layout.gd" type="Script" id=6]
 [ext_resource path="res://addons/dockable_container/dockable_container.gd" type="Script" id=7]
 [ext_resource path="res://addons/dockable_container/layout_split.gd" type="Script" id=8]
-[ext_resource path="res://ControlPanel/ScrollContainer.gd" type="Script" id=9]
 [ext_resource path="res://Viewport/ViewportContainerScript.gd" type="Script" id=10]
 [ext_resource path="res://Polygon/PolygonVertexHandler.gd" type="Script" id=11]
 [ext_resource path="res://Shaders/FlowMap.gdshader" type="Shader" id=12]
 [ext_resource path="res://Flowmap/FlowMap.gd" type="Script" id=13]
 [ext_resource path="res://ControlPanel/PolygonVertexControl.gd" type="Script" id=14]
-[ext_resource path="res://PhasespaceControl/ScrollContainer.gd" type="Script" id=15]
 [ext_resource path="res://icon.png" type="Texture" id=16]
 [ext_resource path="res://Shaders/FlowMapSymplectic.gdshader" type="Shader" id=17]
 [ext_resource path="res://Shaders/FTLE.gdshader" type="Shader" id=18]
@@ -210,11 +208,11 @@ margin_bottom = 330.976
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DockableContainer/ControlPanel"]
 margin_right = 229.901
 margin_bottom = 322.976
-script = ExtResource( 9 )
+scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 217.901
-margin_bottom = 548.0
+margin_bottom = 554.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -276,7 +274,7 @@ margin_bottom = 24.0
 [node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 76.0
 margin_right = 217.0
-margin_bottom = 180.0
+margin_bottom = 186.0
 size_flags_horizontal = 3
 
 [node name="IterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
@@ -303,32 +301,32 @@ text = "Iterate"
 [node name="InterationCountControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
 margin_top = 42.0
 margin_right = 217.0
-margin_bottom = 60.0
+margin_bottom = 66.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
 [node name="SetIterationCountLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl"]
 margin_right = 106.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "#Iterations: "
 valign = 1
 clip_text = true
 
-[node name="EditBatchSize" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl" groups=["BatchSizeEdit"]]
+[node name="EditBatchSize" type="LineEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl"]
 margin_left = 110.0
 margin_right = 217.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 hint_tooltip = "Set the number of interations for one batch"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "1"
 
 [node name="MaxDrawnIterationsCount" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
-margin_top = 64.0
+margin_top = 70.0
 margin_right = 217.0
-margin_bottom = 82.0
+margin_bottom = 88.0
 rect_min_size = Vector2( 0, 18 )
 
 [node name="SetDrawnIterations" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxDrawnIterationsCount"]
@@ -347,9 +345,9 @@ size_flags_horizontal = 3
 text = "100"
 
 [node name="MaxIterationsControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
-margin_top = 86.0
+margin_top = 92.0
 margin_right = 217.0
-margin_bottom = 104.0
+margin_bottom = 110.0
 rect_min_size = Vector2( 0, 18 )
 
 [node name="SetMaxIterations" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxIterationsControl"]
@@ -369,9 +367,9 @@ size_flags_horizontal = 3
 text = "100000"
 
 [node name="Radius" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 184.0
+margin_top = 190.0
 margin_right = 217.0
-margin_bottom = 240.0
+margin_bottom = 246.0
 size_flags_horizontal = 3
 
 [node name="RadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
@@ -422,9 +420,9 @@ __meta__ = {
 }
 
 [node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 244.0
+margin_top = 250.0
 margin_right = 217.0
-margin_bottom = 416.0
+margin_bottom = 422.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -519,9 +517,9 @@ text = "Open Vertex Control"
 clip_text = true
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 420.0
+margin_top = 426.0
 margin_right = 217.0
-margin_bottom = 440.0
+margin_bottom = 446.0
 size_flags_horizontal = 3
 
 [node name="FlowmapControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
@@ -532,9 +530,9 @@ text = "Open Flow Map Control"
 clip_text = true
 
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
-margin_top = 444.0
+margin_top = 450.0
 margin_right = 217.0
-margin_bottom = 548.0
+margin_bottom = 554.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -709,11 +707,11 @@ margin_bottom = 598.0
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DockableContainer/PSControlPanel"]
 margin_right = 289.067
 margin_bottom = 273.594
-script = ExtResource( 15 )
+scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer"]
 margin_right = 277.067
-margin_bottom = 434.0
+margin_bottom = 446.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -907,7 +905,7 @@ clip_text = true
 [node name="FillPSControl" type="VBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 304.0
 margin_right = 277.0
-margin_bottom = 386.0
+margin_bottom = 398.0
 
 [node name="Label" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl"]
 margin_right = 277.0
@@ -918,58 +916,58 @@ clip_text = true
 [node name="GridSizeControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl"]
 margin_top = 18.0
 margin_right = 277.0
-margin_bottom = 36.0
+margin_bottom = 42.0
 rect_min_size = Vector2( 0, 18 )
 
 [node name="GridSizeLabel" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/GridSizeControl"]
-margin_top = 2.0
+margin_top = 5.0
 margin_right = 136.0
-margin_bottom = 16.0
+margin_bottom = 19.0
 size_flags_horizontal = 3
 text = "Grid Size"
 clip_text = true
 
-[node name="GridSizeEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/GridSizeControl" groups=["GridSize"]]
+[node name="GridSizeEdit" type="LineEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/GridSizeControl" groups=["GridSize"]]
 margin_left = 140.0
 margin_right = 277.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 text = "64"
 
 [node name="TrajNumControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl"]
-margin_top = 40.0
+margin_top = 46.0
 margin_right = 277.0
-margin_bottom = 58.0
+margin_bottom = 70.0
 rect_min_size = Vector2( 0, 18 )
 
 [node name="TrajNumToSpawnLabel" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/TrajNumControl"]
-margin_top = 2.0
+margin_top = 5.0
 margin_right = 136.0
-margin_bottom = 16.0
+margin_bottom = 19.0
 size_flags_horizontal = 3
 text = "#Trajectories to Spawn"
 clip_text = true
 
-[node name="TrajNumToSpawnEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/TrajNumControl" groups=["TrajNumToSpawn"]]
+[node name="TrajNumToSpawnEdit" type="LineEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl/TrajNumControl" groups=["TrajNumToSpawn"]]
 margin_left = 140.0
 margin_right = 277.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 text = "1"
 
 [node name="StartFillPSButton" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl"]
-margin_top = 62.0
+margin_top = 74.0
 margin_right = 277.0
-margin_bottom = 82.0
+margin_bottom = 94.0
 hint_tooltip = "Iteratively spawns a trajectory inside the largest square hole 
 inside the currently visible phase space and iterates all trajectories"
 text = "Start to Fill Phase Space"
 clip_text = true
 
 [node name="ClearPSTrajectories" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 390.0
+margin_top = 402.0
 margin_right = 277.0
-margin_bottom = 410.0
+margin_bottom = 422.0
 hint_tooltip = "Remove all points from phase space
 NEITHER DELETES TRAJECToRIES NOR RESETS THEM"
 size_flags_horizontal = 3
@@ -977,9 +975,9 @@ text = "Clear Phase Space"
 clip_text = true
 
 [node name="SavePhaseSpaceData" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 414.0
+margin_top = 426.0
 margin_right = 277.0
-margin_bottom = 434.0
+margin_bottom = 446.0
 size_flags_horizontal = 3
 text = "Save Phase Space"
 clip_text = true
@@ -1075,7 +1073,7 @@ size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer"]
 margin_right = 195.0
-margin_bottom = 294.0
+margin_bottom = 300.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -1202,37 +1200,37 @@ hint_tooltip = "Switch between regular flow map and FTLE"
 [node name="FTLEStepsizeControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
 margin_top = 190.0
 margin_right = 195.0
-margin_bottom = 208.0
+margin_bottom = 214.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
 [node name="FTLEStepsizeLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/FTLEStepsizeControl"]
-margin_top = 2.0
+margin_top = 5.0
 margin_right = 95.0
-margin_bottom = 16.0
+margin_bottom = 19.0
 size_flags_horizontal = 3
 text = "Step Size Modifier"
 clip_text = true
 
-[node name="FTLEStepsizeEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/FTLEStepsizeControl" groups=["FTLEStepsize"]]
+[node name="FTLEStepsizeEdit" type="LineEdit" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/FTLEStepsizeControl"]
 margin_left = 99.0
 margin_right = 195.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 text = "0.01"
 
 [node name="ShowSpawnTitle" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
-margin_top = 212.0
+margin_top = 218.0
 margin_right = 195.0
-margin_bottom = 226.0
+margin_bottom = 232.0
 size_flags_horizontal = 3
 text = "On Click in Flow Map: "
 align = 1
 
 [node name="ShowSpawnBox" type="HBoxContainer" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
-margin_top = 230.0
+margin_top = 236.0
 margin_right = 195.0
-margin_bottom = 270.0
+margin_bottom = 276.0
 size_flags_horizontal = 3
 
 [node name="ShowTrajectory" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/ShowSpawnBox"]
@@ -1260,9 +1258,9 @@ text = "Spawn Trajectory"
 clip_text = true
 
 [node name="SpawnShowenTrajButton" type="Button" parent="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer"]
-margin_top = 274.0
+margin_top = 280.0
 margin_right = 195.0
-margin_bottom = 294.0
+margin_bottom = 300.0
 size_flags_horizontal = 3
 text = "Spawn Currently Shown Trajectory"
 clip_text = true
@@ -1270,7 +1268,7 @@ clip_text = true
 [connection signal="close_polygon" from="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_Trajectories_close_polygon"]
 [connection signal="item_selected" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/BilliardTypeControl/BilliardTypeOptions" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_BilliardTypeOptions_item_selected"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/IterationControl/IterateButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Button_pressed"]
-[connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl/EditBatchSize" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditBatchSize_text_changed"]
+[connection signal="text_entered" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl/EditBatchSize" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditBatchSize_text_entered"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxDrawnIterationsCount/EditMaxDrawnIterations" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditMaxDrawnIterations_text_changed"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxIterationsControl/EditMaxIterations" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditMaxIterations_text_changed"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_TextEdit_text_changed"]
@@ -1297,6 +1295,6 @@ clip_text = true
 [connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/ColorPositionCOntrol/FMPositionCheck" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_FMPositionCheck_toggled"]
 [connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/ColorAngleControl/FMAngleCheck" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_FMAngleCheck_toggled"]
 [connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer3/FTLEButton" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_FTLEButton_toggled"]
-[connection signal="text_changed" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/FTLEStepsizeControl/FTLEStepsizeEdit" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_FTLEStepsizeEdit_text_changed"]
+[connection signal="text_entered" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/FTLEStepsizeControl/FTLEStepsizeEdit" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_FTLEStepsizeEdit_text_entered"]
 [connection signal="toggled" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/ShowSpawnBox/ShowSpawnButton" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_ShowSpawnButton_toggled"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/Flowmap/FlowmapControl/MarginContainer/ScrollContainer/VBoxContainer/SpawnShowenTrajButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SpawnShowenTrajButton_pressed"]
