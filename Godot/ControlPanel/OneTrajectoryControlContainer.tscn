@@ -33,31 +33,31 @@ clip_text = true
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
 margin_top = 24.0
 margin_right = 216.0
-margin_bottom = 44.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="StartPos" type="TextEdit" parent="HBoxContainer2"]
+[node name="StartPos" type="LineEdit" parent="HBoxContainer2"]
 margin_right = 91.0
-margin_bottom = 20.0
+margin_bottom = 24.0
 hint_tooltip = "Starting position"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="StartDir" type="TextEdit" parent="HBoxContainer2"]
+[node name="StartDir" type="LineEdit" parent="HBoxContainer2"]
 margin_left = 95.0
 margin_right = 187.0
-margin_bottom = 20.0
+margin_bottom = 24.0
 hint_tooltip = "Starting direction"
 size_flags_horizontal = 3
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="HBoxContainer2"]
 margin_left = 191.0
 margin_right = 216.0
-margin_bottom = 20.0
+margin_bottom = 24.0
 rect_min_size = Vector2( 25, 0 )
 color = Color( 0, 1, 0, 1 )
 
 [connection signal="pressed" from="HBoxContainer/DeleteTrajButton" to="." method="_on_DeleteTrajButton_pressed"]
-[connection signal="text_changed" from="HBoxContainer2/StartPos" to="." method="_on_StartPos_text_changed"]
-[connection signal="text_changed" from="HBoxContainer2/StartDir" to="." method="_on_StartDir_text_changed"]
+[connection signal="text_entered" from="HBoxContainer2/StartPos" to="." method="_on_StartPos_text_entered"]
+[connection signal="text_entered" from="HBoxContainer2/StartDir" to="." method="_on_StartDir_text_entered"]

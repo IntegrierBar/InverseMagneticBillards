@@ -1,6 +1,5 @@
 extends HBoxContainer
 
-
 var traj_script
 
 
@@ -9,11 +8,11 @@ func _ready():
 	traj_script = get_tree().get_nodes_in_group("Trajectories")[0]
 
 
-func _on_xCoord_text_changed():
+func _on_xCoord_text_entered(new_text):
 	coord_changed()
 
 
-func _on_yCoord_text_changed():
+func _on_yCoord_text_entered(new_text):
 	coord_changed()
 
 
@@ -31,6 +30,5 @@ func coord_changed():
 		traj_script.change_polygon_vertex(v, index)
 		# change position of vertex object via function in PolygonVertexHandler
 		traj_script.get_child(2).coord_text_changed(v, index) 
-		
 
 

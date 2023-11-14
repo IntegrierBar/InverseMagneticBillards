@@ -14,46 +14,12 @@ func _on_DeleteTrajButton_pressed():
 		queue_free()
 
 
-func _on_StartPos_text_changed():
+func _on_StartPos_text_entered(new_text):
 	text_changed()
-	
-#	var traj_num = get_index() - 4
-#	var n = get_child(1).get_child(0)
-#	var text = n.text
-#	var regex = RegEx.new()
-#	regex.compile("^\\s*\\(\\s*(?<digit1>[-+]?([0-9])+\\.?([0-9])*)\\s*,\\s*(?<digit2>[-+]?([0-9])+\\.?([0-9])*)\\s*\\)\\s*$")
-#	#regex.compile("\\((?<digit1>[-+]?([0-9])+\\.?([0-9])*)\\s?,\\s?(?<digit2>[-+]?([0-9])+\\.?([0-9])*)\\)")
-#	var result = regex.search(text)
-#	if result:
-#		var v1 = float(result.get_string("digit1"))
-#		var v2 = float(result.get_string("digit2"))
-#		var v = Vector2(v1, v2)
-#
-#		traj_script.on_StartPosText_changed(traj_num, v)
-		# print(result.get_string("digit1"))
-		# print(result.get_string("digit2"))
-	# traj_script.on_StartPosText_changed(traj_num, text)
 
 
-
-
-func _on_StartDir_text_changed():
+func _on_StartDir_text_entered(new_text):
 	text_changed()
-	
-	# essentially the same code as for start position text changed
-#	var traj_num = get_index() - 4
-#	var n = get_child(1).get_child(1) # different position in scene tree
-#	var text = n.text
-#	var regex = RegEx.new()
-#	regex.compile("^\\s*\\(\\s*(?<digit1>[-+]?([0-9])+\\.?([0-9])*)\\s*,\\s*(?<digit2>[-+]?([0-9])+\\.?([0-9])*)\\s*\\)\\s*$")
-#
-#	var result = regex.search(text)
-#	if result:
-#		var v1 = float(result.get_string("digit1"))
-#		var v2 = float(result.get_string("digit2"))
-#		var v = Vector2(v1, v2)
-#
-#		traj_script.on_DirPosText_changed(traj_num, v)
 
 
 func text_changed():
@@ -78,6 +44,5 @@ func text_changed():
 		var v_dir = Vector2(vd1, vd2)
 		
 		traj_script.on_InitialValues_text_changed(traj_num, v_pos, v_dir)
-
 
 

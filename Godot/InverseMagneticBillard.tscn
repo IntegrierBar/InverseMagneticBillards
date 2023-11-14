@@ -212,7 +212,7 @@ scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer"]
 margin_right = 217.901
-margin_bottom = 554.0
+margin_bottom = 584.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 0, 272 )
@@ -274,7 +274,7 @@ margin_bottom = 24.0
 [node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 76.0
 margin_right = 217.0
-margin_bottom = 186.0
+margin_bottom = 198.0
 size_flags_horizontal = 3
 
 [node name="IterationsLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
@@ -326,50 +326,50 @@ text = "1"
 [node name="MaxDrawnIterationsCount" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
 margin_top = 70.0
 margin_right = 217.0
-margin_bottom = 88.0
+margin_bottom = 94.0
 rect_min_size = Vector2( 0, 18 )
 
 [node name="SetDrawnIterations" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxDrawnIterationsCount"]
-margin_top = 2.0
+margin_top = 5.0
 margin_right = 106.0
-margin_bottom = 16.0
+margin_bottom = 19.0
 size_flags_horizontal = 3
 text = "Max. #Drawn Iterations in Regular Space"
 clip_text = true
 
-[node name="EditMaxDrawnIterations" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxDrawnIterationsCount" groups=["MaxNumberIterationsDrawn"]]
+[node name="EditMaxDrawnIterations" type="LineEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxDrawnIterationsCount" groups=["MaxNumberIterationsDrawn"]]
 margin_left = 110.0
 margin_right = 217.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 text = "100"
 
 [node name="MaxIterationsControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations"]
-margin_top = 92.0
+margin_top = 98.0
 margin_right = 217.0
-margin_bottom = 110.0
+margin_bottom = 122.0
 rect_min_size = Vector2( 0, 18 )
 
 [node name="SetMaxIterations" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxIterationsControl"]
-margin_top = 2.0
+margin_top = 5.0
 margin_right = 106.0
-margin_bottom = 16.0
+margin_bottom = 19.0
 size_flags_horizontal = 3
 text = "Max. #Iterations"
 clip_text = true
 
-[node name="EditMaxIterations" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxIterationsControl" groups=["MaxNumIterations"]]
+[node name="EditMaxIterations" type="LineEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxIterationsControl"]
 margin_left = 110.0
 margin_right = 217.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 hint_tooltip = "Set the maximum number of iterations per trajectory."
 size_flags_horizontal = 3
 text = "100000"
 
 [node name="Radius" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 190.0
+margin_top = 202.0
 margin_right = 217.0
-margin_bottom = 246.0
+margin_bottom = 264.0
 size_flags_horizontal = 3
 
 [node name="RadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
@@ -382,33 +382,33 @@ clip_text = true
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius"]
 margin_top = 18.0
 margin_right = 217.0
-margin_bottom = 36.0
+margin_bottom = 42.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
 [node name="SetRadiusLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer"]
-margin_top = 2.0
+margin_top = 5.0
 margin_right = 106.0
-margin_bottom = 16.0
+margin_bottom = 19.0
 size_flags_horizontal = 3
 size_flags_vertical = 6
 text = "Set Radius: "
 valign = 1
 clip_text = true
 
-[node name="SetRadiusTextEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer" groups=["RadiusEdit"]]
+[node name="SetRadiusTextEdit" type="LineEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer" groups=["RadiusEdit"]]
 margin_left = 110.0
 margin_right = 217.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 hint_tooltip = "Set the radius"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "1"
 
 [node name="RadiusSlider" type="HSlider" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius" groups=["RadiusSlider"]]
-margin_top = 40.0
+margin_top = 46.0
 margin_right = 217.0
-margin_bottom = 56.0
+margin_bottom = 62.0
 hint_tooltip = "Slider to change the radius between 0.01 and 20"
 min_value = 0.01
 max_value = 20.0
@@ -420,9 +420,9 @@ __meta__ = {
 }
 
 [node name="Polygon" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 250.0
+margin_top = 268.0
 margin_right = 217.0
-margin_bottom = 422.0
+margin_bottom = 452.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -453,73 +453,73 @@ clip_text = true
 [node name="N-GonCornerControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
 margin_top = 66.0
 margin_right = 217.0
-margin_bottom = 84.0
+margin_bottom = 90.0
 rect_min_size = Vector2( 0, 18 )
 size_flags_horizontal = 3
 
-[node name="SetCornerNumberLAbel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonCornerControl"]
-margin_top = 2.0
+[node name="SetCornerNumberLabel" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonCornerControl"]
+margin_top = 5.0
 margin_right = 106.0
-margin_bottom = 16.0
+margin_bottom = 19.0
 size_flags_horizontal = 3
-text = "Set #Corners:"
+text = "#Vertices:"
 clip_text = true
 
-[node name="SetCornerNumberEdit" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonCornerControl" groups=["SetCornerCount"]]
+[node name="SetCornerNumberEdit" type="LineEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonCornerControl" groups=["SetCornerCount"]]
 margin_left = 110.0
 margin_right = 217.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 rect_min_size = Vector2( 0, 18 )
 hint_tooltip = "How many corners the regular n-gon should have"
 size_flags_horizontal = 3
 
 [node name="N-GonRadiusControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
-margin_top = 88.0
+margin_top = 94.0
 margin_right = 217.0
-margin_bottom = 106.0
+margin_bottom = 118.0
 rect_min_size = Vector2( 0, 18 )
 
 [node name="SetNGonRadius2" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonRadiusControl"]
-margin_top = 2.0
+margin_top = 5.0
 margin_right = 106.0
-margin_bottom = 16.0
+margin_bottom = 19.0
 size_flags_horizontal = 3
-text = "Set n-gon Radius:"
+text = "N-gon Radius:"
 clip_text = true
 
-[node name="SetNGonRadius" type="TextEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonRadiusControl" groups=["SetNGonRadius"]]
+[node name="SetNGonRadius" type="LineEdit" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/N-GonRadiusControl" groups=["SetNGonRadius"]]
 margin_left = 110.0
 margin_right = 217.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 hint_tooltip = "Set the size of the regular n-gon"
 size_flags_horizontal = 3
 
 [node name="RegularNGonButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
-margin_top = 110.0
+margin_top = 122.0
 margin_right = 217.0
-margin_bottom = 130.0
+margin_bottom = 142.0
 text = "Draw Regular n-gon"
 clip_text = true
 
 [node name="LabelInstructions" type="Label" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon" groups=["PolygonInstructions"]]
-margin_top = 134.0
+margin_top = 146.0
 margin_right = 217.0
-margin_bottom = 148.0
+margin_bottom = 160.0
 clip_text = true
 
 [node name="VertexControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon"]
-margin_top = 152.0
+margin_top = 164.0
 margin_right = 217.0
-margin_bottom = 172.0
+margin_bottom = 184.0
 hint_tooltip = "Explicitely set the coordinates of the corners of the polygon"
 size_flags_horizontal = 3
 text = "Open Vertex Control"
 clip_text = true
 
 [node name="Other" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 426.0
+margin_top = 456.0
 margin_right = 217.0
-margin_bottom = 446.0
+margin_bottom = 476.0
 size_flags_horizontal = 3
 
 [node name="FlowmapControlButton" type="Button" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Other"]
@@ -530,9 +530,9 @@ text = "Open Flow Map Control"
 clip_text = true
 
 [node name="Trajectories" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer" groups=["TrajectoriesControlPart"]]
-margin_top = 450.0
+margin_top = 480.0
 margin_right = 217.0
-margin_bottom = 554.0
+margin_bottom = 584.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -735,7 +735,7 @@ margin_top = 5.0
 margin_right = 136.0
 margin_bottom = 19.0
 size_flags_horizontal = 3
-text = "#Points per Multimesh"
+text = "#Points Per Multimesh"
 clip_text = true
 
 [node name="PSPointsInMultimeshTextEdit" type="LineEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/PSPointsInMultimesh"]
@@ -1268,10 +1268,10 @@ clip_text = true
 [connection signal="close_polygon" from="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" to="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport/FlowMap" method="_on_Trajectories_close_polygon"]
 [connection signal="item_selected" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/BilliardTypeControl/BilliardTypeOptions" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_BilliardTypeOptions_item_selected"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/IterationControl/IterateButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_Button_pressed"]
-[connection signal="text_entered" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl/EditBatchSize" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditBatchSize_text_entered"]
+[connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/InterationCountControl/EditBatchSize" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditBatchSize_text_changed"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxDrawnIterationsCount/EditMaxDrawnIterations" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditMaxDrawnIterations_text_changed"]
 [connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Iterations/MaxIterationsControl/EditMaxIterations" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_EditMaxIterations_text_changed"]
-[connection signal="text_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_TextEdit_text_changed"]
+[connection signal="text_entered" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/HBoxContainer/SetRadiusTextEdit" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SetRadiusTextEdit_text_entered"]
 [connection signal="value_changed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Radius/RadiusSlider" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_RadiusSlider_value_changed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonPolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonPolygon_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Polygon/ButtonClosePolygon" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ButtonClosePolygon_pressed"]

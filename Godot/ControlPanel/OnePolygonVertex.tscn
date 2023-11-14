@@ -11,24 +11,24 @@ size_flags_horizontal = 3
 script = ExtResource( 1 )
 
 [node name="VertexNr" type="Label" parent="."]
-margin_top = 2.0
+margin_top = 5.0
 margin_right = 30.0
-margin_bottom = 16.0
+margin_bottom = 19.0
 rect_min_size = Vector2( 30, 0 )
 text = "1"
 align = 1
 
-[node name="x-Coord" type="TextEdit" parent="."]
+[node name="x-Coord" type="LineEdit" parent="."]
 margin_left = 34.0
 margin_right = 112.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="y-Coord" type="TextEdit" parent="."]
+[node name="y-Coord" type="LineEdit" parent="."]
 margin_left = 116.0
 margin_right = 195.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[connection signal="text_changed" from="x-Coord" to="." method="_on_xCoord_text_changed"]
-[connection signal="text_changed" from="y-Coord" to="." method="_on_yCoord_text_changed"]
+[connection signal="text_entered" from="x-Coord" to="." method="_on_xCoord_text_entered"]
+[connection signal="text_entered" from="y-Coord" to="." method="_on_yCoord_text_entered"]

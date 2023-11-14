@@ -3,7 +3,6 @@ extends Node2D
 
 var mouse_inside = false
 
-#onready var trajectory_scene = preload("res://Trajectory.tscn")
 var phase_space
 var flow_map
 var polygon_instr
@@ -15,10 +14,8 @@ var single_ps_traj
 var corner_count
 var ngon_radius
 var polygon_vertex
-var maxnum_edit
 var grid_size
 var traj_num_spawn
-var maxit_edit
 var rs_coords
 var stop_at_corner
 
@@ -30,8 +27,6 @@ var newdir # now also need a variable for the direction to draw
 var last_shown_traj: Vector2 = Vector2(-1,-1) 
 
 var zoom: float = 0.1 # initialse zoom to initial value from Camera2D
-
-# var lines_to_draw # will be handled in gdnative
 
 # for polygon with n vertices has n+1 entries, the first and last one are the same
 # makes drawing all sides of the polygon easier
@@ -48,7 +43,6 @@ signal close_polygon(p)
 
 var batch: int
 var batch_to_show: int = 1
-#var max_count: int  # I don't think this variable is currently used
 var radius: float
 var billiard_type: int = 0
 
@@ -85,10 +79,8 @@ func _ready():
 	corner_count = get_tree().get_nodes_in_group("SetCornerCount")[0]
 	ngon_radius = get_tree().get_nodes_in_group("SetNGonRadius")[0]
 	polygon_vertex = get_tree().get_nodes_in_group("PolygonVertexControl")[0]
-	maxnum_edit = get_tree().get_nodes_in_group("MaxNumberIterationsDrawn")[0]
 	grid_size = get_tree().get_nodes_in_group("GridSize")[0]
 	traj_num_spawn = get_tree().get_nodes_in_group("TrajNumToSpawn")[0]
-	maxit_edit = get_tree().get_nodes_in_group("MaxNumIterations")[0]
 	rs_coords = get_tree().get_nodes_in_group("RegularSpaceCoordinates")[0]
 	stop_at_corner = get_tree().get_nodes_in_group("StopAtCorner")[0]
 	
@@ -315,7 +307,6 @@ func add_trajectory_ps(pos: Vector2, color: Color):
 
 # spawns and connects single trajectory control 
 func _new_trajectory_added(colour):
-	#print("adding ui for trajectory")
 	var count = traj_control.get_child_count()
 	var scene = load("res://ControlPanel/OneTrajectoryControlContainer.tscn")
 	var newTrajControl = scene.instance()
@@ -344,7 +335,6 @@ func _new_trajectory_added(colour):
 # trajectories spawned via mouse input in regular space have there text set before set_inital_values
 # is called and therefore have to handled somwhere else, see write_StartPos and write_EndPos
 func write_StartPosAndDir(pscoords: Vector2, number: int):
-	#print("writing into ui")
 	var rs = PSToR2(pscoords)
 	var startpos = invert_y(rs[0])
 	var startdir = invert_y(rs[1])
@@ -409,7 +399,6 @@ func mouse_input():
 			add_polygon_vertex(get_local_mouse_position())
 		STATES.SET_START:
 			newpos = snap_to_polygon(get_local_mouse_position())
-			#trajectories[trajectory_to_edit].set_start(newpos)
 			write_StartPos()
 			current_state = STATES.SET_DIRECTION
 			trajectory_instr.text = "Click to choose a new direction"
@@ -434,18 +423,17 @@ func _on_Button_pressed():
 
 
 # Sets maximum of how many iterations will be drawn in regular space for all trajectories
-func _on_EditMaxDrawnIterations_text_changed():
-	if maxnum_edit.text.is_valid_integer():
-		var maxnum = int(maxnum_edit.text)
-		#var trajcount = trajectories.get_trajectory_colors().size()
+func _on_EditMaxDrawnIterations_text_changed(new_text):
+	if new_text.is_valid_integer():
+		var maxnum = int(new_text)
 		
 		trajectories.set_max_count(maxnum)
 
 
 # Sets the maximum number of iterations
-func _on_EditMaxIterations_text_changed():
-	if maxit_edit.text.is_valid_integer():
-		var maxiter = int(maxit_edit.text)
+func _on_EditMaxIterations_text_changed(new_text):
+	if new_text.is_valid_integer():
+		var maxiter = int(new_text)
 		trajectories.set_max_iter(maxiter)
 
 
@@ -519,10 +507,10 @@ func on_InitialValues_text_changed(index: int, v_pos: Vector2, v_dir: Vector2):
 
 
 # radius is set
-func _on_TextEdit_text_changed(): 
-	if radius_edit.text.is_valid_float():
-		var newradius = radius_edit.text.to_float()
-		if newradius <= radius_slider.max_value: 
+func _on_SetRadiusTextEdit_text_entered(new_text):
+	if new_text.is_valid_float():
+		var newradius = new_text.to_float()
+		if newradius < radius_slider.max_value: 
 			# change slider position to value in text edit field if possible
 			radius_slider.value = newradius
 		else: 
@@ -561,7 +549,7 @@ func _on_RadiusSlider_value_changed(newradius):
 
 
 # change number of iterations that are computed and drawn when clicking on iterate
-func _on_EditBatchSize_text_entered(new_text):
+func _on_EditBatchSize_text_changed(new_text):
 	if new_text.is_valid_integer():
 		var newbatch = int(new_text)
 		batch = newbatch
@@ -706,7 +694,6 @@ func traj_batch_pos(n: int, w: float, h: float, xymin: Vector2) -> Array:
 
 # spawns trajectory on click in flowmap at the corresponding phasespace coordinates
 func _spawn_fm_traj_on_click(ps_coord):
-	# var coord = PSToR2(ps_coord)
 	var colour = Color(randf(), randf(), randf())
 	add_trajectory_ps(ps_coord, colour)
 
@@ -905,4 +892,5 @@ func _on_SavePhaseSpaceData_pressed():
 		file.close()
 	else:
 		print("this should not be calling")
+
 
