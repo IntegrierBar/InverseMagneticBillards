@@ -270,6 +270,7 @@ clip_text = true
 margin_left = 193.0
 margin_right = 217.0
 margin_bottom = 24.0
+pressed = true
 
 [node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 76.0
