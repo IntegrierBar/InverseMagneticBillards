@@ -2,7 +2,7 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
-CODE AUFRÄUMEN!!!!!!!!!!!!!!!! KATRIN TODO
+CODE AUFRÄUMEN!!!!!!!!!!!!!!!! KATRIN TODO X
 
 Start to fill PS does not use "Trajectory drawn in regular space". Maybe change this?
 
