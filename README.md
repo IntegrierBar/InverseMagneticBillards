@@ -9,12 +9,77 @@ Both flow map and phase space use inverted y-Axis.
 
 All spaces have their own camera that can zoom and be dragged by holding the right mouse button.
 
+### Input Fields
+Every user input field that immediately effects the system (like changing coordinates) will only update after the you press enter.
+
+
 ### Regular Space
 The regular space shows the polygon and the trajectory as polygonal lines.
+
+#### Billiard Type
+Currently the programm can do both inverse magnetic billiard and symplectic billiard.  
+You can choose which one it should be via a drop down menu.
+
+Changing the type will reset all trajectories but not delete them.
+
+#### Stop When Hitting a Vertex
+Decides if a trajectory should stop iterating when it gets to close to a vertex or should continue.
+
+#### Iterate
+Pressing the "Iterate" button will iterate all trajectories by the "#iterations".  
+"Max. #Iterations" sets a maximum number of iterations to be done for all trajectories.  
+Once this number is reached the trajectories will not iterate further.
+
+#### Radius
+Both a numerical field and a slider from 0.01 to 20 allow you to change the radius of the billiard ball outside the table.  
+radius = 1/field strength
+
+#### Polygon
+By pressing the "Choose New Polygon" button the current polygon and all trajectories are deleted.  
+By left clicking inside the regular space you can now add a vertex to the new polygon at the mouse position.  
+By clicking the "Close Countout" button, middle mouse button, the ESC key or "C" you will close the polygon.  
+As long as the polygon is not closed, no trajectories can be created.  
+
+Polygon vertices can be dragged using left mouse button at any time.  
+Doing so will reset all trajectories to their phase space coordinates (NOT their R2 coordinates).
+
+Clicking the button "Draw Regular n-gon" will automatically create a Regular n-gon with the number of vertices specified in "#Vertices and radius specified in "n-gon Radius".
+
+#### Vertex Control
+Clicking the "Open Vertex Cotrol" will open a new window where you can type in the coordinates of the vertices of the polygon.  
+
+#### Flow Map Control
+This button opens the control panel for the flow map.  
+See below for more information.
+
+#### Trajectories
+"Delete All Trajectories" will delete all trajectories.  
+"Reset All Trajectories" will reset them to their initial state, removing any iterations previously done.
+
+Pressing "Add New Trajectory" creates a new trajectorie with a random color.  
+The initial position and the direction are specified by clicking inside the Regular Space.
+
+For any existing trajectory a new set of buttons is spawned.  
+"New Start Position" allows you to again choose the start position and direction inside the Regular Space.  
+"Delete Trajectory" will delete this single trajectory.  
+The two input fields are the position and the direction in R2. By editing these fields and pressing enter, you can specify your own coordiniates.  
+The color selection panel allows you to change the color of the trajectory.
+
 
 
 ### Phase Space
 The phase space will show the trajecotries as points inside the phase space. The x-axis is the polygon and the y-Axis the angle with the positive tangent.
+
+#### Points Per Multimesh
+For drawing inside the phase space the programm uses Multimeshes.  
+However due to hardware and software constraints only a certain number of multimeshes can be used and every multimesh can only display a certain number of points.  
+These constraints are determined by the users system and can therefore not be calculated in advance.  
+If there are more points per multimesh or multimeshes then your system can handle, the program will crash.  
+Therefore you want the #Points Per Multimesh to be as large as possible.
+
+Most system should be able to handle 1,000,000 points per Multimesh.
+
+To update to the new value, press enter inside the input field.
 
 #### Spawning Trajectories
 The control center for the phase space allows for 3 different methods of creating new trajectories.
@@ -56,10 +121,34 @@ Only the main control is able to do that
 #### Save Phase Space
 Will write the phase space trajectories of all trajectories to a file and save it.  
 If running in a browser it will be saved as a download.  
-On PC it will save the file in "AppData"...
+On PC it will save the file in "%APPDATA%\Godot\app_userdata\InverseMagneticBillard"
+
+
 
 ### Flow Map
-The flow map shows the flow map of the current system. Controls can be opened under "Flow Map Control".
+The flow map shows the flow map of the current system. Controls can be opened under "Flow Map Control".  
+The flow map is calculated by iterating each pixel and then setting the color red as the position and the color green as the angle.
+
+"#Iterations" will specify how many iterations should be done.
+
+With the forwards/backwards toggle you can decide whether the system should iterate forwards or iterate backwards.
+
+#### Color Coding
+With these toggles you can deactivate position or angle to show in the color.  
+
+#### FTLE
+By switching this toggle you can alternatively look at the FTLE of the phase space.  
+This is calculated by spawning 4 trajectories around the pixel, thus approximating the jacobian at the point.  
+The color is then the largest eigenvalue of the Jacobian.
+
+The step size modifier allows you to decide how far away the trajectories should be from the pixel.  
+The distance from the pixel is then given as the product of the step size modifier and the zoom factor of the camera.
+
+#### On Click
+By left clicking inside the flow map you can either show the trajectory started at that point in the Regular Space or spawn a trajectory with those phase space coordinates.
+
+If you are currently showing a trajectory you can press the button "Spawn Currently Shown Trajectory" to spawn a trajectory with those coordinates.  
+To stop showing the trajectory in Regular Space, simply left click anywhere inside the Regular Space.
 
 
 ## How to compile
