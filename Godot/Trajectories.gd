@@ -138,6 +138,8 @@ func _process(_delta):
 			if hole[1] == Color(1,1,1):
 				next_color = c
 			add_trajectory_ps(next_start, next_color)
+			if !phase_space.drawInNormalSpace:
+				trajectories.set_max_count_index(traj_control.get_child_count() - 6, -1)
 			iterate_batch()
 			fill_ps_trajectories_to_spawn -= 1
 	
@@ -665,7 +667,7 @@ func _spawn_ps_traj_batch(bc1: Vector2, bc2: Vector2, n: int, draw: bool):
 	for i in range(pos.size()):
 		add_trajectory_ps(pos[i], colours[i])
 		if !draw:
-			trajectories.set_max_count(-1, 0)
+			trajectories.set_max_count_index(traj_control.get_child_count() - 6, -1)
 
 
 # used when spawning trajectory batches from phasespace
@@ -771,7 +773,7 @@ func _on_DeleteAllTrajectories_pressed():
 		var trajcount = trajectories.get_trajectory_colors().size()
 		for i in range(trajcount): 
 			var container = traj_control.get_child(4 + i)
-			container.queue_free() # BUG here after running fill PS
+			container.queue_free() 
 			trajectories.remove_trajectory(0)
 		phase_space.remove_all_trajectories()
 		# Note: moving the position of the delete button means that the code for adding new trajectories

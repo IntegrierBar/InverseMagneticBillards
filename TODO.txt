@@ -2,24 +2,19 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
-CODE AUFRÄUMEN!!!!!!!!!!!!!!!! KATRIN TODO X
+Programm testen
 
-Start to fill PS does not use "Trajectory drawn in regular space". Maybe change this?
+CODE AUFRÄUMEN!!!!!!!!!!!!!!!! KATRIN TODO X
 
 Überprüfe das mit "Stop at corner" alles stimmt, richtig initialisiert und korrekt in der UI angezeigt etc.
 
-CONSIDER FLIPPING y_axis for PS and FM MAYBE NOT: TOO MUCH WORK
-
-(double Precission im Shader oder andere Tricks für geringen Radius)
-
-Optional: Wenn man in einem Fenster scrollt, sollte im dahinterliegenden Bild nicht auch gescrollt werden, das muss
+Optional: 
+- double Precission im Shader oder andere Tricks für geringen Radius)
+- Wenn man in einem Fenster scrollt, sollte im dahinterliegenden Bild nicht auch gescrollt werden, das muss
 man irgendwie mit Inputs regeln
-
-Überlegen die Trennung von FTLE und normalem FlowMap shader zu beenden
+- Überlegen die Trennung von FTLE und normalem FlowMap shader zu beenden
 
 Pixelgröße in phasespace setzbar WAS MACHE ICH DA FALSCH??
-
-Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?
 
 Überprüfe immer state um nicht in einen illegalen Zustand zu kommen!
 Beispielbugs: 
@@ -32,11 +27,6 @@ DISABLED X
 
 Anleitung schreiben
 
-Koordinatensystem in den Hintergrund des normal Spaces legen, ein- und ausschaltbar
-
-Sollen wir uns optisch noch mehr Mühe machen? Oder lassen wir es so? Soll ich die Font wieder entfernen oder 
-überall hinzufügen?  NE, passt so
-
 Füge nützliche tooltips zu buttons und textfeldern hinzu um die Bedienung zu erleichtern, damit könnten dann auch
 die Instruction labels entfernt werden, denke ich
 
@@ -44,6 +34,17 @@ die Instruction labels entfernt werden, denke ich
 --------------------------------------------------------------------------------------------------------------------
 erledigt:
 --------------------------------------------------------------------------------------------------------------------
+
+Sollen wir uns optisch noch mehr Mühe machen? Oder lassen wir es so? Soll ich die Font wieder entfernen oder 
+überall hinzufügen?  NE, passt so  X
+
+Koordinatensystem in den Hintergrund des normal Spaces legen, ein- und ausschaltbar  UNNÖTIG  X
+
+Wie sollen die Achsen der Flowmap und des Phasespaces beschriftet werden?  X
+
+CONSIDER FLIPPING y_axis for PS and FM MAYBE NOT: TOO MUCH WORK  X
+
+Start to fill PS does not use "Trajectory drawn in regular space". Maybe change this?  X
 
 Spawn trajectory batches muss noch die farben der trajektorien setzen, so dass man sie unterscheiden kann  
 (Hab ich versucht aber verschiedene Farben die gut sichtbar sind ist schwierig)  TUT AKZEPTABEL GENUG   X 

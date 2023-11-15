@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -8,12 +8,13 @@
 [ext_resource path="res://addons/dockable_container/layout.gd" type="Script" id=6]
 [ext_resource path="res://addons/dockable_container/dockable_container.gd" type="Script" id=7]
 [ext_resource path="res://addons/dockable_container/layout_split.gd" type="Script" id=8]
+[ext_resource path="res://ImportedDesignElements/Standard Font/droid-sans.regular.ttf" type="DynamicFontData" id=9]
 [ext_resource path="res://Viewport/ViewportContainerScript.gd" type="Script" id=10]
 [ext_resource path="res://Polygon/PolygonVertexHandler.gd" type="Script" id=11]
 [ext_resource path="res://Shaders/FlowMap.gdshader" type="Shader" id=12]
 [ext_resource path="res://Flowmap/FlowMap.gd" type="Script" id=13]
 [ext_resource path="res://ControlPanel/PolygonVertexControl.gd" type="Script" id=14]
-[ext_resource path="res://icon.png" type="Texture" id=16]
+[ext_resource path="res://ImportedDesignElements/Images/black400x400.png" type="Texture" id=15]
 [ext_resource path="res://Shaders/FlowMapSymplectic.gdshader" type="Shader" id=17]
 [ext_resource path="res://Shaders/FTLE.gdshader" type="Shader" id=18]
 [ext_resource path="res://Viewport/ViewportSkriptForMouseInput.gd" type="Script" id=19]
@@ -90,6 +91,16 @@ root = SubResource( 5 )
 hidden_tabs = {
 }
 
+[sub_resource type="DynamicFont" id=22]
+size = 50
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 9 )
+
+[sub_resource type="DynamicFont" id=23]
+size = 50
+font_data = ExtResource( 9 )
+
 [sub_resource type="ShaderMaterial" id=18]
 shader = ExtResource( 12 )
 shader_param/radius = null
@@ -126,6 +137,14 @@ shader_param/iterations = null
 shader_param/forwards = null
 shader_param/zoom = null
 shader_param/step_size_modifier = null
+
+[sub_resource type="DynamicFont" id=24]
+size = 50
+font_data = ExtResource( 9 )
+
+[sub_resource type="DynamicFont" id=25]
+size = 50
+font_data = ExtResource( 9 )
 
 [node name="InverseMagneticBillard" type="Node2D"]
 
@@ -675,12 +694,21 @@ script = ExtResource( 2 )
 script = ExtResource( 23 )
 
 [node name="PSAngleLabel" type="Label" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
-margin_left = -220.0
-margin_top = 15.0
-margin_right = -160.0
-margin_bottom = 36.0
+margin_left = -260.0
+margin_top = 200.0
+margin_right = 155.0
+margin_bottom = 388.0
 rect_rotation = -90.0
-text = "Angle"
+custom_fonts/font = SubResource( 22 )
+text = "1         Angle        0"
+
+[node name="PSPositionLabel" type="Label" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
+margin_left = -200.0
+margin_top = -260.0
+margin_right = 142.0
+margin_bottom = -200.0
+custom_fonts/font = SubResource( 23 )
+text = "0       Position      1"
 
 [node name="PhasespaceLabel" type="Label" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer"]
 margin_left = 3.0
@@ -1008,23 +1036,40 @@ camera = NodePath("Camera2D")
 [node name="FlowMap" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport" groups=["FlowMap"]]
 show_behind_parent = true
 material = SubResource( 18 )
-texture = ExtResource( 16 )
+texture = ExtResource( 15 )
 script = ExtResource( 13 )
 
 [node name="FTLE" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
 visible = false
 material = SubResource( 19 )
-texture = ExtResource( 16 )
+texture = ExtResource( 15 )
 
 [node name="FMSymplectic" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
 visible = false
 material = SubResource( 20 )
-texture = ExtResource( 16 )
+texture = ExtResource( 15 )
 
 [node name="FTLESymplectic" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
 visible = false
 material = SubResource( 21 )
-texture = ExtResource( 16 )
+texture = ExtResource( 15 )
+
+[node name="FMAngleLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
+margin_left = -260.0
+margin_top = 200.0
+margin_right = 142.0
+margin_bottom = 260.0
+rect_rotation = -90.0
+custom_fonts/font = SubResource( 24 )
+text = "1         Angle        0"
+
+[node name="FMPositionLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
+margin_left = -200.0
+margin_top = -260.0
+margin_right = 207.0
+margin_bottom = -200.0
+custom_fonts/font = SubResource( 25 )
+text = "0       Position      1"
 
 [node name="FlowmapLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer"]
 margin_left = 3.0
