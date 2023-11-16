@@ -13,14 +13,13 @@ namespace godot {
     void InverseMagneticBillard::_ready()
     {
         set_process(false);
-        Godot::print("ready is called");
         set_grid_size(gridSize);
     }
 
     void InverseMagneticBillard::_register_methods()
     {
         register_method((char*)"_ready", &InverseMagneticBillard::_ready);
-        register_method((char*)"_process", &InverseMagneticBillard::_process);
+        // register_method((char*)"_process", &InverseMagneticBillard::_process);
         register_method((char*)"_draw", &InverseMagneticBillard::_draw);
         register_method((char*)"clear_polygon", &InverseMagneticBillard::clear_polygon);
         register_method((char*)"add_polygon_vertex", &InverseMagneticBillard::add_polygon_vertex);
@@ -63,7 +62,6 @@ namespace godot {
     void InverseMagneticBillard::_process()
     {
         // is disabled
-        Godot::print("process runs");
     }
 
     // For each trajectory use polyline to draw it in normal space

@@ -8,7 +8,7 @@ var color_array: Array = []
 var trajectory_data: Array = []
 
 var current_multimesh
-var instance_count = 100000	# could consider higher
+var instance_count = 100000	# most systems should be able to handle 1 mil, but keep it lower to prevent crashes
 
 
 func _ready():

@@ -265,6 +265,7 @@ text = "Billiard Type:  "
 margin_left = 95.0
 margin_right = 217.0
 margin_bottom = 20.0
+hint_tooltip = "Change the billiard type"
 size_flags_horizontal = 3
 text = "Inverse Magnetic Billiards"
 clip_text = true
@@ -289,6 +290,7 @@ clip_text = true
 margin_left = 193.0
 margin_right = 217.0
 margin_bottom = 24.0
+hint_tooltip = "Stop iterating if the trajectory is close to a vertex"
 pressed = true
 
 [node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
@@ -361,6 +363,7 @@ clip_text = true
 margin_left = 110.0
 margin_right = 217.0
 margin_bottom = 24.0
+hint_tooltip = "How many iterations are drawn in Regular Space"
 size_flags_horizontal = 3
 text = "100"
 
@@ -420,7 +423,7 @@ clip_text = true
 margin_left = 110.0
 margin_right = 217.0
 margin_bottom = 24.0
-hint_tooltip = "Set the radius"
+hint_tooltip = "Set the radius for inverse magnetic billiard"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "1"
@@ -465,8 +468,7 @@ clip_text = true
 margin_top = 42.0
 margin_right = 217.0
 margin_bottom = 62.0
-hint_tooltip = "Close the polygon.
-Can also be done via ESC (TODO)"
+hint_tooltip = "Close the polygon"
 text = "Close Contour"
 clip_text = true
 
@@ -771,6 +773,9 @@ clip_text = true
 margin_left = 140.0
 margin_right = 277.0
 margin_bottom = 24.0
+hint_tooltip = "Try setting as large as possible.
+If set too large the program will crash.
+For more information, check the manual."
 size_flags_horizontal = 3
 text = "100000"
 
@@ -868,12 +873,14 @@ margin_bottom = 118.0
 margin_right = 136.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 0, 20 )
+hint_tooltip = "Coordinates on polygon"
 size_flags_horizontal = 3
 
 [node name="TextEdit2" type="LineEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer4"]
 margin_left = 140.0
 margin_right = 277.0
 margin_bottom = 24.0
+hint_tooltip = "Angle coordinates"
 size_flags_horizontal = 3
 
 [node name="SpawnPSTrajOnCoords" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
@@ -911,8 +918,7 @@ margin_left = 140.0
 margin_right = 277.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 0, 20 )
-hint_tooltip = "How many trajectories should fill the rectangle
-IMPORTANT: more then ~10 can lead to crashes in web version"
+hint_tooltip = "How many trajectories should fill the rectangle"
 size_flags_horizontal = 3
 text = "100"
 
@@ -960,6 +966,7 @@ clip_text = true
 margin_left = 140.0
 margin_right = 277.0
 margin_bottom = 24.0
+hint_tooltip = "#grid cells per axis"
 size_flags_horizontal = 3
 text = "64"
 
@@ -981,6 +988,7 @@ clip_text = true
 margin_left = 140.0
 margin_right = 277.0
 margin_bottom = 24.0
+hint_tooltip = "How many trajectories are spawned"
 size_flags_horizontal = 3
 text = "1"
 
@@ -998,7 +1006,7 @@ margin_top = 402.0
 margin_right = 277.0
 margin_bottom = 422.0
 hint_tooltip = "Remove all points from phase space
-NEITHER DELETES TRAJECToRIES NOR RESETS THEM"
+Neither deletes nor resets trajectories"
 size_flags_horizontal = 3
 text = "Clear Phase Space"
 clip_text = true
@@ -1007,6 +1015,10 @@ clip_text = true
 margin_top = 426.0
 margin_right = 277.0
 margin_bottom = 446.0
+hint_tooltip = "Writes all phase space data to a file and saves it.
+If running in browser, it will download.
+If running as standalone, will save in
+%APPDATA%\\Godot\\app_userdata\\InverseMagneticBillard"
 size_flags_horizontal = 3
 text = "Save Phase Space"
 clip_text = true
@@ -1032,6 +1044,7 @@ script = ExtResource( 19 )
 camera = NodePath("Camera2D")
 
 [node name="Camera2D" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport" instance=ExtResource( 1 )]
+_zoom_level = 1.0
 
 [node name="FlowMap" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport" groups=["FlowMap"]]
 show_behind_parent = true
