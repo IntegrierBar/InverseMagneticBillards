@@ -154,7 +154,7 @@ To stop showing the trajectory in Regular Space, simply left click anywhere insi
 ## How to compile
 The code is split into 2 parts.
 
-The code inside the GDNative fodler is the C++ code for the calculations.   
+The code inside the GDNative folder is the C++ code for the calculations.   
 Compilation is only required if you do not compile for windows or web.
 
 The code inside the Godot folder is the Godot project itself.
