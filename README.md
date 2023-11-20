@@ -1,6 +1,15 @@
-# InverseMagneticBillards
+# InverseMagneticBilliards
 A simulator of inverse magnetic billard for polygonal tables written with Godot 3.5.2.
 
+## Inverse Magnetic Billiards
+While classical billiard can be thought of as a ball traveling inside a table bouncing at the border, 
+in inverse magnetic billiard the table does not have a border where the ball can bounce.
+Instead outside the table is a constant magnetic field and the ball is electrically charged.
+As a consequence, as soon as the ball leaves the table it travels on a circlular path until it enters the table again where it continues in a straight path.
+
+This system is of interest as the edgecases for the magnetic field strength are already known.
+- If the field strength is infinitely strong, the resulting system is classical billiards.
+- If the field strength is near 0, the table does not matter and the ball just travels on a giant circle.
 
 ## How to use
 The simulator is split into 3 spaces (regular space, flow map and phase space) and 2 controls (main control and phase space control).
