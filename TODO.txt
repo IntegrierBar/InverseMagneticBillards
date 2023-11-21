@@ -2,6 +2,13 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
+Beschriftuzng für PS und FlowMap ist kacke, entweder schriftart kleiner oder einfach fest machen and den Rand des Spaces
+
+stop when hitting POYLGON vertex
+
+Ab Freitag Exon fragen nach Vorlagen für Tex und POwerpoint.
+(Sekretariat fragen nach zugang zu gitlab) 
+
 Programm testen
 
 CODE AUFRÄUMEN!!!!!!!!!!!!!!!! KATRIN TODO X
