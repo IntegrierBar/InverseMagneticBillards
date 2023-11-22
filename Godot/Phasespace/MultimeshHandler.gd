@@ -140,8 +140,11 @@ func _on_PSPointsInMultimeshTextEdit_text_entered(new_text):
 		var number = int(new_text)
 		set_instance_count(number) 
 
-func set_point_size(new_point_size: float):
-	point_size = new_point_size
-	# set shader_param for all multimeshes
-	for child in get_children():
-		child.material.set_shader_param("point_size", point_size)
+
+func _on_PSPointSizeEdit_text_entered(new_text):
+	if new_text.is_valid_float():
+		point_size = float(new_text)
+		# set shader_param for all multimeshes
+		for child in get_children():
+			child.material.set_shader_param("point_size", point_size)
+

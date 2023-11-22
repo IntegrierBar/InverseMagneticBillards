@@ -742,7 +742,7 @@ scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer"]
 margin_right = 277.067
-margin_bottom = 446.0
+margin_bottom = 474.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -779,18 +779,39 @@ For more information, check the manual."
 size_flags_horizontal = 3
 text = "100000"
 
-[node name="Label" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
+[node name="PSPointSizeControl" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
 margin_top = 52.0
 margin_right = 277.0
-margin_bottom = 66.0
+margin_bottom = 76.0
+
+[node name="PSPointSizeLabel" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/PSPointSizeControl"]
+margin_top = 5.0
+margin_right = 136.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Point Size "
+clip_text = true
+
+[node name="PSPointSizeEdit" type="LineEdit" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/PSPointSizeControl"]
+margin_left = 140.0
+margin_right = 277.0
+margin_bottom = 24.0
+hint_tooltip = "Set point size for points in phase space."
+size_flags_horizontal = 3
+text = "1.0"
+
+[node name="Label" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
+margin_top = 80.0
+margin_right = 277.0
+margin_bottom = 94.0
 text = "Single Trajectories"
 align = 1
 clip_text = true
 
 [node name="SinglePSTrajectoryControl" type="VBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer" groups=["SinglePSTraj"]]
-margin_top = 70.0
+margin_top = 98.0
 margin_right = 277.0
-margin_bottom = 212.0
+margin_bottom = 240.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl"]
@@ -892,17 +913,17 @@ text = "Spawn Trajectory on Coordinates"
 clip_text = true
 
 [node name="Label2" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 216.0
+margin_top = 244.0
 margin_right = 277.0
-margin_bottom = 230.0
+margin_bottom = 258.0
 text = "Trajectory Batches"
 align = 1
 clip_text = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 234.0
+margin_top = 262.0
 margin_right = 277.0
-margin_bottom = 258.0
+margin_bottom = 286.0
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/HBoxContainer"]
@@ -923,24 +944,24 @@ size_flags_horizontal = 3
 text = "100"
 
 [node name="SpawnTrajBatch" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 262.0
+margin_top = 290.0
 margin_right = 277.0
-margin_bottom = 282.0
+margin_bottom = 310.0
 hint_tooltip = "After pressing, click twice inside the phasespace to specify a rectangle 
 inside which #trajectoriesInBatch trajectories will be evenly spawned"
 text = "Spawn PS trajectory batch"
 clip_text = true
 
 [node name="TrajBatchInstructions" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer" groups=["TrajBatchInstr"]]
-margin_top = 286.0
+margin_top = 314.0
 margin_right = 277.0
-margin_bottom = 300.0
+margin_bottom = 328.0
 clip_text = true
 
 [node name="FillPSControl" type="VBoxContainer" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 304.0
+margin_top = 332.0
 margin_right = 277.0
-margin_bottom = 398.0
+margin_bottom = 426.0
 
 [node name="Label" type="Label" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/FillPSControl"]
 margin_right = 277.0
@@ -1002,9 +1023,9 @@ text = "Start to Fill Phase Space"
 clip_text = true
 
 [node name="ClearPSTrajectories" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 402.0
+margin_top = 430.0
 margin_right = 277.0
-margin_bottom = 422.0
+margin_bottom = 450.0
 hint_tooltip = "Remove all points from phase space
 Neither deletes nor resets trajectories"
 size_flags_horizontal = 3
@@ -1012,9 +1033,9 @@ text = "Clear Phase Space"
 clip_text = true
 
 [node name="SavePhaseSpaceData" type="Button" parent="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer"]
-margin_top = 426.0
+margin_top = 454.0
 margin_right = 277.0
-margin_bottom = 446.0
+margin_bottom = 474.0
 hint_tooltip = "Writes all phase space data to a file and saves it.
 If running in browser, it will download.
 If running as standalone, will save in
@@ -1341,6 +1362,7 @@ clip_text = true
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/ResetAllTrajectories" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_ResetAllTrajectories_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/Trajectories/NewTrajectoriesButton" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_NewTrajectoriesButton_pressed"]
 [connection signal="text_entered" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/PSPointsInMultimesh/PSPointsInMultimeshTextEdit" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MultimeshHandler" method="_on_PSPointsInMultimeshTextEdit_text_entered"]
+[connection signal="text_entered" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/PSPointSizeControl/PSPointSizeEdit" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/MultimeshHandler" method="_on_PSPointSizeEdit_text_entered"]
 [connection signal="toggled" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/HBoxContainer2/DrawnInNormalSpace" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_DrawnInNormalSpace_toggled"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnTrajOnClickButton" to="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport/PhaseSpace" method="_on_SpawnTrajOnClickButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/DockableContainer/PSControlPanel/ScrollContainer/VBoxContainer/SinglePSTrajectoryControl/SpawnPSTrajOnCoords" to="CanvasLayer/DockableContainer/PolygonSpace/ViewportContainer/Viewport/Trajectories" method="_on_SpawnPSTrajOnCoords_pressed"]
