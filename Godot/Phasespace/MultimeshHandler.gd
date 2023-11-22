@@ -1,5 +1,6 @@
 extends Node2D
 
+var shader_code = preload("res://Phasespace/point_size.tres")
 
 # saves all color data
 var color_array: Array = []
@@ -10,6 +11,7 @@ var trajectory_data: Array = []
 var current_multimesh
 var instance_count = 100000	# most systems should be able to handle 1 mil, but keep it lower to prevent crashes
 
+var point_size: float = 1.0	# point size of the phase space points
 
 func _ready():
 	add_multimesh()
@@ -25,6 +27,13 @@ func add_multimesh():
 	new_multimesh.multimesh.color_format = MultiMesh.COLOR_FLOAT
 	new_multimesh.multimesh.instance_count = instance_count
 	new_multimesh.multimesh.visible_instance_count = 0
+	
+	### add shader so that we can modify point_size ###
+	var shader_mat = ShaderMaterial.new()
+	shader_mat.shader = shader_code
+	new_multimesh.material = shader_mat
+	new_multimesh.material.set_shader_param("point_size", point_size)
+	
 	add_child(new_multimesh)
 	current_multimesh = new_multimesh
 
@@ -130,3 +139,9 @@ func _on_PSPointsInMultimeshTextEdit_text_entered(new_text):
 	if new_text.is_valid_integer():
 		var number = int(new_text)
 		set_instance_count(number) 
+
+func set_point_size(new_point_size: float):
+	point_size = new_point_size
+	# set shader_param for all multimeshes
+	for child in get_children():
+		child.material.set_shader_param("point_size", point_size)

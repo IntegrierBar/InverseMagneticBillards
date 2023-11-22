@@ -1,0 +1,11 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "// this shader changes the point size for the phase space points
+shader_type canvas_item;
+
+uniform float point_size = 1.0;
+
+void vertex() {
+	POINT_SIZE = point_size;
+}"
