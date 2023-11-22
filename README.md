@@ -1,6 +1,8 @@
 # InverseMagneticBilliards
 A simulator of inverse magnetic billard for polygonal tables written with Godot 3.5.2.
 
+Web Version can be found here: https://integrierbar.github.io/InverseMagneticBillards/
+
 ## Inverse Magnetic Billiards
 While classical billiard can be thought of as a ball traveling inside a table bouncing at the border, 
 in inverse magnetic billiard the table does not have a border where the ball can bounce.
