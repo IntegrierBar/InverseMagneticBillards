@@ -283,14 +283,14 @@ margin_top = 5.0
 margin_right = 189.0
 margin_bottom = 19.0
 size_flags_horizontal = 3
-text = "Stop When Hitting a Vertex"
+text = "Stop When Hitting a Polygon Vertex"
 clip_text = true
 
 [node name="StopAtCornerCheckBox" type="CheckBox" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer/StopAtCornerBox" groups=["StopAtCorner"]]
 margin_left = 193.0
 margin_right = 217.0
 margin_bottom = 24.0
-hint_tooltip = "Stop iterating if the trajectory is close to a vertex"
+hint_tooltip = "Stop iterating if the trajectory is close to a polygon vertex"
 pressed = true
 
 [node name="Iterations" type="VBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
