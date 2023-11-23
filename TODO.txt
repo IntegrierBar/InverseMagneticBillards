@@ -2,6 +2,13 @@
 TODO:
 --------------------------------------------------------------------------------------------------------------------
 
+GPU usage ist sehr hoch, Dinge die man tun könnte:
+ - in Project settings: Renderin->Quality->Driver-> Fallback to GLES2 um sicher zu gehen, dass auch MAC tut
+ - in Project settings: Renderin->Quality->Intended Usage-> Set framebuffer Allocation to 2d (without sampling maybe as well)
+ - in Project settings: Renderin->Quality-> Shadows: disable
+ - in Project settings: Renderin->Quality->Reflection aus
+
+
 Beschriftuzng für PS und FlowMap ist kacke, entweder schriftart kleiner oder einfach fest machen and den Rand des Spaces
 
 stop when hitting POYLGON vertex X
