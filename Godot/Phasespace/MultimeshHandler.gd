@@ -120,9 +120,8 @@ func remove_all():
 	add_multimesh()
 
 
-# allows the user to set the instance count sinze the maximum is hardware dependent
+# allows the user to set the instance count since the maximum is hardware dependent
 func set_instance_count(count: int):
-	print("Setting instance count")
 	instance_count = count
 	redraw()
 
