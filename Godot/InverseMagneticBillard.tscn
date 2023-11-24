@@ -696,6 +696,7 @@ script = ExtResource( 2 )
 script = ExtResource( 23 )
 
 [node name="PSAngleLabel" type="Label" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
+visible = false
 margin_left = -260.0
 margin_top = 200.0
 margin_right = 155.0
@@ -705,6 +706,7 @@ custom_fonts/font = SubResource( 22 )
 text = "1         Angle        0"
 
 [node name="PSPositionLabel" type="Label" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer/Viewport"]
+visible = false
 margin_left = -200.0
 margin_top = -260.0
 margin_right = 142.0
@@ -728,6 +730,25 @@ margin_right = -3.0
 margin_bottom = 14.0
 align = 2
 clip_text = true
+
+[node name="PSPositiomLabel" type="Label" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -20.0
+margin_top = 5.0
+margin_right = 20.0
+margin_bottom = 14.0
+text = "Position"
+
+[node name="PSAngleLabel" type="Label" parent="CanvasLayer/DockableContainer/Phasespace/ViewportContainer"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 5.0
+margin_top = 20.0
+margin_right = 45.0
+margin_bottom = 34.0
+rect_rotation = -90.0
+text = "Angle"
 
 [node name="PSControlPanel" type="HSplitContainer" parent="CanvasLayer/DockableContainer"]
 margin_left = 730.933
@@ -1089,6 +1110,7 @@ material = SubResource( 21 )
 texture = ExtResource( 15 )
 
 [node name="FMAngleLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
+visible = false
 margin_left = -260.0
 margin_top = 200.0
 margin_right = 142.0
@@ -1098,6 +1120,7 @@ custom_fonts/font = SubResource( 24 )
 text = "1         Angle        0"
 
 [node name="FMPositionLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
+visible = false
 margin_left = -200.0
 margin_top = -260.0
 margin_right = 207.0
@@ -1122,6 +1145,25 @@ margin_bottom = 14.0
 size_flags_horizontal = 3
 align = 2
 clip_text = true
+
+[node name="FMPositionLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -20.0
+margin_top = 5.0
+margin_right = 40.0
+margin_bottom = 14.0
+text = "Position"
+
+[node name="FMAngleLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 5.0
+margin_top = 20.0
+margin_right = 40.0
+margin_bottom = -87.5118
+rect_rotation = -90.0
+text = "Angle"
 
 [node name="FlowmapControl" type="WindowDialog" parent="CanvasLayer/DockableContainer/Flowmap"]
 visible = true
