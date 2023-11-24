@@ -5,8 +5,8 @@ TODO:
 Lustiger radius: 3.63
 
 GPU usage ist sehr hoch, Dinge die man tun könnte:
- - in Project settings: Renderin->Quality->Driver-> Fallback to GLES2 um sicher zu gehen, dass auch MAC tut
- - in Project settings: Renderin->Quality->Intended Usage-> Set framebuffer Allocation to 2d (without sampling maybe as well)
+ - in Project settings: Renderin->Quality->Driver-> Fallback to GLES2 um sicher zu gehen, dass auch MAC tut X
+ - in Project settings: Renderin->Quality->Intended Usage-> Set framebuffer Allocation to 2d (without sampling maybe as well) X
  - in Project settings: Renderin->Quality-> Shadows: disable
  - in Project settings: Renderin->Quality->Reflection aus
 
