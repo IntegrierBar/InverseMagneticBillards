@@ -1,4 +1,4 @@
-// Copy of Flowmap Shader, nothing changed yet
+// FTLE for regular billiard
 
 shader_type canvas_item;
 
@@ -197,43 +197,12 @@ vec2 iterateForwardsnTimes(vec2 pos) {
 	
 	for (int i=0; i < iterations; i++) {
 		vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, 1.);
-		vec2 nextIterate = intersection.xy;
-		int nextIndex = int(intersection.z);
-		// get new direction by calculating the next iterate by intersecting the polygon with line from old position with direction of the edge of the polygon of the new position
-		vec2 dir = normalize(getPolyVertex(nextIndex + 1) - getPolyVertex(nextIndex));
-		// still have to find out in which direction we need to go
-		// Use intersection test for this
-		vec2 start = currentPosition + 100.*eps * dir;
-		int intersections = 0;
-		for (int j = 0; j < n - 1; j++) // only loop till -1, since we know that polygon closed means that first == last point
-		{
-		    // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
-		    float denominator = (getPolyVertex(j + 1).x - getPolyVertex(j).x) * dir.y - (getPolyVertex(j + 1).y - getPolyVertex(j).y) * dir.x;
-		    if (abs(denominator) < 1e-8)
-		    {
-		        continue; // no intersection possible, since lines near parallel
-		    }
-		    float t = ((getPolyVertex(j).y - start.y) * dir.x - (getPolyVertex(j).x - start.x) * dir.y) / denominator;
-		    if (0.0 <= t && t < 1.0) // allow t = 0 but not t = 1 to avoid double counting
-		    {
-		        float u = ((getPolyVertex(j).x - start.x) * (getPolyVertex(j).y - getPolyVertex(j + 1).y) - (getPolyVertex(j).y - start.y) * (getPolyVertex(j).x - getPolyVertex(j + 1).x)) / denominator;
-		        if (j != currentIndexOnPolygon && u > 0.0)
-		        {
-		            intersections++;
-		        }
-		    }
-		}
-		// if even amount of intersections, the we went the wrong direction
-		if (intersections % 2 == 0)
-		{
-		    dir = -dir;
-		}
-		
-		vec3 secondIntersection = intersect_polygon_line(currentPosition, dir, currentIndexOnPolygon, 1.);
-
-		currentIndexOnPolygon = nextIndex;
-		currentPosition = nextIterate;
-		currentDirection = normalize(secondIntersection.xy - currentPosition);
+		currentPosition = intersection.xy;
+		currentIndexOnPolygon = int(intersection.z);
+		// get new direction by reflecting
+		vec2 verticalDirection = normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
+		vec2 horizontalDirection = vec2(-verticalDirection.y, verticalDirection.x);
+		currentDirection = normalize(currentDirection - 2.*dot(currentDirection, horizontalDirection)*horizontalDirection);
 	}
 
 	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
@@ -248,46 +217,15 @@ vec2 iterateBackwardsnTimes(vec2 pos) {
 	int currentIndexOnPolygon = int(coords[2].x); 
 	
 	for  (int i=0; i < iterations; i++) {
-		// calculate one iteration forward in order to go backwards
-		vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, 1.);
-		vec2 nextIterate = intersection.xy;	// the forwards point
-		int nextIndex = int(intersection.z);
-		// get direction to backwards iterate from the currentIndexOnPolygon edge
-		vec2 dir = normalize(getPolyVertex(currentIndexOnPolygon) - getPolyVertex(currentIndexOnPolygon + 1));
-		// still have to find out in which direction we need to go
-		// Use intersection test for this
-		vec2 start = nextIterate + 100.*eps*dir;
-		int intersections = 0;
-		for (int j = 0; j < n - 1; j++) // only loop till -1, since we know that polygon closed means that first == last point
-		{
-		    // formula for line line intersection from https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
-		    float denominator = (getPolyVertex(j + 1).x - getPolyVertex(j).x) * dir.y - (getPolyVertex(j + 1).y - getPolyVertex(j).y) * dir.x;
-		    if (abs(denominator) < 1e-8)
-		    {
-		        continue; // no intersection possible, since lines near parallel
-		    }
-		    float t = ((getPolyVertex(j).y - start.y) * dir.x - (getPolyVertex(j).x - start.x) * dir.y) / denominator;
-		    if (0.0 <= t && t < 1.0) // allow t = 0 but not t = 1 to avoid double counting
-		    {
-		        float u = ((getPolyVertex(j).x - start.x) * (getPolyVertex(j).y - getPolyVertex(j + 1).y) - (getPolyVertex(j).y - start.y) * (getPolyVertex(j).x - getPolyVertex(j + 1).x)) / denominator;
-		        if (j != currentIndexOnPolygon && u > 0.0)
-		        {
-		            intersections++;
-		        }
-		    }
-		}
-		// if even amount of intersections, the we went the wrong direction
-		if (intersections % 2 == 0)
-		{
-		    dir = -dir;
-		}
+		// first reflect the direction
+		vec2 verticalDirection = normalize(getPolyVertex(currentIndexOnPolygon + 1) - getPolyVertex(currentIndexOnPolygon));
+		vec2 horizontalDirection = vec2(-verticalDirection.y, verticalDirection.x);
+		currentDirection = normalize(currentDirection - 2.*dot(currentDirection, horizontalDirection)*horizontalDirection);
 		
-		// now calculate the previous iterate
-		vec3 secondIntersection = intersect_polygon_line(nextIterate, dir, nextIndex, 1.);
-
-		currentIndexOnPolygon = int(secondIntersection.z);
-		currentDirection = normalize(currentPosition - secondIntersection.xy);
-		currentPosition = secondIntersection.xy;
+		// then go the line
+		vec3 intersection = intersect_polygon_line(currentPosition, currentDirection, currentIndexOnPolygon, -1.);
+		currentPosition = intersection.xy;
+		currentIndexOnPolygon = int(intersection.z);
 	}
 	
 	return R2ToPhaseSpace(currentPosition, currentDirection, currentIndexOnPolygon);
@@ -319,7 +257,6 @@ void fragment() {
 	vec2 pos = UV;	// phasespace coords are texture coords
 	
 	float diff;
-	
 	
 	float pixelsize = zoom*step_size_modifier;	// magic formula to determine stepsize
 	vec2 hor = vec2(pixelsize, 0);
@@ -366,85 +303,7 @@ void fragment() {
 		// diff = dot(pos - delpos, pos - delpos);
 		
 	}
-	//vec2 next = iterateBackwards(start, dir);
-	//vec2 next = iterateForwards(start, dir, index);
-	// DETERMINE COLOR FROM next PHASESPACE COORDS
-	//COLOR = texture(TEXTURE, UV + vec2(getPolyLength(n-1)*0.01, 0));
-	//COLOR = texture(TEXTURE, UV + getPolyVertex(n)*0.1);
-	//COLOR = texture(TEXTURE, UV + next*0.01);
+	
 	COLOR = vec4(0, diff, 0., 1.);
-	//COLOR = texture(TEXTURE, next);
 }
 
-
-//
-//float drawLine (vec2 p1, vec2 p2, vec2 uv, float a, float one_px)
-//{
-//    float r = 0.;
-//
-//    // get dist between points
-//    float d = distance(p1, p2);
-//
-//    // get dist between current pixel and p1
-//    float duv = distance(p1, uv);
-//
-//    //if point is on line, according to dist, it should match current uv 
-//    r = 1.-floor(1.-(a*one_px)+distance (mix(p1, p2, clamp(duv/d, 0., 1.)),  uv));
-//
-//    return r;
-//}
-//
-//float drawCircle(vec2 p, float d, vec2 uv)
-//{
-//    return (distance(p, uv) <= d) ? 1. : 0.;
-//}
-//
-//
-//void fragment() {
-//	//vec2 xy = texelFetch(polygon, ivec2(2,0), 0).xy;
-//
-//	vec2 uv = UV;
-//	float t = TIME*1.5; //Pro Tip™: multipluy time to go faster!
-//
-//	float polygon_lines = 0.0;
-//	for (int i=0; i<n-1; i++) {
-//		//vec2 xy = texelFetch(polygon, ivec2(i,0), 0).xy;
-//		polygon_lines = polygon_lines + drawLine(texelFetch(polygon, ivec2(i,0), 0).xy, texelFetch(polygon, ivec2(i + 1,0), 0).xy, uv, 2.0, SCREEN_PIXEL_SIZE.x);
-//	}
-//
-//    //in uv space
-//	vec2 p1 = vec2(0.5 + sin(t)*.2, 0.25 + cos(t+pi)*.1);
-//	vec2 p2 = vec2(0.5 + sin(t+pi)*.2, 0.25 + cos(t)*.1);
-//	vec2 p3 = vec2(0.5 + sin(t+pi/2.)*.2, 0.25 + cos(t-.5*pi)*.1);
-//	vec2 p4 = vec2(0.5 + sin(t-pi/2.)*.2, 0.25 + cos(t+.5*pi)*.1);
-//	vec2 p5 = vec2(0.5 + sin(t)*.2, 0.75 + cos(t+pi)*.1);
-//	vec2 p6 = vec2(0.5 + sin(t+pi)*.2, 0.75 + cos(t)*.1);
-//	vec2 p7 = vec2(0.5 + sin(t+pi/2.)*.2, 0.75 + cos(t-.5*pi)*.1);
-//	vec2 p8 = vec2(0.5 + sin(t-pi/2.)*.2, 0.75 + cos(t+.5*pi)*.1);
-//
-//
-//	float lines = drawLine(p1, p5, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p2, p6, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p1, p3, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p3, p2, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p1, p4, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p4, p2, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p5, p7, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p7, p6, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p6, p8, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p8, p5, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p3, p7, uv, 1., SCREEN_PIXEL_SIZE.x)
-//	    		  + drawLine(p4, p8, uv, 1., SCREEN_PIXEL_SIZE.x);
-//
-//	float d = 0.003;
-//	float dots = drawCircle(p1, d, uv)
-//				 + drawCircle(p2, d, uv)
-//	     		 + drawCircle(p3, d, uv)
-//				 + drawCircle(p4, d, uv)
-//	     		 + drawCircle(p5, d, uv)
-//				 + drawCircle(p6, d, uv)
-//	     		 + drawCircle(p7, d, uv)
-//				 + drawCircle(p8, d, uv);
-//
-//	COLOR = vec4(polygon_lines-dots, dots, dots, 1.);
-//}

@@ -50,6 +50,18 @@ func _ready():
 	$"../FTLESymplectic".material.set_shader_param("radius", 1.0)
 	$"../FTLESymplectic".material.set_shader_param("zoom", 0.1)
 	$"../FTLESymplectic".material.set_shader_param("step_size_modifier", 0.01)
+	# initialise parameters for regular flowmap shader
+	$"../FMRegular".material.set_shader_param("iterations", 1)
+	$"../FMRegular".material.set_shader_param("forwards", true)
+	$"../FMRegular".material.set_shader_param("radius", 1.0)
+	$"../FMRegular".material.set_shader_param("showAngle", true)
+	$"../FMRegular".material.set_shader_param("showPosition", true)
+	# initialise parameters for regular FTLE shader
+	$"../FTLERegular".material.set_shader_param("iterations", 1)
+	$"../FTLERegular".material.set_shader_param("forwards", true)
+	$"../FTLERegular".material.set_shader_param("radius", 1.0)
+	$"../FTLERegular".material.set_shader_param("zoom", 0.1)
+	$"../FTLERegular".material.set_shader_param("step_size_modifier", 0.01)
 	
 	
 	sizey = texture.get_height()
@@ -135,6 +147,8 @@ func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	$"../FTLE".material.set_shader_param("n", polygon.size())
 	$"../FMSymplectic".material.set_shader_param("n", polygon.size())
 	$"../FTLESymplectic".material.set_shader_param("n", polygon.size())
+	$"../FMRegular".material.set_shader_param("n", polygon.size())
+	$"../FTLERegular".material.set_shader_param("n", polygon.size())
 	
 	# convert array to imageTexture and send it to shader
 	var img = Image.new()
@@ -163,6 +177,10 @@ func store_polygon_as_image(polygon: Array, polygonLength: Array):
 	$"../FMSymplectic".material.set_shader_param("polygonLength", lengthTexture)
 	$"../FTLESymplectic".material.set_shader_param("polygon", texture)
 	$"../FTLESymplectic".material.set_shader_param("polygonLength", lengthTexture)
+	$"../FMRegular".material.set_shader_param("polygon", texture)
+	$"../FMRegular".material.set_shader_param("polygonLength", lengthTexture)
+	$"../FTLERegular".material.set_shader_param("polygon", texture)
+	$"../FTLERegular".material.set_shader_param("polygonLength", lengthTexture)
 
 
 func _on_Trajectories_close_polygon(p):
@@ -177,6 +195,8 @@ func set_radius(r):
 	$"../FTLE".material.set_shader_param("radius", r)
 	$"../FMSymplectic".material.set_shader_param("radius", r)
 	$"../FTLESymplectic".material.set_shader_param("radius", r)
+	$"../FMRegular".material.set_shader_param("radius", r)
+	$"../FTLERegular".material.set_shader_param("radius", r)
 
 
 # sets number of iterations also for the trajectories copy that is needed to show trajectories from the flow map
@@ -186,6 +206,8 @@ func set_iterations(iter: int):
 	$"../FTLE".material.set_shader_param("iterations", iter)
 	$"../FMSymplectic".material.set_shader_param("iterations", iter)
 	$"../FTLESymplectic".material.set_shader_param("iterations", iter)
+	$"../FMRegular".material.set_shader_param("iterations", iter)
+	$"../FTLERegular".material.set_shader_param("iterations", iter)
 
 
 func set_direction(b: bool): # forwards is true
@@ -193,6 +215,8 @@ func set_direction(b: bool): # forwards is true
 	$"../FTLE".material.set_shader_param("forwards", b)
 	$"../FMSymplectic".material.set_shader_param("forwards", b)
 	$"../FTLESymplectic".material.set_shader_param("forwards", b)
+	$"../FMRegular".material.set_shader_param("forwards", b)
+	$"../FTLERegular".material.set_shader_param("forwards", b)
 	# needed for show trajectory to determine whether a forwards or backwards iteration is supposed 
 	# to be shown
 	forwards = b
@@ -216,18 +240,22 @@ func _on_FTLEButton_toggled(button_pressed):
 	$"../FTLE".visible = button_pressed and (billiard_type == 0)
 	$"../FMSymplectic".visible = !button_pressed and (billiard_type == 1)
 	$"../FTLESymplectic".visible = button_pressed and (billiard_type == 1)
+	$"../FMRegular".visible = !button_pressed and (billiard_type == 2)
+	$"../FTLERegular".visible = button_pressed and (billiard_type == 2)
 
 
 # If toggled on the position in phasespace is colour coded in the flowmap
 func _on_FMPositionCheck_toggled(button_pressed):
 	material.set_shader_param("showPosition", button_pressed)
 	$"../FMSymplectic".material.set_shader_param("showPosition", button_pressed)
+	$"../FMRegular".material.set_shader_param("showPosition", button_pressed)
 
 
 # If toggled on the anngle in phasespace is colour coded in the flowmap
 func _on_FMAngleCheck_toggled(button_pressed):
 	material.set_shader_param("showAngle", button_pressed)
 	$"../FMSymplectic".material.set_shader_param("showAngle", button_pressed)
+	$"../FMRegular".material.set_shader_param("showAngle", button_pressed)
 	
 
 func local_to_ps() -> Vector2:
@@ -243,14 +271,17 @@ func local_to_ps() -> Vector2:
 func _on_Camera2D_zoom_changed(z):
 	$"../FTLE".material.set_shader_param("zoom", z)
 	$"../FTLESymplectic".material.set_shader_param("zoom", z)
+	$"../FTLERegular".material.set_shader_param("zoom", z)
 
 
-func change_billiard_type(type: bool):
-	billiard_type = int(type)
-	self.visible = !type and !showFTLE
-	$"../FTLE".visible = !type and showFTLE
-	$"../FMSymplectic".visible = type and !showFTLE
-	$"../FTLESymplectic".visible = type and showFTLE
+func change_billiard_type(type: int):
+	billiard_type = type
+	self.visible = (type==0) and !showFTLE
+	$"../FTLE".visible = (type==0) and showFTLE
+	$"../FMSymplectic".visible = (type==1) and !showFTLE
+	$"../FTLESymplectic".visible = (type==1) and showFTLE
+	$"../FMRegular".visible = (type==2) and !showFTLE
+	$"../FTLERegular".visible = (type==2) and showFTLE
 
 
 func _on_FTLEStepsizeEdit_text_entered(new_text):
@@ -258,3 +289,4 @@ func _on_FTLEStepsizeEdit_text_entered(new_text):
 		var stepsize = float(new_text)
 		$"../FTLE".material.set_shader_param("step_size_modifier", stepsize)
 		$"../FTLESymplectic".material.set_shader_param("step_size_modifier", stepsize)
+		$"../FTLERegular".material.set_shader_param("step_size_modifier", stepsize)

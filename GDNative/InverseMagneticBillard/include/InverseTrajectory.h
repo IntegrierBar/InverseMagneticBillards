@@ -22,6 +22,9 @@ namespace godot {
         std::optional<Vector2> iterate_symplectic();
         PoolVector2Array iterate_symplectic_batch(int batch);
 
+        std::optional<Vector2> iterate_regular();
+        PoolVector2Array iterate_regular_batch(int batch);
+
     protected:
         /* Functions used to calculate the iterations of the trajectory */
 

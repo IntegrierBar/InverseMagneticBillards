@@ -54,6 +54,10 @@ namespace godot {
         std::optional<Vector2> iterate_symplectic(bool stopAtVertex);               // one iteration of the system. Returns the phase space coordinates of the new point. stopAtVertex decides whether the trajectory stops if it hits a vertex 
         PoolVector2Array iterate_symplectic_batch(int batch, bool stopAtVertex);    // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
 
+        // regular iteration
+        std::optional<Vector2> iterate_regular(bool stopAtVertex);               // one iteration of the system. Returns the phase space coordinates of the new point. stopAtVertex decides whether the trajectory stops if it hits a vertex 
+        PoolVector2Array iterate_regular_batch(int batch, bool stopAtVertex);    // "batch" iterations of the system. Returns Array of all phase space coordinates of the iterations
+
 	protected:
         /* Functions used to calculate the iterations of the trajectory */
 

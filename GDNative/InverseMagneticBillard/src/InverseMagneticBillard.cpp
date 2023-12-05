@@ -79,9 +79,9 @@ namespace godot {
             }            
         }
 
-        // inverse trajecotries are always small so no noeed to split them
+        // inverse trajecotries are always small so no need to split them
         for (auto& t : inverseTrajectories) {
-            if (t.trajectoryToDraw.size() > 1) {
+            if (t.trajectoryToDraw[0].size() > 1) {
                 draw_polyline(t.trajectoryToDraw[0], t.trajectoryColor, 1.0F, true);    // antialiasing could hit draw performance
             }
         }        
@@ -273,24 +273,67 @@ namespace godot {
     Array InverseMagneticBillard::iterate_batch(int batch, bool stopAtVertex)
     {
         Array phaseSpace;
-        for (auto& t : trajectories)
+        if (billardType == 0)
         {
-            PoolVector2Array phaseSpacePoints;  // points from this trajectory
-            if (billardType == 0)
+            for (auto& t : trajectories)
             {
+                PoolVector2Array phaseSpacePoints;  // points from this trajectory
                 phaseSpacePoints = t.iterate_batch(batch, stopAtVertex);
+                phaseSpace.push_back(phaseSpacePoints);
+                if (addPointsToGrid)
+                {
+                    fill_grid_with_points(phaseSpacePoints, t.trajectoryColor);
+                }
             }
-            else if (billardType == 1)
-            {
-                phaseSpacePoints = t.iterate_symplectic_batch(batch, stopAtVertex);
-            }
-            phaseSpace.push_back(phaseSpacePoints);
-            if (addPointsToGrid)
-            {
-                fill_grid_with_points(phaseSpacePoints, t.trajectoryColor);
-            }
-            
         }
+        else if (billardType == 1)
+        {
+            for (auto& t : trajectories)
+            {
+                PoolVector2Array phaseSpacePoints;  // points from this trajectory
+                phaseSpacePoints = t.iterate_symplectic_batch(batch, stopAtVertex);
+                phaseSpace.push_back(phaseSpacePoints);
+                if (addPointsToGrid)
+                {
+                    fill_grid_with_points(phaseSpacePoints, t.trajectoryColor);
+                }
+            }
+        }
+        else if (billardType == 2)
+        {
+            for (auto& t : trajectories)
+            {
+                PoolVector2Array phaseSpacePoints;  // points from this trajectory
+                phaseSpacePoints = t.iterate_regular_batch(batch, stopAtVertex);
+                phaseSpace.push_back(phaseSpacePoints);
+                if (addPointsToGrid)
+                {
+                    fill_grid_with_points(phaseSpacePoints, t.trajectoryColor);
+                }
+            }
+        }
+        //for (auto& t : trajectories)
+        //{
+        //    PoolVector2Array phaseSpacePoints;  // points from this trajectory
+        //    if (billardType == 0)
+        //    {
+        //        phaseSpacePoints = t.iterate_batch(batch, stopAtVertex);
+        //    }
+        //    else if (billardType == 1)
+        //    {
+        //        phaseSpacePoints = t.iterate_symplectic_batch(batch, stopAtVertex);
+        //    }
+        //    else if (billardType == 2)
+        //    {
+        //        phaseSpacePoints = t.iterate_regular_batch(batch, stopAtVertex);
+        //    }
+        //    phaseSpace.push_back(phaseSpacePoints);
+        //    if (addPointsToGrid)
+        //    {
+        //        fill_grid_with_points(phaseSpacePoints, t.trajectoryColor);
+        //    }
+        //    
+        //}
 
         update();
         return phaseSpace;
@@ -319,19 +362,32 @@ namespace godot {
     Array InverseMagneticBillard::iterate_inverse_batch(int batch)
     {
         Array phaseSpace;
-        for (auto& t : inverseTrajectories)
+        if (billardType == 0)
         {
-            PoolVector2Array phaseSpacePoints;  // points from this trajectory
-            if (billardType == 0)
+            for (auto& t : inverseTrajectories)
             {
+                PoolVector2Array phaseSpacePoints;  // points from this trajectory
                 phaseSpacePoints = t.iterate_batch(batch);
+                phaseSpace.push_back(phaseSpacePoints);
             }
-            else if (billardType == 1)
+        }
+        else if (billardType == 1)
+        {
+            for (auto& t : inverseTrajectories)
             {
+                PoolVector2Array phaseSpacePoints;  // points from this trajectory
                 phaseSpacePoints = t.iterate_symplectic_batch(batch);
+                phaseSpace.push_back(phaseSpacePoints);
             }
-            phaseSpace.push_back(phaseSpacePoints);
-            //fill_grid_with_points(phaseSpacePoints, t.trajectoryColor);   // do not need this for inverse
+        }
+        else if (billardType == 2)
+        {
+            for (auto& t : inverseTrajectories)
+            {
+                PoolVector2Array phaseSpacePoints;  // points from this trajectory
+                phaseSpacePoints = t.iterate_regular_batch(batch);
+                phaseSpace.push_back(phaseSpacePoints);
+            }
         }
         update();
         return phaseSpace;

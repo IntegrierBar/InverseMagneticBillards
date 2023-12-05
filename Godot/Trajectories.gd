@@ -743,7 +743,7 @@ func _show_backwards_fm_traj_on_click(ps_coord):
 		trajectories.hide()
 		trajectory_to_show.show()
 		var color = Color.aqua
-		
+		color = Color.deeppink
 		trajectory_to_show.add_inverse_trajectory_phasespace(ps_coord, color)
 		trajectory_to_show.iterate_inverse_batch(batch_to_show)
 		trajectory_to_show.update()

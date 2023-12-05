@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://Camera/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Phasespace/PhaseSpace.gd" type="Script" id=2]
@@ -15,10 +15,12 @@
 [ext_resource path="res://Flowmap/FlowMap.gd" type="Script" id=13]
 [ext_resource path="res://ControlPanel/PolygonVertexControl.gd" type="Script" id=14]
 [ext_resource path="res://ImportedDesignElements/Images/black400x400.png" type="Texture" id=15]
+[ext_resource path="res://Shaders/FTLERegular.gdshader" type="Shader" id=16]
 [ext_resource path="res://Shaders/FlowMapSymplectic.gdshader" type="Shader" id=17]
 [ext_resource path="res://Shaders/FTLE.gdshader" type="Shader" id=18]
 [ext_resource path="res://Viewport/ViewportSkriptForMouseInput.gd" type="Script" id=19]
 [ext_resource path="res://Flowmap/FlowmapControl.gd" type="Script" id=20]
+[ext_resource path="res://Shaders/FlowMapRegular.gdshader" type="Shader" id=21]
 [ext_resource path="res://Shaders/FTLESymplectic.gdshader" type="Shader" id=22]
 [ext_resource path="res://Phasespace/MultimeshHandler.gd" type="Script" id=23]
 
@@ -131,6 +133,25 @@ shader_param/showAngle = null
 
 [sub_resource type="ShaderMaterial" id=21]
 shader = ExtResource( 22 )
+shader_param/radius = null
+shader_param/n = null
+shader_param/iterations = null
+shader_param/forwards = null
+shader_param/zoom = null
+shader_param/step_size_modifier = null
+
+[sub_resource type="ShaderMaterial" id=26]
+shader = ExtResource( 21 )
+shader_param/radius = null
+shader_param/n = null
+shader_param/iterations = null
+shader_param/forwards = null
+shader_param/showPosition = null
+shader_param/showAngle = null
+shader_param/polygon2 = null
+
+[sub_resource type="ShaderMaterial" id=27]
+shader = ExtResource( 16 )
 shader_param/radius = null
 shader_param/n = null
 shader_param/iterations = null
@@ -266,7 +287,7 @@ hint_tooltip = "Change the billiard type"
 size_flags_horizontal = 3
 text = "Inverse Magnetic Billiards"
 clip_text = true
-items = [ "Inverse Magnetic Billiards", null, false, 0, null, "Symplectic Billiards", null, false, 1, null ]
+items = [ "Inverse Magnetic Billiards", null, false, 0, null, "Symplectic Billiards", null, false, 1, null, "Regular Billiards", null, false, 2, null ]
 selected = 0
 
 [node name="StopAtCornerBox" type="HBoxContainer" parent="CanvasLayer/DockableContainer/ControlPanel/ScrollContainer/VBoxContainer"]
@@ -1108,6 +1129,16 @@ texture = ExtResource( 15 )
 [node name="FTLESymplectic" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
 visible = false
 material = SubResource( 21 )
+texture = ExtResource( 15 )
+
+[node name="FMRegular" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
+visible = false
+material = SubResource( 26 )
+texture = ExtResource( 15 )
+
+[node name="FTLERegular" type="Sprite" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]
+visible = false
+material = SubResource( 27 )
 texture = ExtResource( 15 )
 
 [node name="FMAngleLabel" type="Label" parent="CanvasLayer/DockableContainer/Flowmap/ViewportContainer/Viewport"]

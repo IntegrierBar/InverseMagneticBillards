@@ -225,6 +225,87 @@ namespace godot {
         return coordinatesPhasespace;
     }
 
+    std::optional<Vector2> InverseTrajectory::iterate_regular()
+    {
+        // first reflect the direction
+        vec2_d verticalDirection = normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
+        vec2_d horizontalDirection = vec2_d(-verticalDirection.y, verticalDirection.x);
+        currentDirection = normalize(currentDirection - 2 * dot(currentDirection, horizontalDirection) * horizontalDirection);
+
+
+        // then do the line intersection with negative direction
+        auto intersectionOpt = Trajectory::intersect_polygon_line(currentPosition, -currentDirection);   // use function from baseclass
+        if (!intersectionOpt)
+        {
+            // if the intersection failed, stop the iteration by setting count to maxIter and return nullopt to tell the calling code
+            count = maxIter;
+            return std::nullopt;
+        }
+        auto& intersection = *intersectionOpt;
+        currentPosition = intersection.first;
+        currentIndexOnPolygon = intersection.second;
+
+
+        //if (count < maxCount)   //draw in normal space if desired
+        {
+            trajectoryToDraw[0].push_back(currentPosition.to_draw());
+        }
+
+        // calculate phase space coordinates
+        double anglePhasespace = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
+        double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
+        phaseSpaceTrajectory.push_back(vec2_d(pos, abs(anglePhasespace) / M_PI));
+        count++;
+        return { Vector2(pos, abs(anglePhasespace) / M_PI) };
+    }
+
+    PoolVector2Array InverseTrajectory::iterate_regular_batch(int batch)
+    {
+        PoolVector2Array coordinatesPhasespace = PoolVector2Array();
+        // do checks to make sure that everything is valid
+        if (polygon.size() < 3)
+        {
+            Godot::print("polygon not enough vertices");
+            return coordinatesPhasespace;
+        }
+        if (polygon.size() != polygonLength.size())
+        {
+            Godot::print("polygon structures not of same size");
+            Godot::print(Vector2(polygon.size(), polygonLength.size()));
+            return coordinatesPhasespace;
+        }
+        if (length_squared(polygon[0] - polygon.back()) > eps)
+        {
+            Godot::print("polygon not closed");
+            Godot::print(polygon[0].to_godot());
+            Godot::print(polygon.back().to_godot());
+            return coordinatesPhasespace;
+        }
+
+
+        if (count >= maxIter)
+        {
+            return coordinatesPhasespace;
+        }
+
+        batch = std::min(batch, maxIter - count);   // make sure we don't iterate to far
+
+        coordinatesPhasespace.resize(batch);
+        for (size_t i = 0; i < batch; i++)
+        {
+            if (auto point = iterate_regular())
+            {
+                coordinatesPhasespace.set(i, *point);
+            }
+            else
+            {
+                // if we got a nullopt, we stop
+                break;
+            }
+        }
+        return coordinatesPhasespace;
+    }
+
     // both function work like in "Trajectory" but instead of minimizing the length/angle, they maximize it
     std::pair<vec2_d, int> InverseTrajectory::intersect_polygon_line(vec2_d start, vec2_d dir)
     {

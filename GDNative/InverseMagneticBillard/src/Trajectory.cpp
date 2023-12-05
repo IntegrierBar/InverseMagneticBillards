@@ -416,6 +416,107 @@ namespace godot {
         return coordinatesPhasespace;
     }
 
+    std::optional<Vector2> Trajectory::iterate_regular(bool stopAtVertex)
+    {
+        // check if we are at a vertex
+        if (stopAtVertex)
+        {
+            // for every vertex of the polygon, check if we are close
+            for (const auto& v : polygon)
+            {
+                if (length_squared(currentPosition - v) < eps)
+                {
+                    Godot::print("stopped iteration since we landed in polygon vertex");
+                    count = maxIter;
+                    return std::nullopt;
+                }
+            }
+        }
+
+        // first intersect polygon with new line to get next position.
+        auto intersectionOpt = intersect_polygon_line(currentPosition, currentDirection);
+        if (!intersectionOpt)
+        {
+            // if the intersection failed, stop the iteration by setting count to maxIter and return nullopt to tell the calling code
+            count = maxIter;
+            return std::nullopt;
+        }
+        auto& intersection = *intersectionOpt;
+        currentPosition = intersection.first;
+        currentIndexOnPolygon = intersection.second;
+
+        // calculate new direction by reflecting at polygon line
+        vec2_d verticalDirection = normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]);
+        vec2_d horizontalDirection = vec2_d(-verticalDirection.y, verticalDirection.x);
+        currentDirection = normalize(currentDirection - 2*dot(currentDirection, horizontalDirection)*horizontalDirection);
+
+        if (count < maxCount)   //draw in normal space if desired
+        {
+            trajectoryToDraw[trajectoryToDraw.size() - 1].push_back(currentPosition.to_draw());
+
+            // need to split every 700 iterations   // TODO need to check this number. Higher should be possible
+            if (count % 700 == 0)
+            {
+                PoolVector2Array nextPolyline;
+                nextPolyline.push_back(currentPosition.to_draw());
+                trajectoryToDraw.push_back(nextPolyline);
+            }
+        }
+
+        // calculate phase space coordinates
+        double anglePhasespace = angle_between(normalize(polygon[currentIndexOnPolygon + 1] - polygon[currentIndexOnPolygon]), currentDirection);
+        double pos = (polygonLength[currentIndexOnPolygon] + length(polygon[currentIndexOnPolygon] - currentPosition)) / polygonLength.back();
+        phaseSpaceTrajectory.push_back(vec2_d(pos, abs(anglePhasespace) / M_PI));
+        count++;
+        return { Vector2(pos, abs(anglePhasespace) / M_PI) };
+    }
+
+    PoolVector2Array Trajectory::iterate_regular_batch(int batch, bool stopAtVertex)
+    {
+        PoolVector2Array coordinatesPhasespace = PoolVector2Array();
+        // do checks to make sure that everything is valid
+        if (polygon.size() < 3)
+        {
+            Godot::print("polygon not enough vertices");
+            return coordinatesPhasespace;
+        }
+        if (polygon.size() != polygonLength.size())
+        {
+            Godot::print("polygon structures not of same size");
+            Godot::print(Vector2(polygon.size(), polygonLength.size()));
+            return coordinatesPhasespace;
+        }
+        if (length_squared(polygon[0] - polygon.back()) > eps)
+        {
+            Godot::print("polygon not closed");
+            Godot::print(polygon[0].to_godot());
+            Godot::print(polygon.back().to_godot());
+            return coordinatesPhasespace;
+        }
+
+        if (count >= maxIter)
+        {
+            return coordinatesPhasespace;
+        }
+
+        batch = std::min(batch, maxIter - count);   // make sure we don't iterate to far
+
+        coordinatesPhasespace.resize(batch);
+        for (size_t i = 0; i < batch; i++)
+        {
+            if (auto point = iterate_regular(stopAtVertex))
+            {
+                coordinatesPhasespace.set(i, *point);
+            }
+            else
+            {
+                // if we got a nullopt, we stop
+                break;
+            }
+        }
+        return coordinatesPhasespace;
+    }
+
     void Trajectory::set_polygon(std::vector<vec2_d> p, std::vector<double> l)
     {
         polygon = p;
