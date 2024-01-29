@@ -123,6 +123,33 @@ The program will repeat this process every frame as often as is specified in the
 The program calculates the holes by dividing the phase space into a squared grid.
 The grid size (how many cells in each direction) can be specified in the "grid size" field.
 
+##### Example of Usage
+Let's say we want to add 1000 individual trajectories, each iterated 1000 times.
+
+First in "#Trajectories to Spawn" inside the Phase Space Control panel we input 1000.
+Next we have to decide on a grid size. 
+If we want to spawn 1000 trajectories, then we need Grid Size of at least $\sqrt{1000} \approx 32$.
+However if we iterate the trajectories everytime they are added before adding the next trajectory, we will need a much larger Grid Size, as each trajectory will fill multiple cells of the grid.
+
+If you want to iterate trajectories everytime they are added, it is probably best to think more about the Grid Size, i.e. how dense the phase space should be in the end, and then just putting a large number into "#Trajectories to Spawn".
+The algorithm will stop automatically if the grid is full.
+However note that the algorithm scales heavily (between power of 2 and 4) with the Grid Size. 
+So if this number is too large for your system, it might take a while to calculate.
+
+Next make sure you are zoomed out far enough in the Phase Space Window so you can see the entire phase space (the black square). Or are zoomed into the part of the phase space you want filled.
+The algorithm will only spawn trajectories in the part of the phase space that is currently visible.
+
+In case you don't want all spawned trajectories drawn in the Regular Space as well, make sure to uncheck the box "Trajecotries Drawn in Regular Space".
+
+Then go to the main control panel on the left.
+If you want to first add all trajectories and then iterate them together, put 0 into the box "#Iterations" and 1000 into "Max. #Iterations".
+Then click "Start to Fill Phase Space".
+The programm should then have created 1000 individual trajectories.
+Finaly put 1000 into "#Iterations" and click the "Iterate" button.
+
+If you want each trajectory to iterate before you spawn the next trajectory, put 1000 into both "#Iterations" and "Max. #Iterations" and then click "Start to Fill Phase Space".
+
+
 #### Clear Phase Space
 By clicking this button, all points are deleted from the phase space.  
 This will only visualy clear the phase space.
