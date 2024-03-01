@@ -568,7 +568,7 @@ func _on_StartFillPSButton_pressed():
 		current_state = STATES.FILL_PS
 		trajectories.addPointsToGrid = true	# add points after iteration to grid
 		# caluculate lower_left and upper_right
-		var view_rect: Array = $"../../../../Phasespace/ViewportContainer/Viewport/Camera2D".get_view_rectangle()	# get view rectangle from camera of PS
+		var view_rect: Array = $"../../../../Phase Space/ViewportContainer/Viewport/Camera2D".get_view_rectangle()	# get view rectangle from camera of PS # TODO WE RENAMED, CHECK IF WORKING
 		var scaled_view_rect: Array = phase_space.rescale_to_ps(view_rect)	# rescale to get phase space coords
 		# make sure lower_left and upper right are not outside phase space
 		# can alternatively do min in C++ code for width and height, but this is not slow, so I dont think there is a need for it
