@@ -14,7 +14,7 @@ This system is of interest as the edgecases for the magnetic field strength are 
 - If the field strength is near 0, the table does not matter and the ball just travels on a giant circle.
 
 ## How to use
-The simulator is split into 3 spaces (regular space, flow map and phase space) and 2 controls (main control and phase space control).
+The simulator is split into 3 spaces (ambient space, flow map and phase space) and 2 controls (main control and phase space control).
 
 Both flow map and phase space use inverted y-Axis.
 
@@ -24,8 +24,8 @@ All spaces have their own camera that can zoom and be dragged by holding the rig
 Every user input field that immediately effects the system (like changing coordinates) will only update after the you press enter.
 
 
-### Regular Space
-The regular space shows the polygon and the trajectory as polygonal lines.
+### Ambient Space
+The ambient space shows the polygon and the trajectory as polygonal lines.
 
 #### Billiard Type
 Currently the programm can do both inverse magnetic billiard and symplectic billiard.  
@@ -47,14 +47,14 @@ radius = 1/field strength
 
 #### Polygon
 By pressing the "Choose New Polygon" button the current polygon and all trajectories are deleted.  
-By left clicking inside the regular space you can now add a vertex to the new polygon at the mouse position.  
+By left clicking inside the ambient space you can now add a vertex to the new polygon at the mouse position.  
 By clicking the "Close Countout" button, middle mouse button, the ESC key or "C" you will close the polygon.  
 As long as the polygon is not closed, no trajectories can be created.  
 
 Polygon vertices can be dragged using left mouse button at any time.  
 Doing so will reset all trajectories to their phase space coordinates (NOT their R2 coordinates).
 
-Clicking the button "Draw Regular n-gon" will automatically create a Regular n-gon with the number of vertices specified in "#Vertices and radius specified in "n-gon Radius".
+Clicking the button "Draw Regular n-gon" will automatically create a regular n-gon with the number of vertices specified in "#Vertices and radius specified in "n-gon Radius".
 
 #### Vertex Control
 Clicking the "Open Vertex Cotrol" will open a new window where you can type in the coordinates of the vertices of the polygon.  
@@ -68,10 +68,10 @@ See below for more information.
 "Reset All Trajectories" will reset them to their initial state, removing any iterations previously done.
 
 Pressing "Add New Trajectory" creates a new trajectorie with a random color.  
-The initial position and the direction are specified by clicking inside the Regular Space.
+The initial position and the direction are specified by clicking inside the Ambient Space.
 
 For any existing trajectory a new set of buttons is spawned.  
-"New Start Position" allows you to again choose the start position and direction inside the Regular Space.  
+"New Start Position" allows you to again choose the start position and direction inside the Ambient Space.  
 "Delete Trajectory" will delete this single trajectory.  
 The two input fields are the position and the direction in R2. By editing these fields and pressing enter, you can specify your own coordiniates.  
 The color selection panel allows you to change the color of the trajectory.
@@ -96,7 +96,7 @@ To update to the new value, press enter inside the input field.
 The control center for the phase space allows for 3 different methods of creating new trajectories.
 
 For individual trajectories the color can be chosen with the color selector "Trajectory Color".  
-The checkmark "Trajectory Drawn in Regular Space" decides whether the spawned trajectories should also be drawn in regular space.
+The checkmark "Trajectory Drawn in Ambient Space" decides whether the spawned trajectories should also be drawn in ambient space.
 
 ##### 1. On Click
 After pressing the button left clickin inside the phase space will create a new trajectory with those coordinates.
@@ -139,7 +139,7 @@ So if this number is too large for your system, it might take a while to calcula
 Next make sure you are zoomed out far enough in the Phase Space Window so you can see the entire phase space (the black square). Or are zoomed into the part of the phase space you want filled.
 The algorithm will only spawn trajectories in the part of the phase space that is currently visible.
 
-In case you don't want all spawned trajectories drawn in the Regular Space as well, make sure to uncheck the box "Trajecotries Drawn in Regular Space".
+In case you don't want all spawned trajectories drawn in the Ambient Space as well, make sure to uncheck the box "Trajecotries Drawn in Ambient Space".
 
 Then go to the main control panel on the left.
 If you want to first add all trajectories and then iterate them together, put 0 into the box "#Iterations" and 1000 into "Max. #Iterations".
@@ -183,10 +183,10 @@ The step size modifier allows you to decide how far away the trajectories should
 The distance from the pixel is then given as the product of the step size modifier and the zoom factor of the camera.
 
 #### On Click
-By left clicking inside the flow map you can either show the trajectory started at that point in the Regular Space or spawn a trajectory with those phase space coordinates.
+By left clicking inside the flow map you can either show the trajectory started at that point in the Ambient Space or spawn a trajectory with those phase space coordinates.
 
 If you are currently showing a trajectory you can press the button "Spawn Currently Shown Trajectory" to spawn a trajectory with those coordinates.  
-To stop showing the trajectory in Regular Space, simply left click anywhere inside the Regular Space.
+To stop showing the trajectory in Ambient Space, simply left click anywhere inside the Ambient Space.
 
 
 ## How to compile
